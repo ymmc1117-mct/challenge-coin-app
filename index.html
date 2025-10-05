@@ -1,1081 +1,1878 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Coin">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-180.png"> 
-    <title>Challenge Coin!</title>
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Varela+Round&display=swap" rel="stylesheet">
-    <style>
-        /* CSSセクションは前回のコードと同一です */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        ::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 2px;
-        }
-
-        body {
-            font-family: 'M PLUS Rounded 1c', 'Varela Round', sans-serif;
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #dae7f8 0%, #fde5f0 100%);
-            padding: 30px;
-            text-align: center;
-            position: relative;
-        }
-
-        @media (max-width: 768px) {
-            .header { padding: 20px 15px; }
-        }
-
-        .header h1 {
-            font-size: 36px;
-            font-weight: 800;
-            color: #ff6098;
-            letter-spacing: 1px;
-            text-shadow: 2px 2px 8px rgba(255, 96, 152, 0.3);
-        }
-
-        @media (max-width: 768px) {
-            .header h1 { font-size: 28px; }
-        }
-
-        @media (max-width: 480px) {
-            .header h1 { font-size: 24px; }
-        }
-
-        .header-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.8);
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .header-btn:active {
-            transform: translateY(-50%) scale(0.95);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .header-btn svg {
-            width: 24px;
-            height: 24px;
-            fill: rgba(0, 0, 0, 0.4);
-        }
-
-        .back-btn { left: 20px; }
-        .settings-btn { right: 20px; }
-
-        @media (max-width: 768px) {
-            .back-btn { left: 15px; }
-            .settings-btn { right: 15px; }
-        }
-
-        .challenge-buttons-container {
-            padding: 10px 30px;
-            background: white;
-            display: none; 
-            gap: 10px;
-            overflow-x: auto;
-            border-bottom: 1px solid #eee;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .challenge-buttons-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .challenge-button {
-            background: #fff0f5;
-            color: #ff6b9d;
-            border: 2px solid #ffc8d9;
-            border-radius: 25px;
-            padding: 8px 15px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            flex-shrink: 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .challenge-button:active {
-            transform: scale(0.98);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .challenge-button.active {
-            background: #ff6b9d;
-            color: white;
-            border-color: #ff6b9d;
-            box-shadow: 0 4px 8px rgba(255, 107, 157, 0.2);
-        }
-
-        .challenge-buttons-wrapper {
-            display: flex;
-            gap: 10px;
-            flex-grow: 1;
-            overflow-x: auto;
-        }
-
-
-        .content {
-            padding: 30px;
-        }
-
-        @media (max-width: 768px) {
-            .content { padding: 20px; }
-        }
-
-        @media (max-width: 480px) {
-            .content { padding: 15px; }
-        }
-
-        .screen {
-            display: none;
-        }
-
-        .screen.active {
-            display: block;
-        }
-
-        .account-list {
-            display: grid;
-            gap: 15px;
-        }
-
-        .account-card {
-            background: #e0f7fa;
-            border-radius: 15px;
-            padding: 15px 25px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .account-card:active {
-            transform: scale(0.98);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-        }
-
-        .account-card h3 {
-            font-size: 20px;
-            color: #333;
-        }
-
-        .coins-info {
-            display: flex;
-            align-items: baseline;
-            gap: 5px;
-        }
-
-        .coins-number-list {
-            font-size: 28px;
-            font-weight: bold;
-            color: #ff6b9d;
-        }
-
-        .add-account-btn {
-            background-color: #e6f7e9;
-            border: 2px dashed #81c784;
-            border-radius: 15px;
-            padding: 18px 25px; 
-            cursor: pointer;
-            text-align: center;
-            font-size: 18px;
-            color: #4caf50;
-            font-weight: bold;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .add-account-btn:active {
-            transform: scale(0.98);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        .add-account-btn:disabled {
-            background-color: #f7e6e6;
-            border: 2px dashed #ccc;
-            color: #999;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-
-        .coins-display {
-            background: #e6faff;
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        @media (max-width: 768px) {
-            .coins-display { padding: 20px; }
-        }
-
-        .coin-value-label {
-            display: block;
-            width: fit-content;
-            margin: 0 auto 10px;
-            font-size: 16px;
-            color: #666;
-            background: #fff0f5;
-            padding: 5px 10px;
-            border-radius: 10px;
-            border: 1px solid #ffc8d9;
-        }
-
-        .coin-value-label strong {
-            color: #ff6b9d;
-        }
-
-        .coins-label {
-            font-size: 18px;
-            color: #666;
-            margin-bottom: 15px;
-        }
-
-        .coins-main {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .coins-number {
-            font-size: 72px;
-            font-weight: bold;
-            color: #ff6b9d;
-        }
-        
-        .coins-number.disabled {
-            color: #ccc;
-        }
-
-        @media (max-width: 768px) {
-            .coins-number { font-size: 60px; }
-        }
-
-        @media (max-width: 480px) {
-            .coins-number { font-size: 48px; }
-        }
-
-        .coin-btn {
-            width: 50px;
-            height: 50px;
-            border: none;
-            border-radius: 10px;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .coin-btn:active {
-            transform: scale(0.95);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-        }
-        
-        .coin-btn:disabled {
-            background: #eee !important;
-            color: #ccc !important;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        .coin-btn-add {
-            background: #a8e6cf;
-            color: #333;
-        }
-
-        .coin-btn-minus {
-            background: #ffb3ba;
-            color: #333;
-        }
-
-        .coins-value {
-            font-size: 24px;
-            color: #333;
-            font-weight: bold;
-            margin-top: 10px;
-            display: flex; 
-            justify-content: center;
-            align-items: center;
-        }
-
-        .total-coins {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid rgba(255, 255, 255, 0.5);
-            font-size: 16px;
-            color: #555;
-        }
-
-        .total-coins-number {
-            font-size: 20px;
-            font-weight: bold;
-            color: #ff6b9d;
-        }
-
-        .exchange-section {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .exchange-section h3 {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        .exchange-input {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        @media (max-width: 480px) {
-            .exchange-input {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
-
-        .exchange-input input {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            font-size: 18px;
-            text-align: center;
-            font-family: inherit;
-        }
-        
-        .exchange-input span {
-            font-size: 16px;
-            color: #555;
-        }
-
-        .btn-exchange {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #dae7f8 0%, #fde5f0 100%);
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            cursor: pointer;
-            font-family: inherit;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-exchange:active {
-            transform: scale(0.98);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-        }
-        .btn-exchange:disabled {
-            background: #eee;
-            color: #ccc;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-
-        .history-compact {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            border: 2px solid #e9ecef;
-        }
-
-        .history-summary {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .history-total-label {
-            font-size: 14px;
-            color: #999;
-        }
-
-        .history-total-amount {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ff6b9d;
-        }
-
-        .btn-show-history {
-            padding: 10px 20px;
-            background: #e9ecef;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            color: #666;
-            cursor: pointer;
-            font-family: inherit;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-show-history:active {
-            transform: scale(0.98);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .history-details {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 2px solid #f8f9fa;
-            display: none;
-        }
-
-        .history-details.show {
-            display: block;
-        }
-
-        .history-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #f8f9fa;
-            font-size: 14px;
-        }
-
-        .history-description {
-            font-weight: bold;
-            color: #555;
-            margin-bottom: 3px;
-        }
-
-        .history-date {
-            color: #999;
-            font-size: 12px;
-        }
-
-        .history-reward-amount {
-            color: #ff6b9d;
-            font-weight: bold;
-        }
-
-        .history-empty {
-            text-align: center;
-            color: #999;
-            padding: 20px;
-        }
-
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-header h2 {
-            font-size: 24px;
-            color: #333;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
-        }
-
-        .setting-section {
-            margin-bottom: 25px;
-            padding-bottom: 25px;
-            border-bottom: 2px solid #f8f9fa;
-        }
-
-        .setting-section:last-child {
-            border-bottom: none;
-        }
-
-        .setting-section h3 {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        .account-item {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .account-item input {
-            flex: 1;
-            padding: 10px 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            font-size: 16px;
-            font-family: inherit;
-        }
-
-        .btn-delete-account {
-            padding: 10px 15px;
-            background: #ffebee;
-            border: none;
-            border-radius: 10px;
-            color: #c62828;
-            cursor: pointer;
-            font-family: inherit;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-delete-account:active {
-            transform: scale(0.98);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .challenge-item {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-        }
-
-        .challenge-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .challenge-header h4 {
-            font-size: 16px;
-        }
-
-        .challenge-inputs-group {
-            margin-bottom: 15px;
-        }
-
-        .challenge-inputs-group label {
-            display: block;
-            font-size: 14px;
-            color: #999;
-            margin-bottom: 5px;
-        }
-
-        .challenge-inputs-group input {
-            width: 100%;
-            padding: 10px 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            font-size: 16px;
-            font-family: inherit;
-        }
-
-        .challenge-value-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .input-with-suffix {
-            flex-grow: 1;
-            position: relative;
-        }
-
-        .input-with-suffix input {
-            width: 100%;
-            text-align: right;
-            padding-right: 40px;
-        }
-
-        .input-with-suffix .suffix {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 16px;
-            color: #666;
-            pointer-events: none;
-        }
-
-
-        .btn-delete-challenge {
-            padding: 8px 12px;
-            background: #ffebee;
-            border: none;
-            border-radius: 8px;
-            color: #c62828;
-            cursor: pointer;
-            font-family: inherit;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-delete-challenge:active {
-            transform: scale(0.98);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-add {
-            background-color: #e6f7e9;
-            border: 2px dashed #81c784;
-            border-radius: 10px;
-            color: #4caf50;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            padding: 12px;
-            font-family: inherit;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-add:active {
-            transform: scale(0.98);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-save {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #dae7f8 0%, #fde5f0 100%);
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            cursor: pointer;
-            margin-bottom: 20px;
-            font-family: inherit;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-save:active {
-            transform: scale(0.98);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-        }
-
-        .reset-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .btn-reset {
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: inherit;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-reset:active {
-            transform: scale(0.98);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-reset-all {
-            background: #ffebee;
-            color: #c62828;
-        }
-
-        .btn-reset-child {
-            background: #fff4e6;
-            color: #e65100;
-        }
-
-        .confirm-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1001;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .confirm-modal.show {
-            display: flex;
-        }
-
-        .confirm-content {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .confirm-content h3 {
-            font-size: 20px;
-            margin-bottom: 15px;
-        }
-
-        .confirm-content p {
-            color: #666;
-            margin-bottom: 25px;
-        }
-
-        .confirm-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-confirm {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: inherit;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-confirm:active {
-            transform: scale(0.98);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-cancel {
-            background: #e9ecef;
-            color: #333;
-        }
-
-        .btn-confirm-action {
-            background: #e57373;
-            color: white;
-            border: 1px solid #c62828;
-        }
-        
-        .exchange-confirm {
-            background: linear-gradient(135deg, #dae7f8 0%, #fde5f0 100%);
-            color: #333 !important;
-            border: 1px solid #ffc8d9 !important;
-        }
-
-        .celebration {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 50px;
-            border-radius: 20px;
-            text-align: center;
-            z-index: 1002;
-            display: none;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .celebration.show {
-            display: block;
-        }
-
-        .celebration h2 {
-            font-size: 36px;
-            color: #ff6b9d;
-            margin-bottom: 20px;
-        }
-        
-        .celebration-amount {
-            color: #ff6b9d;
-            font-weight: 800;
-            font-size: 1.2em;
-        }
-
-        .confetti {
-            position: fixed;
-            width: 12px;
-            height: 12px;
-            z-index: 1001;
-        }
-
-        @keyframes confetti-fall {
-            to {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            display: none;
-        }
-
-        .overlay.show {
-            display: block;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Coin">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-180.png"> 
+    <title>Challenge Coin!</title>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Varela+Round&display=swap" rel="stylesheet">
+    <style>
+        /* CSSセクションは省略 (変更なし) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 2px;
+        }
+
+        body {
+            font-family: 'M PLUS Rounded 1c', 'Varela Round', sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #dae7f8 0%, #fde5f0 100%);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 20px 15px; }
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            color: #ff6098;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 8px rgba(255, 96, 152, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 28px; }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 { font-size: 24px; }
+        }
+
+        .header-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .header-btn:active {
+            transform: translateY(-50%) scale(0.95);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: rgba(0, 0, 0, 0.4);
+        }
+
+        .back-btn { left: 20px; }
+        .settings-btn { right: 20px; }
+
+        @media (max-width: 768px) {
+            .back-btn { left: 15px; }
+            .settings-btn { right: 15px; }
+        }
+
+        .challenge-buttons-container {
+            padding: 10px 30px;
+            background: white;
+            display: none; 
+            gap: 10px;
+            overflow-x: auto;
+            border-bottom: 1px solid #eee;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .challenge-buttons-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .challenge-button {
+            background: #fff0f5;
+            color: #ff6b9d;
+            border: 2px solid #ffc8d9;
+            border-radius: 25px;
+            padding: 8px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .challenge-button:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .challenge-button.active {
+            background: #ff6b9d;
+            color: white;
+            border-color: #ff6b9d;
+            box-shadow: 0 4px 8px rgba(255, 107, 157, 0.2);
+        }
+
+        .challenge-buttons-wrapper {
+            display: flex;
+            gap: 10px;
+            flex-grow: 1;
+            overflow-x: auto;
+        }
+
+
+        .content {
+            padding: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .content { padding: 20px; }
+        }
+
+        @media (max-width: 480px) {
+            .content { padding: 15px; }
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .account-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .account-card {
+            background: #e0f7fa;
+            border-radius: 15px;
+            padding: 15px 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .account-card:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .account-card h3 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .coins-info {
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+        }
+
+        .coins-number-list {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6b9d;
+        }
+
+        .add-account-btn {
+            background-color: #e6f7e9;
+            border: 2px dashed #81c784;
+            border-radius: 15px;
+            padding: 18px 25px; 
+            cursor: pointer;
+            text-align: center;
+            font-size: 18px;
+            color: #4caf50;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .add-account-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .add-account-btn:disabled {
+            background-color: #f7e6e6;
+            border: 2px dashed #ccc;
+            color: #999;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+
+        .coins-display {
+            background: #e6faff;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .coins-display { padding: 20px; }
+        }
+
+        .coin-value-label {
+            display: block;
+            width: fit-content;
+            margin: 0 auto 10px;
+            font-size: 16px;
+            color: #666;
+            background: #fff0f5;
+            padding: 5px 10px;
+            border-radius: 10px;
+            border: 1px solid #ffc8d9;
+        }
+
+        .coin-value-label strong {
+            color: #ff6b9d;
+        }
+
+        .coins-label {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .coins-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .coins-number {
+            font-size: 72px;
+            font-weight: bold;
+            color: #ff6b9d;
+        }
+        
+        .coins-number.disabled {
+            color: #ccc;
+        }
+
+        @media (max-width: 768px) {
+            .coins-number { font-size: 60px; }
+        }
+
+        @media (max-width: 480px) {
+            .coins-number { font-size: 48px; }
+        }
+
+        .coin-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .coin-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+        
+        .coin-btn:disabled {
+            background: #eee !important;
+            color: #ccc !important;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .coin-btn-add {
+            background: #a8e6cf;
+            color: #333;
+        }
+
+        .coin-btn-minus {
+            background: #ffb3ba;
+            color: #333;
+        }
+
+        .coins-value {
+            font-size: 24px;
+            color: #333;
+            font-weight: bold;
+            margin-top: 10px;
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+        }
+
+        .total-coins {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid rgba(255, 255, 255, 0.5);
+            font-size: 16px;
+            color: #555;
+        }
+
+        .total-coins-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff6b9d;
+        }
+
+        .exchange-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .exchange-section h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .exchange-input {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 480px) {
+            .exchange-input {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        .exchange-input input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 18px;
+            text-align: center;
+            font-family: inherit;
+        }
+        
+        .exchange-input span {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .btn-exchange {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #dae7f8 0%, #fde5f0 100%);
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-exchange:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+        .btn-exchange:disabled {
+            background: #eee;
+            color: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+
+        .history-compact {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .history-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .history-total-label {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .history-total-amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b9d;
+        }
+
+        .btn-show-history {
+            padding: 10px 20px;
+            background: #e9ecef;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-show-history:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-details {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #f8f9fa;
+            display: none;
+        }
+
+        .history-details.show {
+            display: block;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f8f9fa;
+            font-size: 14px;
+        }
+
+        .history-description {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 3px;
+        }
+
+        .history-date {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .history-reward-amount {
+            color: #ff6b9d;
+            font-weight: bold;
+        }
+
+        .history-empty {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .setting-section {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .setting-section:last-child {
+            border-bottom: none;
+        }
+
+        .setting-section h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .account-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .account-item input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        .btn-delete-account {
+            padding: 10px 15px;
+            background: #ffebee;
+            border: none;
+            border-radius: 10px;
+            color: #c62828;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-delete-account:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .challenge-item {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .challenge-header h4 {
+            font-size: 16px;
+        }
+
+        .challenge-inputs-group {
+            margin-bottom: 15px;
+        }
+
+        .challenge-inputs-group label {
+            display: block;
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .challenge-inputs-group input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        .challenge-value-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .input-with-suffix {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .input-with-suffix input {
+            width: 100%;
+            text-align: right;
+            padding-right: 40px;
+        }
+
+        .input-with-suffix .suffix {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #666;
+            pointer-events: none;
+        }
+
+
+        .btn-delete-challenge {
+            padding: 8px 12px;
+            background: #ffebee;
+            border: none;
+            border-radius: 8px;
+            color: #c62828;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-delete-challenge:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-add, .btn-add-account-modal { /* .btn-add-account-modalを追加 */
+            background-color: #e6f7e9;
+            border: 2px dashed #81c784;
+            border-radius: 10px;
+            color: #4caf50;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            padding: 12px;
+            font-family: inherit;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center; /* 中央揃えを追加 */
+        }
+        .btn-add:active, .btn-add-account-modal:active { /* .btn-add-account-modal:activeを追加 */
+            transform: scale(0.98);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* アカウント追加ボタンの無効化スタイル */
+        .btn-add-account-modal:disabled {
+            background-color: #f7e6e6;
+            border: 2px dashed #ccc;
+            color: #999;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+
+        .btn-save {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #dae7f8 0%, #fde5f0 100%);
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-family: inherit;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-save:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .reset-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-reset {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-reset:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-reset-all {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .btn-reset-child {
+            background: #fff4e6;
+            color: #e65100;
+        }
+
+        .confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .confirm-modal.show {
+            display: flex;
+        }
+
+        .confirm-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .confirm-content h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .confirm-content p {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-confirm {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-confirm:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-cancel {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        .btn-confirm-action {
+            background: #e57373;
+            color: white;
+            border: 1px solid #c62828;
+        }
+        
+        .exchange-confirm {
+            background: linear-gradient(135deg, #dae7f8 0%, #fde5f0 100%);
+            color: #333 !important;
+            border: 1px solid #ffc8d9 !important;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 1002;
+            display: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .celebration.show {
+            display: block;
+        }
+
+        .celebration h2 {
+            font-size: 36px;
+            color: #ff6b9d;
+            margin-bottom: 20px;
+        }
+        
+        .celebration-amount {
+            color: #ff6b9d;
+            font-weight: 800;
+            font-size: 1.2em;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            z-index: 1001;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <button class="header-btn back-btn" id="backBtn" style="display: none;">
-                <svg viewBox="0 0 24 24">
-                    <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
-                </svg>
-            </button>
-            <h1 id="headerTitle">Challenge Coin!</h1>
-            <button class="header-btn settings-btn" id="globalSettingsBtn" style="display: none;">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
-                </svg>
-            </button>
-            <button class="header-btn settings-btn" id="detailSettingsBtn" style="display: none;">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
-                </svg>
-            </button>
-        </div>
+    <div class="container">
+        <div class="header">
+            <button class="header-btn back-btn" id="backBtn" style="display: none;">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
+                </svg>
+            </button>
+            <h1 id="headerTitle">Challenge Coin!</h1>
+            <button class="header-btn settings-btn" id="globalSettingsBtn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
+                </svg>
+            </button>
+            <button class="header-btn settings-btn" id="detailSettingsBtn" style="display: none;">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
+                </svg>
+            </button>
+        </div>
 
-        <div class="challenge-buttons-container" id="challengeButtonsContainer">
-            <div class="challenge-buttons-wrapper" id="challengeButtonsWrapper">
-            </div>
-        </div>
-        
-        <div class="content">
-            <div class="screen active" id="accountSelectScreen">
-                <div class="account-list" id="accountList"></div>
-            </div>
+        <div class="challenge-buttons-container" id="challengeButtonsContainer">
+            <div class="challenge-buttons-wrapper" id="challengeButtonsWrapper">
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="screen active" id="accountSelectScreen">
+                <div class="account-list" id="accountList"></div>
+            </div>
 
-            <div class="screen" id="accountDetailScreen">
-                <div class="coins-display">
-                    <div class="coin-value-label" id="coinValueLabel"></div>
-                    <div class="coins-label">現在のコイン</div>
-                    <div class="coins-main">
-                        <button class="coin-btn coin-btn-minus" id="removeCoinBtn">−</button>
-                        <div class="coins-number" id="currentCoins">0</div>
-                        <button class="coin-btn coin-btn-add" id="addCoinBtn">+</button>
-                    </div>
-                    <div class="coins-value">
-                        = <span id="currentValue">0</span>円
-                    </div>
-                    <div class="total-coins">
-                        <span id="totalCoinsLabel">これまでのコイン合計</span>: 
-                        <span class="total-coins-number" id="totalCoins">0</span>コイン
-                    </div>
-                </div>
+            <div class="screen" id="accountDetailScreen">
+                <div class="coins-display">
+                    <div class="coin-value-label" id="coinValueLabel"></div>
+                    <div class="coins-label">現在のコイン</div>
+                    <div class="coins-main">
+                        <button class="coin-btn coin-btn-minus" id="removeCoinBtn">−</button>
+                        <div class="coins-number" id="currentCoins">0</div>
+                        <button class="coin-btn coin-btn-add" id="addCoinBtn">+</button>
+                    </div>
+                    <div class="coins-value">
+                        = <span id="currentValue">0</span>円
+                    </div>
+                    <div class="total-coins">
+                        <span id="totalCoinsLabel">これまでのコイン合計</span>: 
+                        <span class="total-coins-number" id="totalCoins">0</span>コイン
+                    </div>
+                </div>
 
-                <div class="exchange-section">
-                    <h3>コインの交換</h3>
-                    <div class="exchange-input">
-                        <input type="number" id="exchangeInput" min="1" value="1">
-                        <span>コイン</span>
-                    </div>
-                    <button class="btn-exchange" id="exchangeBtn">おこづかいと交換する</button>
-                </div>
+                <div class="exchange-section">
+                    <h3>コインの交換</h3>
+                    <div class="exchange-input">
+                        <input type="number" id="exchangeInput" min="1" value="1">
+                        <span>コイン</span>
+                    </div>
+                    <button class="btn-exchange" id="exchangeBtn">おこづかいと交換する</button>
+                </div>
 
-                <div class="history-compact">
-                    <div class="history-summary">
-                        <div class="history-total">
-                            <div class="history-total-label">これまでのおこづかい合計</div>
-                            <div class="history-total-amount" id="totalReward">0円</div>
-                        </div>
-                        <button class="btn-show-history" id="toggleHistoryBtn">
-                            <span id="historyToggleText">くわしく見る</span> </button>
-                    </div>
-                    <div class="history-details" id="historyDetails">
-                        <div id="historyList"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                <div class="history-compact">
+                    <div class="history-summary">
+                        <div class="history-total">
+                            <div class="history-total-label">これまでのおこづかい合計</div>
+                            <div class="history-total-amount" id="totalReward">0円</div>
+                        </div>
+                        <button class="btn-show-history" id="toggleHistoryBtn">
+                            <span id="historyToggleText">くわしく見る</span> </button>
+                    </div>
+                    <div class="history-details" id="historyDetails">
+                        <div id="historyList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div class="modal" id="globalSettingsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>全体設定</h2>
-                <button class="close-btn" id="closeGlobalSettingsBtn">×</button>
-            </div>
-            <div class="setting-section">
-                <h3>アカウント管理（最大4人）</h3>
-                <div id="accountSettings"></div>
-                </div>
-            <div class="setting-section">
-                <h3>データのリセット</h3>
-                <div class="reset-buttons">
-                    <button class="btn-reset btn-reset-all" id="resetAllBtn">全データをリセット</button>
-                </div>
-            </div>
-            <button class="btn-save" id="saveGlobalSettingsBtn">保存</button>
-        </div>
-    </div>
+    <div class="modal" id="globalSettingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>全体設定</h2>
+                <button class="close-btn" id="closeGlobalSettingsBtn">×</button>
+            </div>
+            <div class="setting-section">
+                <h3>アカウント管理（最大4人）</h3>
+                <div id="accountSettings"></div>
+                <button class="btn-add-account-modal" id="addAccountInModalBtn">＋ アカウントを追加</button>
+            </div>
+            <div class="setting-section">
+                <h3>データのリセット</h3>
+                <div class="reset-buttons">
+                    <button class="btn-reset btn-reset-all" id="resetAllBtn">全データをリセット</button>
+                </div>
+            </div>
+            <button class="btn-save" id="saveGlobalSettingsBtn">保存</button>
+        </div>
+    </div>
 
-    <div class="modal" id="detailSettingsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="detailModalTitle">アカウント設定</h2>
-                <button class="close-btn" id="closeDetailSettingsBtn">×</button>
-            </div>
-            <div class="setting-section">
-                <h3>アカウント名</h3>
-                <div class="account-item">
-                    <input type="text" id="detailAccountNameInput">
-                </div>
-            </div>
-            <div class="setting-section">
-                <h3>チャレンジ管理</h3>
-                <div id="detailChallengeSettings"></div>
-                <button class="btn-add" id="addChallengeInDetailModalBtn">＋ チャレンジを追加</button>
-            </div>
-            <button class="btn-save" id="saveDetailSettingsBtn">保存</button>
-            <div class="setting-section">
-                <h3>データのリセット</h3>
-                <div class="reset-buttons">
-                    <button class="btn-reset btn-reset-child" id="resetCurrentBtn">このアカウントをリセット</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="modal" id="detailSettingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="detailModalTitle">アカウント設定</h2>
+                <button class="close-btn" id="closeDetailSettingsBtn">×</button>
+            </div>
+            <div class="setting-section">
+                <h3>アカウント名</h3>
+                <div class="account-item">
+                    <input type="text" id="detailAccountNameInput">
+                </div>
+            </div>
+            <div class="setting-section">
+                <h3>チャレンジ管理</h3>
+                <div id="detailChallengeSettings"></div>
+                <button class="btn-add" id="addChallengeInDetailModalBtn">＋ チャレンジを追加</button>
+            </div>
+            <button class="btn-save" id="saveDetailSettingsBtn">保存</button>
+            <div class="setting-section">
+                <h3>データのリセット</h3>
+                <div class="reset-buttons">
+                    <button class="btn-reset btn-reset-child" id="resetCurrentBtn">このアカウントをリセット</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div class="confirm-modal" id="confirmModal">
-        <div class="confirm-content">
-            <h3 id="confirmTitle">確認</h3>
-            <p id="confirmMessage"></p>
-            <div class="confirm-buttons">
-                <button class="btn-confirm btn-cancel" id="cancelBtn">キャンセル</button>
-                <button class="btn-confirm btn-confirm-action" id="confirmActionBtn">はい</button>
-            </div>
-        </div>
-    </div>
+    <div class="confirm-modal" id="confirmModal">
+        <div class="confirm-content">
+            <h3 id="confirmTitle">確認</h3>
+            <p id="confirmMessage"></p>
+            <div class="confirm-buttons">
+                <button class="btn-confirm btn-cancel" id="cancelBtn">キャンセル</button>
+                <button class="btn-confirm btn-confirm-action" id="confirmActionBtn">はい</button>
+            </div>
+        </div>
+    </div>
 
-    <div class="overlay" id="overlay"></div>
-    <div class="celebration" id="celebration">
-        <h2>おめでとう！🎉</h2>
-        <p id="celebrationText"></p>
-    </div>
+    <div class="overlay" id="overlay"></div>
+    <div class="celebration" id="celebration">
+        <h2>おめでとう！🎉</h2>
+        <p id="celebrationText"></p>
+    </div>
 
-    <script>
-        const MAX_ACCOUNTS = 4;
-        const STORAGE_KEY = 'challengeCoinData';
-        
-        let appData = { 
-            accounts: [],
-        };
-        let currentAccountIndex = -1;
-        let currentChallengeIndex = 0;
-        let confirmCallback = null;
+    <script>
+        const MAX_ACCOUNTS = 4;
+        const STORAGE_KEY = 'challengeCoinData';
+        
+        let appData = { 
+            accounts: [],
+        };
+        let currentAccountIndex = -1;
+        let currentChallengeIndex = 0;
+        let confirmCallback = null;
 
-        const $ = id => document.getElementById(id);
+        const $ = id => document.getElementById(id);
 
-        // データ保存・読み込み
-        function saveData() {
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-            } catch (e) {
-                console.error('保存エラー:', e);
-            }
-        }
+        // データ保存・読み込み
+        function saveData() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+            } catch (e) {
+                console.error('保存エラー:', e);
+            }
+        }
 
-        function loadData() {
-            try {
-                const saved = localStorage.getItem(STORAGE_KEY);
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    if (data && Array.isArray(data.accounts)) {
-                        data.accounts.forEach(acc => {
-                            if (!acc.challenges) acc.challenges = [];
-                            if (!acc.history) acc.history = [];
-                            
-                            // 旧データのマイグレーション処理
-                            if (typeof acc.coins === 'number') {
-                                if (acc.challenges.length === 0) {
-                                    acc.challenges.push({ name: 'お手伝い', value: 10, coins: 0, totalCoins: 0 });
-                                }
-                                if (acc.challenges.length > 0) {
-         
+        function loadData() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    if (data && Array.isArray(data.accounts)) {
+                        data.accounts.forEach(acc => {
+                            if (!acc.challenges) acc.challenges = [];
+                            if (!acc.history) acc.history = [];
+                            
+                            // 旧データのマイグレーション処理
+                            if (typeof acc.coins === 'number') {
+                                if (acc.challenges.length === 0) {
+                                    acc.challenges.push({ name: 'お手伝い', value: 10, coins: 0, totalCoins: 0 });
+                                }
+                                if (acc.challenges.length > 0) {
+                                    // 既存のcoinsを最初のチャレンジに統合 (簡易的な移行)
+                                    acc.challenges[0].coins += acc.coins; 
+                                    acc.challenges[0].totalCoins += acc.totalCoins || 0;
+                                }
+                                delete acc.coins;
+                                delete acc.totalCoins;
+                            }
+                        });
+                        appData = data;
+                    }
+                }
+                
+                // 初回起動時のデフォルトデータ設定
+                if (appData.accounts.length === 0) {
+                    appData.accounts.push({ 
+                        name: '（アカウント1）', 
+                        challenges: [
+                            { name: 'お手伝い', value: 10, coins: 0, totalCoins: 0 },
+                            { name: '習い事', value: 50, coins: 0, totalCoins: 0 }
+                        ],
+                        history: []
+                    });
+                    appData.accounts.push({ 
+                        name: '（アカウント2）', 
+                        challenges: [
+                            { name: '宿題', value: 20, coins: 0, totalCoins: 0 }
+                        ],
+                        history: []
+                    });
+                    saveData();
+                }
 
+                if (currentAccountIndex === -1 && appData.accounts.length > 0) {
+                    currentAccountIndex = 0; // 常に最初のアカウントを選択
+                }
+            } catch (e) {
+                console.error('読み込みエラー:', e);
+                // エラー時は初期データで上書き
+                appData.accounts = [
+                    { 
+                        name: '（アカウント1）', 
+                        challenges: [
+                            { name: 'お手伝い', value: 10, coins: 0, totalCoins: 0 },
+                            { name: '習い事', value: 50, coins: 0, totalCoins: 0 }
+                        ],
+                        history: []
+                    }
+                ];
+                currentAccountIndex = 0;
+                saveData();
+            }
+        }
+
+        // 画面制御
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            $(screenId).classList.add('active');
+
+            // ヘッダーボタンの表示制御
+            if (screenId === 'accountSelectScreen') {
+                $('headerTitle').textContent = 'Challenge Coin!';
+                $('backBtn').style.display = 'none';
+                $('globalSettingsBtn').style.display = 'flex';
+                $('detailSettingsBtn').style.display = 'none';
+                $('challengeButtonsContainer').style.display = 'none';
+            } else if (screenId === 'accountDetailScreen') {
+                const currentAccount = appData.accounts[currentAccountIndex];
+                $('headerTitle').textContent = currentAccount ? currentAccount.name : 'アカウント詳細';
+                $('backBtn').style.display = 'flex';
+                $('globalSettingsBtn').style.display = 'none';
+                $('detailSettingsBtn').style.display = 'flex';
+                $('challengeButtonsContainer').style.display = 'block';
+            }
+        }
+
+        // アカウントカードのレンダリング
+        function renderAccountCards() {
+            const list = $('accountList');
+            list.innerHTML = '';
+            
+            if (appData.accounts.length === 0) {
+                list.innerHTML = '<p class="history-empty">アカウントがありません。全体設定から追加してください。</p>';
+                return;
+            }
+
+            appData.accounts.forEach((account, index) => {
+                const totalCoins = account.challenges.reduce((sum, c) => sum + c.coins, 0);
+                const card = document.createElement('div');
+                card.className = 'account-card';
+                card.innerHTML = `
+                    <h3>${account.name || '名前なし'}</h3>
+                    <div class="coins-info">
+                        <span class="coins-number-list">${totalCoins}</span>
+                        <span>コイン</span>
+                    </div>
+                `;
+                card.onclick = () => selectAccount(index);
+                list.appendChild(card);
+            });
+            
+            // アカウント選択画面では、アカウントリストの下にボタンを追加しない（代わりに設定モーダル内に移動）
+        }
+
+        // アカウント選択
+        function selectAccount(index) {
+            if (index < 0 || index >= appData.accounts.length) return;
+            currentAccountIndex = index;
+            currentChallengeIndex = 0; // アカウント変更時に最初のチャレンジにリセット
+            renderChallengeButtons();
+            renderDetailScreen();
+            switchScreen('accountDetailScreen');
+        }
+
+        // チャレンジボタンのレンダリング
+        function renderChallengeButtons() {
+            const wrapper = $('challengeButtonsWrapper');
+            wrapper.innerHTML = '';
+            
+            const currentAccount = appData.accounts[currentAccountIndex];
+            if (!currentAccount || currentAccount.challenges.length === 0) {
+                 $('challengeButtonsContainer').style.display = 'none';
+                return;
+            }
+            $('challengeButtonsContainer').style.display = 'block';
+
+            currentAccount.challenges.forEach((challenge, index) => {
+                const button = document.createElement('button');
+                button.className = 'challenge-button' + (index === currentChallengeIndex ? ' active' : '');
+                button.textContent = challenge.name;
+                button.dataset.index = index;
+                button.onclick = () => selectChallenge(index);
+                wrapper.appendChild(button);
+            });
+        }
+
+        // チャレンジ選択
+        function selectChallenge(index) {
+            currentChallengeIndex = index;
+            renderChallengeButtons();
+            renderDetailScreen();
+        }
+
+        // 詳細画面のレンダリング
+        function renderDetailScreen() {
+            if (currentAccountIndex === -1) return;
+            
+            const account = appData.accounts[currentAccountIndex];
+            const challenge = account.challenges[currentChallengeIndex];
+            
+            // ヘッダータイトル更新
+            $('headerTitle').textContent = account.name || 'アカウント詳細';
+
+            // コイン表示部分
+            const totalCoins = account.challenges.reduce((sum, c) => sum + c.coins, 0);
+            
+            $('currentCoins').textContent = totalCoins.toLocaleString();
+            
+            let coinValue = 0;
+            let coinValueLabelText = 'チャレンジが設定されていません';
+            let totalCoinsLabelText = 'これまでのコイン合計';
+            
+            if (challenge) {
+                 coinValue = challenge.value;
+                 coinValueLabelText = `<strong>${challenge.value}円/1コイン</strong>`;
+                 $('coins-number').classList.remove('disabled');
+                 $('addCoinBtn').disabled = false;
+                 $('removeCoinBtn').disabled = totalCoins <= 0;
+            } else {
+                 $('coins-number').classList.add('disabled');
+                 $('addCoinBtn').disabled = true;
+                 $('removeCoinBtn').disabled = true;
+            }
+
+            // 現在のコインと等価価値の表示
+            $('coinValueLabel').innerHTML = `1コインあたり${coinValueLabelText}`;
+            $('currentValue').textContent = (totalCoins * coinValue).toLocaleString();
+            $('totalCoinsLabel').textContent = totalCoinsLabelText;
+            
+            // 総獲得コイン表示
+            const grandTotalCoins = account.challenges.reduce((sum, c) => sum + c.totalCoins, 0);
+            $('totalCoins').textContent = grandTotalCoins.toLocaleString();
+
+            // 交換ボタンの制御
+            $('exchangeInput').max = totalCoins;
+            $('exchangeBtn').disabled = totalCoins <= 0;
+
+            // 履歴表示
+            renderHistory();
+        }
+        
+        // コイン操作
+        function addCoin() {
+            if (currentAccountIndex === -1) return;
+            const account = appData.accounts[currentAccountIndex];
+            const challenge = account.challenges[currentChallengeIndex];
+            if (!challenge) return; // チャレンジがない場合は操作不可
+            
+            challenge.coins++;
+            challenge.totalCoins++; // 総獲得コインも増やす
+            
+            // 履歴に追加
+            account.history.unshift({
+                type: 'gain',
+                description: `${challenge.name}達成`,
+                amount: 1,
+                value: challenge.value,
+                timestamp: Date.now()
+            });
+
+            saveData();
+            renderDetailScreen();
+            // イベントを視覚化（紙吹雪など）
+        }
+
+        function removeCoin() {
+            if (currentAccountIndex === -1) return;
+            const account = appData.accounts[currentAccountIndex];
+            const challenge = account.challenges[currentChallengeIndex];
+            const totalCoins = account.challenges.reduce((sum, c) => sum + c.coins, 0);
+
+            if (totalCoins <= 0 || !challenge) return;
+            
+            // 現在のチャレンジから減らすのが自然だが、今回はアカウント全体のコイン総数から減らす処理に修正
+            // どのチャレンジから減らすかというロジックは複雑になるため、ここでは「最後のチャレンジ」から減らすという暫定的なルールを適用
+            // より正確には、どのチャレンジで獲得したコインを減らすかを選択する必要がある
+            
+            // 簡易的に、現在アクティブなチャレンジから減らす
+            if (challenge.coins > 0) {
+                 challenge.coins--;
+                 
+                 account.history.unshift({
+                    type: 'spend',
+                    description: `コイン利用（${challenge.name}分）`,
+                    amount: -1,
+                    value: 0, // 利用時は価値を0としておく
+                    timestamp: Date.now()
+                });
+            } else {
+                // アクティブなチャレンジにコインがない場合、他のチャレンジから探して減らす（ここでは省略）
+                // 現在はボタン制御で防ぐ
+            }
+
+            saveData();
+            renderDetailScreen();
+        }
+
+        // 交換処理
+        function handleExchange() {
+            if (currentAccountIndex === -1) return;
+            const account = appData.accounts[currentAccountIndex];
+            const exchangeInput = $('exchangeInput');
+            const exchangeAmount = parseInt(exchangeInput.value, 10);
+            const totalCoins = account.challenges.reduce((sum, c) => sum + c.coins, 0);
+            const currentCoinValue = account.challenges.length > 0 ? account.challenges[currentChallengeIndex].value : 0;
+            
+            if (isNaN(exchangeAmount) || exchangeAmount <= 0 || exchangeAmount > totalCoins) {
+                alert(`無効な交換コイン数です。1〜${totalCoins}の範囲で入力してください。`);
+                return;
+            }
+
+            const reward = exchangeAmount * currentCoinValue;
+            
+            // 確認モーダル表示
+            showConfirm(
+                'コインの交換',
+                `${exchangeAmount}コインを${reward.toLocaleString()}円のおこづかいに交換しますか？`,
+                '交換する',
+                'exchange-confirm',
+                () => {
+                    // 交換ロジックを実行
+                    let remaining = exchangeAmount;
+                    
+                    // コインを減らす（どのチャレンジから減らすかは、古いものからなど厳密なルールが必要だが、ここでは単純にチャレンジID順に減らす）
+                    for (const challenge of account.challenges) {
+                        const amountToTake = Math.min(remaining, challenge.coins);
+                        challenge.coins -= amountToTake;
+                        remaining -= amountToTake;
+                        if (remaining === 0) break;
+                    }
+
+                    // 履歴に交換記録を追加
+                    account.history.unshift({
+                        type: 'exchange',
+                        description: 'おこづかい交換',
+                        amount: -exchangeAmount,
+                        value: reward,
+                        timestamp: Date.now()
+                    });
+
+                    saveData();
+                    renderDetailScreen();
+                    showCelebration(reward.toLocaleString()); // お祝い表示
+                }
+            );
+        }
+
+        // 履歴表示の切り替え
+        function toggleHistoryDetails() {
+            const historyDetails = $('historyDetails');
+            const toggleText = $('historyToggleText');
+            if (historyDetails.classList.contains('show')) {
+                historyDetails.classList.remove('show');
+                toggleText.textContent = 'くわしく見る';
+            } else {
+                historyDetails.classList.add('show');
+                toggleText.textContent = '閉じる';
+            }
+        }
+
+        // 履歴のレンダリング
+        function renderHistory() {
+            if (currentAccountIndex === -1) return;
+            const account = appData.accounts[currentAccountIndex];
+            const list = $('historyList');
+            list.innerHTML = '';
+            
+            let totalReward = 0;
+
+            if (account.history.length === 0) {
+                list.innerHTML = '<div class="history-empty">履歴がありません。</div>';
+            } else {
+                account.history.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'history-item';
+                    
+                    const date = new Date(item.timestamp);
+                    const dateStr = `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+                    
+                    let amountStr = '';
+                    let amountClass = '';
+                    let rewardDisplay = '';
+                    
+                    if (item.type === 'gain') {
+                        amountStr = `+${item.amount}コイン`;
+                        amountClass = 'history-gain-amount';
+                        rewardDisplay = `(${item.value}円)`;
+                    } else if (item.type === 'exchange') {
+                        amountStr = `${item.amount}コイン`;
+                        amountClass = 'history-exchange-amount';
+                        rewardDisplay = `<span class="history-reward-amount">→ ${item.value.toLocaleString()}円</span>`;
+                        totalReward += item.value;
+                    } else if (item.type === 'spend') {
+                        amountStr = `${item.amount}コイン`;
+                        amountClass = 'history-spend-amount';
+                        rewardDisplay = '';
+                    }
+
+                    itemDiv.innerHTML = `
+                        <div>
+                            <div class="history-description">${item.description}</div>
+                            <div class="history-date">${dateStr}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="${amountClass}">${amountStr}</div>
+                            ${rewardDisplay}
+                        </div>
+                    `;
+                    list.appendChild(itemDiv);
+                });
+            }
+            
+            $('totalReward').textContent = totalReward.toLocaleString() + '円';
+        }
+
+        // グローバル設定モーダルのレンダリング
+        function renderGlobalSettingsModal() {
+            const accountSettings = $('accountSettings');
+            accountSettings.innerHTML = '';
+
+            appData.accounts.forEach((account, index) => {
+                const item = document.createElement('div');
+                item.className = 'account-item';
+                item.innerHTML = `
+                    <input type="text" value="${account.name}" data-index="${index}" class="account-name-input">
+                    <button class="btn-delete-account" data-index="${index}">削除</button>
+                `;
+                accountSettings.appendChild(item);
+            });
+            
+            // アカウント追加ボタンの有効/無効を切り替える
+            const addBtn = $('addAccountInModalBtn');
+            if (appData.accounts.length >= MAX_ACCOUNTS) {
+                addBtn.disabled = true;
+                addBtn.textContent = `アカウントを追加（最大${MAX_ACCOUNTS}人）`;
+            } else {
+                addBtn.disabled = false;
+                addBtn.textContent = '＋ アカウントを追加';
+            }
+
+            // 保存処理のためのイベントリスナーを再設定 (既存のinputに対するもの)
+            document.querySelectorAll('.account-name-input').forEach(input => {
+                input.onchange = (e) => {
+                    const index = parseInt(e.target.dataset.index, 10);
+                    appData.accounts[index].name = e.target.value;
+                };
+            });
+
+            // 削除ボタンのイベントリスナーを再設定
+            document.querySelectorAll('.btn-delete-account').forEach(button => {
+                button.onclick = (e) => {
+                    const index = parseInt(e.target.dataset.index, 10);
+                    deleteAccount(index);
+                };
+            });
+            
+            showModal('globalSettingsModal');
+        }
+        
+        // アカウント削除
+        function deleteAccount(index) {
+            showConfirm(
+                'アカウント削除',
+                `本当に「${appData.accounts[index].name}」アカウントを削除しますか？\n（データは完全に消去されます）`,
+                '削除する',
+                'btn-confirm-action',
+                () => {
+                    appData.accounts.splice(index, 1);
+                    if (currentAccountIndex === index) {
+                        currentAccountIndex = -1; // 削除したアカウントが選択中だった場合
+                    } else if (currentAccountIndex > index) {
+                        currentAccountIndex--; // インデックス調整
+                    }
+                    saveData();
+                    renderAccountSettings(); // モーダル内のアカウントリストを再レンダリング
+                    renderAccountCards(); // メイン画面を再レンダリング
+                    if (appData.accounts.length === 0) {
+                         closeModal('globalSettingsModal');
+                         switchScreen('accountSelectScreen');
+                    } else if (currentAccountIndex === -1) {
+                         currentAccountIndex = 0;
+                         selectAccount(0);
+                    }
+                }
+            );
+        }
+        
+        // モーダル内でアカウント追加ボタンを押したときの処理 (新規追加)
+        function addAccountInModal() {
+             if (appData.accounts.length >= MAX_ACCOUNTS) return;
+             
+             const newAccount = {
+                name: `（アカウント${appData.accounts.length + 1}）`,
+                challenges: [
+                    { name: 'お手伝い', value: 10, coins: 0, totalCoins: 0 } // デフォルトチャレンジ
+                ],
+                history: []
+             };
+             appData.accounts.push(newAccount);
+             saveData();
+             renderAccountSettings(); // モーダルを更新
+             renderAccountCards(); // メイン画面を更新
+        }
+        
+        // アカウント設定セクションのレンダリング（ボタンの有効/無効化を含む）
+        function renderAccountSettings() {
+             const accountSettings = $('accountSettings');
+             accountSettings.innerHTML = '';
+
+             appData.accounts.forEach((account, index) => {
+                const item = document.createElement('div');
+                item.className = 'account-item';
+                item.innerHTML = `
+                    <input type="text" value="${account.name}" data-index="${index}" class="account-name-input">
+                    <button class="btn-delete-account" data-index="${index}">削除</button>
+                `;
+                accountSettings.appendChild(item);
+             });
+            
+             // アカウント追加ボタンの有効/無効を切り替える
+             const addBtn = $('addAccountInModalBtn');
+             if (appData.accounts.length >= MAX_ACCOUNTS) {
+                 addBtn.disabled = true;
+                 addBtn.textContent = `アカウントを追加（最大${MAX_ACCOUNTS}人）`;
+             } else {
+                 addBtn.disabled = false;
+                 addBtn.textContent = '＋ アカウントを追加';
+             }
+
+             // 保存処理のためのイベントリスナーを再設定 (既存のinputに対するもの)
+             document.querySelectorAll('.account-name-input').forEach(input => {
+                 input.onchange = (e) => {
+                     const index = parseInt(e.target.dataset.index, 10);
+                     appData.accounts[index].name = e.target.value;
+                 };
+             });
+
+             // 削除ボタンのイベントリスナーを再設定
+             document.querySelectorAll('.btn-delete-account').forEach(button => {
+                 button.onclick = (e) => {
+                     const index = parseInt(e.target.dataset.index, 10);
+                     deleteAccount(index);
+                 };
+             });
+        }
+
+
+        // 詳細設定モーダルのレンダリング
+        function renderDetailSettingsModal() {
+            if (currentAccountIndex === -1) return;
+            const account = appData.accounts[currentAccountIndex];
+            
+            $('detailModalTitle').textContent = `「${account.name}」の設定`;
+            $('detailAccountNameInput').value = account.name;
+            
+            const challengeSettings = $('detailChallengeSettings');
+            challengeSettings.innerHTML = '';
+            
+            account.challenges.forEach((challenge, index) => {
+                const item = document.createElement('div');
+                item.className = 'challenge-item';
+                item.innerHTML = `
+                    <div class="challenge-header">
+                        <h4>チャレンジ ${index + 1}</h4>
+                        <button class="btn-delete-challenge" data-index="${index}">削除</button>
+                    </div>
+                    <div class="challenge-inputs-group">
+                        <label>チャレンジ名</label>
+                        <input type="text" value="${challenge.name}" data-index="${index}" data-field="name" class="challenge-input-field">
+                    </div>
+                    <div class="challenge-inputs-group">
+                        <label>報酬 (1コインあたり)</label>
+                        <div class="challenge-value-wrapper">
+                            <div class="input-with-suffix">
+                                <input type="number" min="1" value="${challenge.value}" data-index="${index}" data-field="value" class="challenge-input-field">
+                                <span class="suffix">円</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                challengeSettings.appendChild(item);
+            });
+            
+            // イベントリスナーの再設定
+            document.querySelectorAll('.challenge-input-field').forEach(input => {
+                input.onchange = (e) => {
+                    const index = parseInt(e.target.dataset.index, 10);
+                    const field = e.target.dataset.field;
+                    let value = e.target.value;
+                    
+                    if (field === 'value') {
+                        value = parseInt(value, 10);
+                        if (isNaN(value) || value < 1) {
+                            alert('報酬は1円以上の整数を入力してください。');
+                            e.target.value = account.challenges[index].value; // 元に戻す
+                            return;
+                        }
+                    }
+
+                    account.challenges[index][field] = value;
+                };
+            });
+            
+            document.querySelectorAll('.btn-delete-challenge').forEach(button => {
+                button.onclick = (e) => {
+                    const index = parseInt(e.target.dataset.index, 10);
+                    deleteChallenge(index);
+                };
+            });
+            
+            showModal('detailSettingsModal');
+        }
+
+        // チャレンジ削除
+        function deleteChallenge(index) {
+             const account = appData.accounts[currentAccountIndex];
+             showConfirm(
+                'チャレンジ削除',
+                `本当に「${account.challenges[index].name}」チャレンジを削除しますか？\n（このチャレンジで獲得したコインはそのまま残ります）`,
+                '削除する',
+                'btn-confirm-action',
+                () => {
+                    account.challenges.splice(index, 1);
+                    saveData();
+                    
+                    // 現在選択中のチャレンジを調整
+                    if (currentChallengeIndex === index) {
+                         currentChallengeIndex = 0;
+                    } else if (currentChallengeIndex > index) {
+                         currentChallengeIndex--;
+                    }
+                    
+                    renderDetailSettingsModal(); // モーダルを更新
+                    renderChallengeButtons(); // メイン画面のボタンを更新
+                }
+             );
+        }
+
+        // チャレンジ追加
+        function addChallenge() {
+            if (currentAccountIndex === -1) return;
+            const account = appData.accounts[currentAccountIndex];
+            
+            account.challenges.push({
+                name: `新しいチャレンジ${account.challenges.length + 1}`,
+                value: 10,
+                coins: 0,
+                totalCoins: 0
+            });
+            saveData();
+            renderDetailSettingsModal();
+        }
+        
+        // モーダル表示
+        function showModal(modalId) {
+            $('overlay').classList.add('show');
+            $(modalId).classList.add('show');
+        }
+        
+        // モーダルを閉じる
+        function closeModal(modalId) {
+            $(modalId).classList.remove('show');
+            $('overlay').classList.remove('show');
+            // 必要に応じてメイン画面を再レンダリング
+            if (modalId === 'globalSettingsModal' || modalId === 'detailSettingsModal') {
+                renderDetailScreen();
+                renderAccountCards();
+                renderChallengeButtons();
+            }
+        }
+        
+        // 確認モーダル表示
+        function showConfirm(title, message, actionText, actionClass, callback) {
+            $('confirmTitle').textContent = title;
+            $('confirmMessage').textContent = message;
+            $('confirmActionBtn').textContent = actionText;
+            $('confirmActionBtn').className = `btn-confirm ${actionClass}`;
+            confirmCallback = callback;
+            showModal('confirmModal');
+        }
+        
+        // 確認アクション実行
+        function executeConfirmAction() {
+            closeModal('confirmModal');
+            if (confirmCallback) {
+                confirmCallback();
+                confirmCallback = null;
+            }
+        }
+        
+        // 紙吹雪アニメーション
+        function createConfetti() {
+            const colors = ['#ff6b9d', '#a8e6cf', '#dae7f8', '#ffb3ba'];
+            const numConfetti = 50;
+            for (let i = 0; i < numConfetti; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = Math.random() * -20 + 'vh';
+                confetti.style.animation = `confetti-fall ${Math.random() * 3 + 2}s linear forwards`;
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                document.body.appendChild(confetti);
+                
+                // アニメーション終了後に削除
+                confetti.addEventListener('animationend', () => {
+                    confetti.remove();
+                });
+            }
+        }
+        
+        // お祝い表示
+        function showCelebration(rewardAmount) {
+             $('celebrationText').innerHTML = `${rewardAmount}円のおこづかいと交換しました！`;
+             $('celebration').classList.add('show');
+             $('overlay').classList.add('show');
+             createConfetti();
+             
+             // 3秒後に閉じる
+             setTimeout(() => {
+                 $('celebration').classList.remove('show');
+                 $('overlay').classList.remove('show');
+             }, 3000);
+        }
+        
+        // 全データリセット
+        function resetAllData() {
+            showConfirm(
+                '全データリセット',
+                'アプリの**全て**のデータ（アカウント、コイン、履歴など）を本当にリセットしますか？この操作は元に戻せません。',
+                '全リセット',
+                'btn-confirm-action',
+                () => {
+                    localStorage.removeItem(STORAGE_KEY);
+                    appData.accounts = [];
+                    currentAccountIndex = -1;
+                    loadData(); // 初期データで再ロード
+                    closeModal('globalSettingsModal');
+                    switchScreen('accountSelectScreen');
+                }
+            );
+        }
+
+        // 現在のアカウントをリセット
+        function resetCurrentAccount() {
+             if (currentAccountIndex === -1) return;
+             const account = appData.accounts[currentAccountIndex];
+             showConfirm(
+                'アカウントデータリセット',
+                `本当に「${account.name}」のコインと履歴をリセットしますか？（設定したチャレンジは残ります）`,
+                'リセット',
+                'btn-confirm-action',
+                () => {
+                    account.history = [];
+                    account.challenges.forEach(c => {
+                         c.coins = 0;
+                         c.totalCoins = 0;
+                    });
+                    saveData();
+                    closeModal('detailSettingsModal');
+                    renderDetailScreen();
+                    renderAccountCards(); // メイン画面のコイン数を更新
+                }
+             );
+        }
+
+
+        // イベントリスナーの設定
+        function attachEventListeners() {
+            // メイン画面
+            $('addCoinBtn').onclick = addCoin;
+            $('removeCoinBtn').onclick = removeCoin;
+            $('exchangeBtn').onclick = handleExchange;
+            $('toggleHistoryBtn').onclick = toggleHistoryDetails;
+            
+            // ヘッダーボタン
+            $('globalSettingsBtn').onclick = renderGlobalSettingsModal;
+            $('detailSettingsBtn').onclick = renderDetailSettingsModal;
+            $('backBtn').onclick = () => {
+                switchScreen('accountSelectScreen');
+                renderAccountCards();
+            };
+            
+            // グローバル設定モーダル
+            $('closeGlobalSettingsBtn').onclick = () => closeModal('globalSettingsModal');
+            $('saveGlobalSettingsBtn').onclick = () => closeModal('globalSettingsModal');
+            $('resetAllBtn').onclick = resetAllData;
+            // 🌟 追加したアカウント追加ボタンのイベントリスナー 🌟
+            $('addAccountInModalBtn').onclick = addAccountInModal; 
+            
+            // 詳細設定モーダル
+            $('closeDetailSettingsBtn').onclick = () => closeModal('detailSettingsModal');
+            $('saveDetailSettingsBtn').onclick = () => {
+                // アカウント名を手動で更新して保存
+                if (currentAccountIndex !== -1) {
+                    appData.accounts[currentAccountIndex].name = $('detailAccountNameInput').value;
+                }
+                saveData();
+                closeModal('detailSettingsModal');
+                renderDetailScreen(); // ヘッダータイトル更新のため
+            };
+            $('addChallengeInDetailModalBtn').onclick = addChallenge;
+            $('resetCurrentBtn').onclick = resetCurrentAccount;
+            
+            // 確認モーダル
+            $('cancelBtn').onclick = () => closeModal('confirmModal');
+            $('confirmActionBtn').onclick = executeConfirmAction;
+            
+            // オーバーレイ
+            $('overlay').onclick = (e) => {
+                 // クリックされたのがオーバーレイ自体で、かつ確認モーダルが表示されていない場合のみ閉じる
+                 if (e.target.id === 'overlay' && !$('confirmModal').classList.contains('show')) {
+                     closeModal('globalSettingsModal');
+                     closeModal('detailSettingsModal');
+                     $('celebration').classList.remove('show');
+                     $('overlay').classList.remove('show');
+                 }
+            };
+        }
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            attachEventListeners();
+            renderAccountCards();
+            if (currentAccountIndex !== -1) {
+                 // 初回はアカウント選択画面を表示し、ボタンで詳細に入る
+                 switchScreen('accountSelectScreen');
+                 // もしアカウントが1つしかない場合は、自動で詳細画面に遷移しても良いが、ここでは選択画面に留める
+            } else {
+                 switchScreen('accountSelectScreen');
+            }
+        });
+    </script>
+</body>
+</html>

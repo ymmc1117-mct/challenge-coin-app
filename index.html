@@ -1352,6 +1352,8 @@
             if (!currentChallenge || currentChallenge.coins <= 0) return;
 
             currentChallenge.coins -= 1;
+            currentChallenge.totalCoins -= 1; // ★修正箇所
+            
             saveData();
             renderCoinDisplay();
         }

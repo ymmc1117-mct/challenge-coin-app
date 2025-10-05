@@ -5,18 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <meta name="apple-mobile-web-app-capable" content="yes">
-    
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
     <meta name="apple-mobile-web-app-title" content="Coin">
-
     <link rel="manifest" href="manifest.json">
-
     <link rel="apple-touch-icon" href="icon-180.png"> 
-    
     <title>Challenge Coin!</title>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Varela+Round&display=swap" rel="stylesheet">
     <style>
+        /* CSSセクションは省略 (変更なし) */
         * {
             margin: 0;
             padding: 0;
@@ -40,7 +36,7 @@
         body {
             font-family: 'M PLUS Rounded 1c', 'Varela Round', sans-serif;
             background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-            min-height: 100vh; /* フルスクリーン時の高さを確保 */
+            min-height: 100vh;
             padding: 20px;
         }
 
@@ -159,7 +155,6 @@
             box-shadow: 0 4px 8px rgba(255, 107, 157, 0.2);
         }
 
-        /* チャレンジ切り替えエリアのスタイル調整 */
         .challenge-buttons-wrapper {
             display: flex;
             gap: 10px;
@@ -243,6 +238,15 @@
             transform: scale(0.98);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+        
+        .add-account-btn:disabled {
+            background-color: #f7e6e6;
+            border: 2px dashed #ccc;
+            color: #999;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
 
         .coins-display {
             background: #e6faff;
@@ -980,8 +984,7 @@
             <div class="setting-section">
                 <h3>アカウント管理（最大4人）</h3>
                 <div id="accountSettings"></div>
-                <button class="btn-add" id="addAccountBtn">＋ アカウントを追加</button>
-            </div>
+                </div>
             <div class="setting-section">
                 <h3>データのリセット</h3>
                 <div class="reset-buttons">
@@ -1068,7 +1071,7 @@
                             if (!acc.challenges) acc.challenges = [];
                             if (!acc.history) acc.history = [];
                             
-                            // 旧データのマイグレーション処理 (coins -> challenges[0].coins)
+                            // 旧データのマイグレーション処理
                             if (typeof acc.coins === 'number') {
                                 if (acc.challenges.length === 0) {
                                     acc.challenges.push({ name: 'お手伝い', value: 10, coins: 0, totalCoins: 0 });
@@ -1161,14 +1164,35 @@
                 list.appendChild(card);
             });
             
-            // アカウント追加ボタン
+            // アカウント追加ボタンのレンダリング
             const addButton = document.createElement('button');
             addButton.classList.add('add-account-btn');
-            addButton.textContent = '＋ 新しいアカウントを追加';
-            addButton.addEventListener('click', () => {
-                openGlobalSettingsModal();
-            });
+            addButton.id = 'addAccountBtnOnMain'; 
+            
+            if (appData.accounts.length >= MAX_ACCOUNTS) {
+                addButton.textContent = 'アカウントは最大4人までです';
+                addButton.disabled = true;
+            } else {
+                addButton.textContent = '＋ 新しいアカウントを追加';
+                addButton.disabled = false;
+                // クリックで直接アカウントを追加する関数を呼び出す
+                addButton.addEventListener('click', addNewAccountDirectly);
+            }
+
             list.appendChild(addButton);
+        }
+
+        // アカウントを直接追加する関数
+        function addNewAccountDirectly() {
+            if (appData.accounts.length < MAX_ACCOUNTS) {
+                appData.accounts.push({
+                    name: `アカウント ${appData.accounts.length + 1}`,
+                    challenges: [{ name: 'お手伝い', value: 10, coins: 0, totalCoins: 0 }],
+                    history: [],
+                });
+                saveData();
+                renderAccountSelectScreen(); // 画面を再描画
+            }
         }
 
         // 詳細画面（コイン操作画面）
@@ -1327,7 +1351,10 @@
             
             if (!currentChallenge || currentChallenge.coins <= 0) return;
 
+            // ★ ここを修正: 合計からも1枚減らす
             currentChallenge.coins -= 1;
+            currentChallenge.totalCoins -= 1; 
+            
             saveData();
             renderCoinDisplay();
         }
@@ -1387,8 +1414,6 @@
                 accountSettings.appendChild(item);
             });
 
-            $('addAccountBtn').disabled = appData.accounts.length >= MAX_ACCOUNTS;
-
             // イベントリスナー再設定
             document.querySelectorAll('.btn-delete-account').forEach(btn => {
                 btn.onclick = (e) => {
@@ -1398,7 +1423,9 @@
                             appData.accounts.splice(index, 1);
                             saveData();
                             renderGlobalSettings();
+                            if (currentAccountIndex === index) currentAccountIndex = -1; // 削除されたアカウントが現在のユーザーだった場合
                             showScreen('accountSelectScreen');
+                            hideModal('confirmModal'); 
                         }, '削除する', 'btn-confirm-action');
                     }
                 };
@@ -1462,6 +1489,7 @@
                             saveData();
                             renderDetailSettings();
                             renderDetailScreen();
+                            hideModal('confirmModal'); 
                         }, '削除する', 'btn-confirm-action');
                     }
                 };
@@ -1495,7 +1523,10 @@
             setTimeout(() => {
                 $('celebration').classList.remove('show');
                 $('overlay').classList.remove('show');
-                $('headerTitle').textContent = appData.accounts[currentAccountIndex]?.name || 'Challenge Coin!';
+                // 画面がアカウント選択画面に戻っていない場合のみタイトルを復元
+                if (currentAccountIndex !== -1) { 
+                    $('headerTitle').textContent = appData.accounts[currentAccountIndex]?.name || 'Challenge Coin!';
+                }
             }, 3000); // 3秒後に閉じる
         }
 
@@ -1527,20 +1558,13 @@
             
             // グローバル設定モーダル
             $('closeGlobalSettingsBtn').addEventListener('click', () => hideModal('globalSettingsModal'));
-            $('addAccountBtn').addEventListener('click', () => {
-                if (appData.accounts.length < MAX_ACCOUNTS) {
-                    appData.accounts.push({
-                        name: `アカウント ${appData.accounts.length + 1}`,
-                        challenges: [{ name: 'お手伝い', value: 10, coins: 0, totalCoins: 0 }],
-                        history: [],
-                    });
-                    renderGlobalSettings();
-                }
-            });
+            
             $('saveGlobalSettingsBtn').addEventListener('click', () => {
                 document.querySelectorAll('.account-name-input').forEach(input => {
                     const index = parseInt(input.dataset.index);
-                    appData.accounts[index].name = input.value.trim() || `アカウント ${index + 1}`;
+                    if (appData.accounts[index]) { 
+                         appData.accounts[index].name = input.value.trim() || `アカウント ${index + 1}`;
+                    }
                 });
                 saveData();
                 hideModal('globalSettingsModal');
@@ -1585,7 +1609,7 @@
             $('removeCoinBtn').addEventListener('click', removeCoin);
             
             // 交換機能
-            $('exchangeInput').addEventListener('input', renderCoinDisplay); // 入力値が変わったらボタンの状態を更新
+            $('exchangeInput').addEventListener('input', renderCoinDisplay);
             $('exchangeBtn').addEventListener('click', () => {
                 const exchangeAmount = parseInt($('exchangeInput').value);
                 const currentChallenge = appData.accounts[currentAccountIndex]?.challenges[currentChallengeIndex];
@@ -1649,6 +1673,7 @@
 
             // 確認モーダルのボタン
             $('cancelBtn').addEventListener('click', () => hideModal('confirmModal'));
+            
             $('confirmActionBtn').addEventListener('click', () => {
                 if (confirmCallback) {
                     confirmCallback();

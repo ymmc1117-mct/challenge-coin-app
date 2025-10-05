@@ -12,7 +12,7 @@
     <title>Challenge Coin!</title>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Varela+Round&display=swap" rel="stylesheet">
     <style>
-        /* CSSセクションは省略 (変更なし) */
+        /* CSSセクションは前回のコードと同一です */
         * {
             margin: 0;
             padding: 0;
@@ -236,7 +236,7 @@
         }
         .add-account-btn:active {
             transform: scale(0.98);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         .add-account-btn:disabled {
@@ -1260,10 +1260,7 @@
 
             $('currentCoins').textContent = currentChallenge.coins;
             $('currentValue').textContent = currentChallenge.coins * currentChallenge.value;
-            
-            // ★★★ 修正箇所 (1コイン = XX円 のみ表示) ★★★
-            $('coinValueLabel').innerHTML = `1コイン = <strong>${currentChallenge.value}</strong>円`;
-            // ★★★ 修正箇所 ここまで ★★★
+            $('coinValueLabel').innerHTML = `${currentChallenge.name} (1コイン = <strong>${currentChallenge.value}</strong>円)`;
             
             // 合計コイン表示
             const totalCoins = account.challenges.reduce((sum, chal) => sum + chal.totalCoins, 0);
@@ -1354,9 +1351,8 @@
             
             if (!currentChallenge || currentChallenge.coins <= 0) return;
 
-            // ★ 確実に両方（現在のコインと合計獲得コイン）を減算する修正
             currentChallenge.coins -= 1;
-            currentChallenge.totalCoins -= 1; 
+            currentChallenge.totalCoins -= 1; // ★修正箇所
             
             saveData();
             renderCoinDisplay();

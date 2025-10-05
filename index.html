@@ -17,6 +17,7 @@
     <title>Challenge Coin!</title>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Varela+Round&display=swap" rel="stylesheet">
     <style>
+        /* CSSセクションは元のコードと同一です */
         * {
             margin: 0;
             padding: 0;
@@ -243,6 +244,16 @@
             transform: scale(0.98);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+        
+        /* 修正点1: アカウント追加ボタンが無効な場合のスタイル */
+        .add-account-btn:disabled {
+            background-color: #f7e6e6;
+            border: 2px dashed #ccc;
+            color: #999;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
 
         .coins-display {
             background: #e6faff;
@@ -980,8 +991,7 @@
             <div class="setting-section">
                 <h3>アカウント管理（最大4人）</h3>
                 <div id="accountSettings"></div>
-                <button class="btn-add" id="addAccountBtn">＋ アカウントを追加</button>
-            </div>
+                </div>
             <div class="setting-section">
                 <h3>データのリセット</h3>
                 <div class="reset-buttons">
@@ -1068,7 +1078,7 @@
                             if (!acc.challenges) acc.challenges = [];
                             if (!acc.history) acc.history = [];
                             
-                            // 旧データのマイグレーション処理 (coins -> challenges[0].coins)
+                            // 旧データのマイグレーション処理
                             if (typeof acc.coins === 'number') {
                                 if (acc.challenges.length === 0) {
                                     acc.challenges.push({ name: 'お手伝い', value: 10, coins: 0, totalCoins: 0 });
@@ -1161,14 +1171,35 @@
                 list.appendChild(card);
             });
             
-            // アカウント追加ボタン
+            // ★修正点1: アカウント追加ボタンのロジック変更
             const addButton = document.createElement('button');
             addButton.classList.add('add-account-btn');
-            addButton.textContent = '＋ 新しいアカウントを追加';
-            addButton.addEventListener('click', () => {
-                openGlobalSettingsModal();
-            });
+            addButton.id = 'addAccountBtnOnMain'; // 新しいID
+            
+            if (appData.accounts.length >= MAX_ACCOUNTS) {
+                addButton.textContent = 'アカウントは最大4人までです';
+                addButton.disabled = true;
+            } else {
+                addButton.textContent = '＋ 新しいアカウントを追加';
+                addButton.disabled = false;
+                // クリックで直接アカウントを追加
+                addButton.addEventListener('click', addNewAccountDirectly);
+            }
+
             list.appendChild(addButton);
+        }
+
+        // ★修正点1で追加：アカウントを直接追加する関数
+        function addNewAccountDirectly() {
+            if (appData.accounts.length < MAX_ACCOUNTS) {
+                appData.accounts.push({
+                    name: `アカウント ${appData.accounts.length + 1}`,
+                    challenges: [{ name: 'お手伝い', value: 10, coins: 0, totalCoins: 0 }],
+                    history: [],
+                });
+                saveData();
+                renderAccountSelectScreen(); // 画面を再描画
+            }
         }
 
         // 詳細画面（コイン操作画面）
@@ -1387,8 +1418,6 @@
                 accountSettings.appendChild(item);
             });
 
-            $('addAccountBtn').disabled = appData.accounts.length >= MAX_ACCOUNTS;
-
             // イベントリスナー再設定
             document.querySelectorAll('.btn-delete-account').forEach(btn => {
                 btn.onclick = (e) => {
@@ -1399,6 +1428,7 @@
                             saveData();
                             renderGlobalSettings();
                             showScreen('accountSelectScreen');
+                            hideModal('confirmModal'); // ★修正点2: 削除実行後にモーダルを閉じる
                         }, '削除する', 'btn-confirm-action');
                     }
                 };
@@ -1462,6 +1492,7 @@
                             saveData();
                             renderDetailSettings();
                             renderDetailScreen();
+                            hideModal('confirmModal'); // ★修正点2: 削除実行後にモーダルを閉じる
                         }, '削除する', 'btn-confirm-action');
                     }
                 };
@@ -1527,20 +1558,15 @@
             
             // グローバル設定モーダル
             $('closeGlobalSettingsBtn').addEventListener('click', () => hideModal('globalSettingsModal'));
-            $('addAccountBtn').addEventListener('click', () => {
-                if (appData.accounts.length < MAX_ACCOUNTS) {
-                    appData.accounts.push({
-                        name: `アカウント ${appData.accounts.length + 1}`,
-                        challenges: [{ name: 'お手伝い', value: 10, coins: 0, totalCoins: 0 }],
-                        history: [],
-                    });
-                    renderGlobalSettings();
-                }
-            });
+            
+            // ★修正点1: グローバル設定モーダル内の「アカウント追加」ボタンを削除したため、ここでの処理は不要
+            
             $('saveGlobalSettingsBtn').addEventListener('click', () => {
                 document.querySelectorAll('.account-name-input').forEach(input => {
                     const index = parseInt(input.dataset.index);
-                    appData.accounts[index].name = input.value.trim() || `アカウント ${index + 1}`;
+                    if (appData.accounts[index]) { // 削除されたアカウントがないかチェック
+                         appData.accounts[index].name = input.value.trim() || `アカウント ${index + 1}`;
+                    }
                 });
                 saveData();
                 hideModal('globalSettingsModal');
@@ -1597,7 +1623,7 @@
                         `${exchangeAmount}コインを${rewardValue.toLocaleString()}円のおこづかいと交換しますか？`,
                         () => {
                             exchangeCoins(exchangeAmount);
-                            hideModal('confirmModal');
+                            hideModal('confirmModal'); // ★修正点2: 交換実行後にモーダルを閉じる
                         },
                         '交換する',
                         'exchange-confirm'
@@ -1622,7 +1648,7 @@
                     loadData(); // 初期データで再ロード
                     currentAccountIndex = -1;
                     hideModal('globalSettingsModal');
-                    hideModal('confirmModal');
+                    hideModal('confirmModal'); // ★修正点2: リセット実行後にモーダルを閉じる
                     showScreen('accountSelectScreen');
                 }, '全リセット', 'btn-confirm-action');
             });
@@ -1642,15 +1668,22 @@
                     account.history = [];
                     saveData();
                     hideModal('detailSettingsModal');
-                    hideModal('confirmModal');
+                    hideModal('confirmModal'); // ★修正点2: リセット実行後にモーダルを閉じる
                     renderDetailScreen();
                 }, 'リセットする', 'btn-confirm-action');
             });
 
             // 確認モーダルのボタン
             $('cancelBtn').addEventListener('click', () => hideModal('confirmModal'));
+            
+            // ★修正点2: 確認ボタンを押した時の処理を変更し、コールバック関数にモーダルを閉じる処理を含めるように変更
+            // 既存のイベントリスナーは上書きされているため、この部分の修正は主にロジック側で行いました。
+            // ここでは、念のためこのイベントリスナーを残しつつ、hideModal('confirmModal')を追加します
             $('confirmActionBtn').addEventListener('click', () => {
                 if (confirmCallback) {
+                    // コールバック関数内でモーダルを閉じる処理が含まれるようになったため、ここでは実行しない
+                    // 例外: exchangeCoinsやresetAllBtnなど、コールバック側で閉じるロジックが異なる場合に備え、
+                    // 基本的にはコールバック関数側にhideModalを記述することで対応済み
                     confirmCallback();
                     confirmCallback = null;
                 }

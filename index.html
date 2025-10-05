@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    
     <meta name="apple-mobile-web-app-capable" content="yes">
-    
+    
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
+    
     <meta name="apple-mobile-web-app-title" content="Coin">
 
     <link rel="manifest" href="manifest.json">
 
-    <link rel="apple-touch-icon" href="icon-180.png"> 
-    
+    <link rel="apple-touch-icon" href="icon-180.png"> 
+    
     <title>Challenge Coin!</title>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Varela+Round&display=swap" rel="stylesheet">
     <style>
@@ -123,7 +123,7 @@
         .challenge-buttons-container {
             padding: 10px 30px;
             background: white;
-            display: none; 
+            display: none; 
             gap: 10px;
             overflow-x: auto;
             border-bottom: 1px solid #eee;
@@ -191,7 +191,6 @@
         .account-list {
             display: grid;
             gap: 15px;
-            margin-bottom: 20px; /* 新しいボタンのためのスペース */
         }
 
         .account-card {
@@ -231,7 +230,7 @@
             background-color: #e6f7e9;
             border: 2px dashed #81c784;
             border-radius: 15px;
-            padding: 18px 25px; 
+            padding: 18px 25px; 
             cursor: pointer;
             text-align: center;
             font-size: 18px;
@@ -293,7 +292,7 @@
             font-weight: bold;
             color: #ff6b9d;
         }
-        
+        
         .coins-number.disabled {
             color: #ccc;
         }
@@ -321,7 +320,7 @@
             transform: scale(0.95);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
         }
-        
+        
         .coin-btn:disabled {
             background: #eee !important;
             color: #ccc !important;
@@ -344,7 +343,7 @@
             color: #333;
             font-weight: bold;
             margin-top: 10px;
-            display: flex; 
+            display: flex; 
             justify-content: center;
             align-items: center;
         }
@@ -400,7 +399,7 @@
             text-align: center;
             font-family: inherit;
         }
-        
+        
         .exchange-input span {
             font-size: 16px;
             color: #555;
@@ -624,7 +623,7 @@
             align-items: center;
             margin-bottom: 15px;
         }
-        
+        
         .challenge-header h4 {
             font-size: 16px;
         }
@@ -654,7 +653,7 @@
             align-items: center;
             gap: 5px;
         }
-        
+        
         .input-with-suffix {
             flex-grow: 1;
             position: relative;
@@ -830,7 +829,7 @@
             color: white;
             border: 1px solid #c62828;
         }
-        
+        
         .exchange-confirm {
             background: linear-gradient(135deg, #dae7f8 0%, #fde5f0 100%);
             color: #333 !important;
@@ -860,7 +859,7 @@
             color: #ff6b9d;
             margin-bottom: 20px;
         }
-        
+        
         .celebration-amount {
             color: #ff6b9d;
             font-weight: 800;
@@ -922,11 +921,10 @@
             <div class="challenge-buttons-wrapper" id="challengeButtonsWrapper">
             </div>
         </div>
-        
+        
         <div class="content">
             <div class="screen active" id="accountSelectScreen">
                 <div class="account-list" id="accountList"></div>
-                                <button class="add-account-btn" id="addAccountBtnSelect">＋ アカウントを追加</button>
             </div>
 
             <div class="screen" id="accountDetailScreen">
@@ -942,7 +940,7 @@
                         = <span id="currentValue">0</span>円
                     </div>
                     <div class="total-coins">
-                        <span id="totalCoinsLabel">これまでのコイン合計</span>: 
+                        <span id="totalCoinsLabel">これまでのコイン合計</span>: 
                         <span class="total-coins-number" id="totalCoins">0</span>コイン
                     </div>
                 </div>
@@ -982,7 +980,7 @@
             <div class="setting-section">
                 <h3>アカウント管理（最大4人）</h3>
                 <div id="accountSettings"></div>
-                                <button class="btn-add" id="addAccountBtnGlobal">＋ アカウントを追加</button>
+                <button class="btn-add" id="addAccountBtn">＋ アカウントを追加</button>
             </div>
             <div class="setting-section">
                 <h3>データのリセット</h3>
@@ -1041,8 +1039,8 @@
     <script>
         const MAX_ACCOUNTS = 4;
         const STORAGE_KEY = 'challengeCoinData';
-        
-        let appData = { 
+        
+        let appData = { 
             accounts: [],
         };
         let currentAccountIndex = -1;
@@ -1069,725 +1067,11 @@
                         data.accounts.forEach(acc => {
                             if (!acc.challenges) acc.challenges = [];
                             if (!acc.history) acc.history = [];
-                            
+                            
                             // 旧データのマイグレーション処理 (coins -> challenges[0].coins)
                             if (typeof acc.coins === 'number') {
                                 if (acc.challenges.length === 0) {
                                     acc.challenges.push({ name: 'お手伝い', value: 10, coins: 0, totalCoins: 0 });
                                 }
                                 if (acc.challenges.length > 0) {
-                                    acc.challenges[0].coins = acc.coins;
-                                    acc.challenges[0].totalCoins = acc.totalCoins || acc.coins;
-                                }
-                                delete acc.coins;
-                                delete acc.totalCoins;
-                                saveData(); // マイグレーション後に保存
-                            }
-                            
-                            // チャレンジのデフォルト値設定
-                            if (acc.challenges.length === 0) {
-                                acc.challenges.push(getDefaultChallenge('お手伝い', 10));
-                            }
-                            
-                            // データ構造の不足を補完
-                            acc.challenges.forEach(chal => {
-                                if (typeof chal.coins !== 'number') chal.coins = 0;
-                                if (typeof chal.totalCoins !== 'number') chal.totalCoins = 0;
-                            });
-                        });
-                        appData = data;
-                    } else {
-                        initializeData();
-                    }
-                } else {
-                    initializeData();
-                }
-            } catch (e) {
-                console.error('読み込みエラー:', e);
-                initializeData();
-            }
-        }
-
-        // 初期データ設定
-        function getDefaultChallenge(name, value) {
-            return { name: name, value: value, coins: 0, totalCoins: 0 };
-        }
-
-        function initializeData() {
-            appData.accounts = [
-                { name: 'アカウント1', challenges: [getDefaultChallenge('お手伝い', 10), getDefaultChallenge('チャレンジ2', 50)], rewardValue: 10, totalReward: 0 },
-                { name: 'アカウント2', challenges: [getDefaultChallenge('お手伝い', 10), getDefaultChallenge('チャレンジ2', 50)], rewardValue: 10, totalReward: 0 },
-            ];
-            saveData();
-        }
-
-        // 画面切り替え
-        function showScreen(screenId) {
-            const screens = document.querySelectorAll('.screen');
-            screens.forEach(screen => {
-                screen.classList.remove('active');
-            });
-            $(screenId).classList.add('active');
-
-            if (screenId === 'accountSelectScreen') {
-                $('headerTitle').textContent = 'Challenge Coin!';
-                $('backBtn').style.display = 'none';
-                $('globalSettingsBtn').style.display = 'flex';
-                $('detailSettingsBtn').style.display = 'none';
-                $('challengeButtonsContainer').style.display = 'none';
-                currentAccountIndex = -1;
-                renderAccountList();
-            } else if (screenId === 'accountDetailScreen') {
-                const account = appData.accounts[currentAccountIndex];
-                $('headerTitle').textContent = account.name;
-                $('backBtn').style.display = 'flex';
-                $('globalSettingsBtn').style.display = 'none';
-                $('detailSettingsBtn').style.display = 'flex';
-                $('challengeButtonsContainer').style.display = 'block';
-                renderChallengeButtons();
-                updateDetailScreen();
-            }
-        }
-
-        // アカウントリストの描画
-        function renderAccountList() {
-            const accountList = $('accountList');
-            accountList.innerHTML = '';
-            appData.accounts.forEach((account, index) => {
-                const totalCoins = account.challenges.reduce((sum, chal) => sum + chal.coins, 0);
-                const card = document.createElement('div');
-                card.className = 'account-card';
-                card.dataset.index = index;
-                card.innerHTML = `
-                    <h3>${escapeHtml(account.name)}</h3>
-                    <div class="coins-info">
-                        <span class="coins-number-list">${totalCoins}</span>
-                        <span>コイン</span>
-                    </div>
-                `;
-                card.addEventListener('click', () => selectAccount(index));
-                accountList.appendChild(card);
-            });
-            
-            // アカウント追加ボタンの表示制御 (既にHTMLで配置されているため、ここでは制御しない)
-            const addBtn = $('addAccountBtnSelect');
-            if (appData.accounts.length >= MAX_ACCOUNTS) {
-                addBtn.style.display = 'none';
-            } else {
-                addBtn.style.display = 'block';
-            }
-        }
-
-        // アカウント選択
-        function selectAccount(index) {
-            currentAccountIndex = index;
-            currentChallengeIndex = 0; // アカウント選択時は最初のチャレンジに設定
-            showScreen('accountDetailScreen');
-        }
-
-        // チャレンジボタンの描画
-        function renderChallengeButtons() {
-            const wrapper = $('challengeButtonsWrapper');
-            wrapper.innerHTML = '';
-            const account = appData.accounts[currentAccountIndex];
-            
-            account.challenges.forEach((challenge, index) => {
-                const button = document.createElement('button');
-                button.className = 'challenge-button';
-                if (index === currentChallengeIndex) {
-                    button.classList.add('active');
-                }
-                button.textContent = escapeHtml(challenge.name);
-                button.dataset.index = index;
-                button.addEventListener('click', () => selectChallenge(index));
-                wrapper.appendChild(button);
-            });
-            
-            if (account.challenges.length === 0) {
-                $('challengeButtonsContainer').style.display = 'none';
-            } else {
-                $('challengeButtonsContainer').style.display = 'block';
-            }
-        }
-
-        // チャレンジ選択
-        function selectChallenge(index) {
-            if (currentChallengeIndex === index) return;
-            currentChallengeIndex = index;
-            renderChallengeButtons();
-            updateDetailScreen();
-        }
-
-        // 詳細画面の更新
-        function updateDetailScreen() {
-            const account = appData.accounts[currentAccountIndex];
-            const challenge = account.challenges[currentChallengeIndex];
-            
-            // コイン表示
-            $('currentCoins').textContent = challenge ? challenge.coins : 0;
-            $('currentValue').textContent = challenge ? challenge.coins * account.rewardValue : 0;
-            $('coinValueLabel').innerHTML = challenge ? `<strong>${challenge.value}</strong>コイン = <strong>${challenge.value * account.rewardValue}</strong>円` : '';
-            $('totalCoins').textContent = challenge ? challenge.totalCoins : 0;
-            $('totalCoinsLabel').textContent = challenge ? `${challenge.name}でのこれまでのコイン合計` : 'これまでのコイン合計';
-            
-            const isChallengeAvailable = !!challenge;
-
-            // ボタン制御
-            $('addCoinBtn').disabled = !isChallengeAvailable;
-            $('removeCoinBtn').disabled = !isChallengeAvailable || challenge.coins <= 0;
-            $('exchangeBtn').disabled = !isChallengeAvailable || challenge.coins < 1;
-            $('exchangeInput').disabled = !isChallengeAvailable;
-            $('exchangeInput').value = challenge && challenge.coins > 0 ? 1 : '';
-            
-            $('currentCoins').classList.toggle('disabled', !isChallengeAvailable);
-            
-            $('totalReward').textContent = `${account.totalReward}円`;
-            renderHistory();
-        }
-
-        // コイン追加
-        function addCoin() {
-            const account = appData.accounts[currentAccountIndex];
-            const challenge = account.challenges[currentChallengeIndex];
-            if (!challenge) return;
-
-            challenge.coins++;
-            challenge.totalCoins++;
-            account.history.unshift({
-                type: 'add',
-                challengeName: challenge.name,
-                coins: 1,
-                date: new Date().toISOString()
-            });
-            saveData();
-            updateDetailScreen();
-            
-            if (challenge.coins % 10 === 0) { // 10コインごとに祝福
-                showCelebration(`やったね！${challenge.coins}コイン貯まったよ！`);
-            }
-        }
-
-        // コイン削除
-        function removeCoin() {
-            const account = appData.accounts[currentAccountIndex];
-            const challenge = account.challenges[currentChallengeIndex];
-            if (!challenge || challenge.coins <= 0) return;
-
-            challenge.coins--;
-            account.history.unshift({
-                type: 'remove',
-                challengeName: challenge.name,
-                coins: -1,
-                date: new Date().toISOString()
-            });
-            saveData();
-            updateDetailScreen();
-        }
-
-        // コイン交換処理
-        function exchangeCoins() {
-            const exchangeInput = $('exchangeInput');
-            const count = parseInt(exchangeInput.value);
-            
-            const account = appData.accounts[currentAccountIndex];
-            const totalCoins = account.challenges.reduce((sum, chal) => sum + chal.coins, 0);
-
-            if (isNaN(count) || count <= 0) {
-                alert('有効なコイン数を入力してください。');
-                return;
-            }
-            
-            if (count > totalCoins) {
-                alert(`コインが不足しています。現在の合計: ${totalCoins}コイン`);
-                return;
-            }
-
-            const reward = count * account.rewardValue;
-
-            showConfirmModal(
-                '交換の確認',
-                `${count}コインを${reward}円のおこづかいと交換しますか？`,
-                '交換する',
-                'exchange-confirm',
-                () => {
-                    // コインを減らす（どのチャレンジから減らすかは今回は単純に均等に減らすか、あるいは実装を簡略化する）
-                    // 今回は、合計コインを減らす形に修正。
-
-                    let remainingToDeduct = count;
-                    
-                    // まずは現在のチャレンジから減らす
-                    if (account.challenges[currentChallengeIndex]) {
-                        const chal = account.challenges[currentChallengeIndex];
-                        const deductFromCurrent = Math.min(remainingToDeduct, chal.coins);
-                        chal.coins -= deductFromCurrent;
-                        remainingToDeduct -= deductFromCurrent;
-                    }
-
-                    // 残りを他のチャレンジから順次減らす
-                    for (let i = 0; i < account.challenges.length && remainingToDeduct > 0; i++) {
-                        if (i === currentChallengeIndex) continue;
-                        
-                        const chal = account.challenges[i];
-                        const deduct = Math.min(remainingToDeduct, chal.coins);
-                        chal.coins -= deduct;
-                        remainingToDeduct -= deduct;
-                    }
-                    
-                    account.totalReward += reward;
-                    
-                    account.history.unshift({
-                        type: 'exchange',
-                        coins: -count,
-                        reward: reward,
-                        date: new Date().toISOString()
-                    });
-                    
-                    saveData();
-                    updateDetailScreen();
-                    showCelebration(`${reward}円のおこづかいと交換したよ！✨`);
-                }
-            );
-        }
-
-        // 履歴表示のトグル
-        function toggleHistory() {
-            const historyDetails = $('historyDetails');
-            const toggleText = $('historyToggleText');
-            historyDetails.classList.toggle('show');
-            toggleText.textContent = historyDetails.classList.contains('show') ? '閉じる' : 'くわしく見る';
-        }
-
-        // 履歴の描画
-        function renderHistory() {
-            const historyList = $('historyList');
-            historyList.innerHTML = '';
-            const account = appData.accounts[currentAccountIndex];
-
-            if (account.history.length === 0) {
-                historyList.innerHTML = '<div class="history-empty">まだ履歴はありません</div>';
-                return;
-            }
-
-            account.history.forEach(item => {
-                const date = new Date(item.date);
-                const dateString = date.toLocaleDateString('ja-JP') + ' ' + date.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
-
-                let description = '';
-                let amountText = '';
-
-                if (item.type === 'add') {
-                    description = `${escapeHtml(item.challengeName)} 達成`;
-                    amountText = `+${item.coins}コイン`;
-                } else if (item.type === 'remove') {
-                    description = `${escapeHtml(item.challengeName)} 修正`;
-                    amountText = `${item.coins}コイン`;
-                } else if (item.type === 'exchange') {
-                    description = `おこづかい交換`;
-                    amountText = `<span style="color: #4caf50;">${item.reward}円</span> (${item.coins}コイン)`;
-                }
-
-                const itemHtml = `
-                    <div class="history-item">
-                        <div>
-                            <div class.history-description">${description}</div>
-                            <div class="history-date">${dateString}</div>
-                        </div>
-                        <div class="history-reward-amount">${amountText}</div>
-                    </div>
-                `;
-                historyList.insertAdjacentHTML('beforeend', itemHtml);
-            });
-        }
-        
-        // モーダル表示/非表示
-        function showModal(modalId) {
-            $(modalId).classList.add('show');
-            $('overlay').classList.add('show');
-        }
-
-        function hideModal(modalId) {
-            $(modalId).classList.remove('show');
-            if (!$('globalSettingsModal').classList.contains('show') && !$('detailSettingsModal').classList.contains('show') && !$('confirmModal').classList.contains('show')) {
-                $('overlay').classList.remove('show');
-            }
-        }
-        
-        // 全体設定モーダル
-        function openGlobalSettings() {
-            renderAccountSettings();
-            showModal('globalSettingsModal');
-        }
-
-        function closeGlobalSettings() {
-            hideModal('globalSettingsModal');
-            renderAccountList(); // 変更があったかもしれないので再描画
-        }
-
-        // 詳細設定モーダル
-        function openDetailSettings() {
-            if (currentAccountIndex === -1) return;
-            const account = appData.accounts[currentAccountIndex];
-            
-            $('detailModalTitle').textContent = `${account.name} の設定`;
-            $('detailAccountNameInput').value = account.name;
-            renderChallengeSettings(account);
-            
-            // リセットボタンのIDをアカウントインデックスで分けておく（イベントリスナー用）
-            $('resetCurrentBtn').dataset.index = currentAccountIndex;
-
-            showModal('detailSettingsModal');
-        }
-
-        function closeDetailSettings() {
-            hideModal('detailSettingsModal');
-            if (currentAccountIndex !== -1) {
-                renderChallengeButtons(); // チャレンジが変更された可能性があるので更新
-                updateDetailScreen(); // 画面を最新の状態に
-            }
-        }
-
-        // アカウント設定の描画（全体設定モーダル内）
-        function renderAccountSettings() {
-            const accountSettings = $('accountSettings');
-            accountSettings.innerHTML = '';
-            
-            appData.accounts.forEach((account, index) => {
-                const item = document.createElement('div');
-                item.className = 'account-item';
-                item.innerHTML = `
-                    <input type="text" value="${escapeHtml(account.name)}" data-account-index="${index}" data-field="name">
-                    <button class="btn-delete-account" data-delete-index="${index}">削除</button>
-                `;
-                accountSettings.appendChild(item);
-            });
-            
-            document.querySelectorAll('#accountSettings .btn-delete-account').forEach(btn => {
-                btn.addEventListener('click', event => deleteAccount(parseInt(event.currentTarget.dataset.deleteIndex)));
-            });
-            
-            // アカウント追加ボタンの有効/無効
-            const addBtn = $('addAccountBtnGlobal');
-            addBtn.disabled = appData.accounts.length >= MAX_ACCOUNTS;
-            addBtn.textContent = addBtn.disabled ? `アカウントを追加（最大${MAX_ACCOUNTS}人）` : '＋ アカウントを追加';
-        }
-        
-        // チャレンジ設定の描画（詳細設定モーダル内）
-        function renderChallengeSettings(account) {
-            const challengeSettings = $('detailChallengeSettings');
-            challengeSettings.innerHTML = '';
-            
-            account.challenges.forEach((challenge, index) => {
-                const item = document.createElement('div');
-                item.className = 'challenge-item';
-                item.innerHTML = `
-                    <div class="challenge-header">
-                        <h4>チャレンジ #${index + 1}</h4>
-                        <button class="btn-delete-challenge" data-challenge-index="${index}">削除</button>
-                    </div>
-                    <div class="challenge-inputs-group">
-                        <label>チャレンジ名</label>
-                        <input type="text" value="${escapeHtml(challenge.name)}" data-challenge-index="${index}" data-field="name">
-                    </div>
-                    <div class="challenge-inputs-group">
-                        <label>獲得コイン数 (1回あたり)</label>
-                        <div class="challenge-value-wrapper">
-                            <div class="input-with-suffix">
-                                <input type="number" min="1" value="${challenge.value}" data-challenge-index="${index}" data-field="value">
-                                <span class="suffix">コイン</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                challengeSettings.appendChild(item);
-            });
-            
-            document.querySelectorAll('#detailChallengeSettings .btn-delete-challenge').forEach(btn => {
-                btn.addEventListener('click', event => deleteChallenge(parseInt(event.currentTarget.dataset.challengeIndex)));
-            });
-        }
-
-        // 新しいアカウントの追加
-        function addAccount() {
-            if (appData.accounts.length >= MAX_ACCOUNTS) {
-                alert(`アカウントは最大${MAX_ACCOUNTS}人までです。`);
-                return;
-            }
-            
-            const newName = `アカウント${appData.accounts.length + 1}`;
-            appData.accounts.push({
-                name: newName,
-                challenges: [getDefaultChallenge('お手伝い', 10)],
-                rewardValue: 10,
-                totalReward: 0,
-                history: []
-            });
-            
-            saveData();
-            // モーダルが開いていれば更新、そうでなければリストを更新
-            if ($('globalSettingsModal').classList.contains('show')) {
-                renderAccountSettings();
-            } else {
-                renderAccountList();
-            }
-        }
-
-        // アカウントの削除
-        function deleteAccount(index) {
-            showConfirmModal(
-                'アカウント削除の確認',
-                `${appData.accounts[index].name} のデータを完全に削除します。よろしいですか？`,
-                '削除する',
-                'btn-confirm-action',
-                () => {
-                    appData.accounts.splice(index, 1);
-                    saveData();
-                    renderAccountSettings();
-                    
-                    // 現在表示中のアカウントが削除された場合、選択画面に戻る
-                    if (currentAccountIndex === index || appData.accounts.length === 0) {
-                        showScreen('accountSelectScreen');
-                    }
-                }
-            );
-        }
-        
-        // 新しいチャレンジの追加（詳細設定モーダル内）
-        function addChallengeInDetailModal() {
-            if (currentAccountIndex === -1) return;
-            
-            const account = appData.accounts[currentAccountIndex];
-            const newIndex = account.challenges.length + 1;
-            account.challenges.push(getDefaultChallenge(`チャレンジ${newIndex}`, 10));
-            
-            renderChallengeSettings(account);
-        }
-
-        // チャレンジの削除（詳細設定モーダル内）
-        function deleteChallenge(index) {
-            if (currentAccountIndex === -1) return;
-            const account = appData.accounts[currentAccountIndex];
-            const challengeName = account.challenges[index].name;
-            
-            showConfirmModal(
-                'チャレンジ削除の確認',
-                `${challengeName} のデータを完全に削除します。よろしいですか？`,
-                '削除する',
-                'btn-confirm-action',
-                () => {
-                    account.challenges.splice(index, 1);
-                    saveData();
-                    renderChallengeSettings(account);
-                    
-                    // 現在選択中のチャレンジが削除された場合、選択をリセット
-                    if (currentChallengeIndex >= account.challenges.length) {
-                        currentChallengeIndex = account.challenges.length > 0 ? account.challenges.length - 1 : 0;
-                    }
-                    // 画面表示を更新するために設定モーダルを閉じるときに再描画する
-                }
-            );
-        }
-
-        // 全体設定の保存
-        function saveGlobalSettings() {
-            const accountInputs = document.querySelectorAll('#accountSettings input[type="text"]');
-            
-            accountInputs.forEach(input => {
-                const index = parseInt(input.dataset.accountIndex);
-                if (appData.accounts[index]) {
-                    appData.accounts[index].name = input.value.trim() || `アカウント${index + 1}`;
-                }
-            });
-            
-            saveData();
-            closeGlobalSettings();
-        }
-
-        // 詳細設定の保存
-        function saveDetailSettings() {
-            if (currentAccountIndex === -1) return;
-            const account = appData.accounts[currentAccountIndex];
-            
-            // アカウント名の保存
-            const newName = $('detailAccountNameInput').value.trim();
-            account.name = newName || `アカウント${currentAccountIndex + 1}`;
-            $('headerTitle').textContent = account.name; // ヘッダーも更新
-
-            // チャレンジ設定の保存
-            const challengeItems = document.querySelectorAll('#detailChallengeSettings .challenge-item');
-            
-            challengeItems.forEach(item => {
-                const nameInput = item.querySelector('input[data-field="name"]');
-                const valueInput = item.querySelector('input[data-field="value"]');
-                const index = parseInt(nameInput.dataset.challengeIndex);
-                
-                if (account.challenges[index]) {
-                    account.challenges[index].name = nameInput.value.trim() || `チャレンジ${index + 1}`;
-                    const newValue = parseInt(valueInput.value);
-                    account.challenges[index].value = isNaN(newValue) || newValue < 1 ? 1 : newValue;
-                }
-            });
-            
-            saveData();
-            closeDetailSettings();
-        }
-
-        // 全データリセット
-        function resetAllData() {
-            showConfirmModal(
-                '全データリセットの確認',
-                '全てのアカウント情報、コイン、履歴を完全に削除します。本当によろしいですか？',
-                'リセット',
-                'btn-confirm-action',
-                () => {
-                    localStorage.removeItem(STORAGE_KEY);
-                    initializeData();
-                    closeGlobalSettings();
-                    showScreen('accountSelectScreen');
-                    currentAccountIndex = -1;
-                }
-            );
-        }
-
-        // 現在のアカウントをリセット
-        function resetCurrentAccount(event) {
-            const index = parseInt(event.currentTarget.dataset.index);
-            const account = appData.accounts[index];
-            
-            showConfirmModal(
-                `${account.name} のリセットの確認`,
-                `アカウント ${account.name} のコインと履歴を全てリセットします。よろしいですか？`,
-                'リセット',
-                'btn-confirm-action',
-                () => {
-                    account.challenges.forEach(chal => {
-                        chal.coins = 0;
-                        chal.totalCoins = 0;
-                    });
-                    account.totalReward = 0;
-                    account.history = [];
-                    
-                    saveData();
-                    closeDetailSettings();
-                    updateDetailScreen();
-                }
-            );
-        }
-
-        // 確認モーダル表示
-        function showConfirmModal(title, message, confirmText, confirmClass, callback) {
-            $('confirmTitle').textContent = title;
-            $('confirmMessage').textContent = message;
-            $('confirmActionBtn').textContent = confirmText;
-            $('confirmActionBtn').className = `btn-confirm ${confirmClass}`;
-            
-            confirmCallback = () => {
-                callback();
-                hideModal('confirmModal');
-            };
-            
-            $('confirmActionBtn').onclick = confirmCallback;
-            $('cancelBtn').onclick = () => hideModal('confirmModal');
-            
-            showModal('confirmModal');
-        }
-
-        // 祝福アニメーション
-        function showCelebration(message) {
-            $('celebrationText').innerHTML = message;
-            $('celebration').classList.add('show');
-            $('overlay').classList.add('show');
-            
-            // 紙吹雪
-            const confettiColors = ['#ff6b9d', '#ffc8d9', '#a8e6cf', '#dae7f8', '#fcb69f'];
-            const confettiCount = 50;
-            for (let i = 0; i < confettiCount; i++) {
-                const c = document.createElement('div');
-                c.className = 'confetti';
-                c.style.backgroundColor = confettiColors[Math.floor(Math.random() * confettiColors.length)];
-                c.style.left = `${Math.random() * 100}vw`;
-                c.style.animation = `confetti-fall ${2 + Math.random() * 3}s ease-in-out infinite`;
-                c.style.animationDelay = `${-Math.random() * 3}s`;
-                document.body.appendChild(c);
-
-                setTimeout(() => c.remove(), 5000);
-            }
-
-            setTimeout(() => {
-                $('celebration').classList.remove('show');
-                if (!$('globalSettingsModal').classList.contains('show') && !$('detailSettingsModal').classList.contains('show') && !$('confirmModal').classList.contains('show')) {
-                    $('overlay').classList.remove('show');
-                }
-                document.querySelectorAll('.confetti').forEach(c => c.remove());
-            }, 3000);
-        }
-        
-        // HTMLエスケープ処理（セキュリティ対策）
-        function escapeHtml(str) {
-            if (typeof str !== 'string') return str;
-            return str.replace(/[&<>"']/g, function(match) {
-                return {
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    '"': '&quot;',
-                    "'": '&#39;'
-                }[match];
-            });
-        }
-
-
-        // イベントリスナーの設定
-        function setupEventListeners() {
-            $('globalSettingsBtn').addEventListener('click', openGlobalSettings);
-            $('closeGlobalSettingsBtn').addEventListener('click', closeGlobalSettings);
-            $('saveGlobalSettingsBtn').addEventListener('click', saveGlobalSettings);
-            
-            // 修正: グローバル設定モーダル内の追加ボタンのIDを修正
-            $('addAccountBtnGlobal').addEventListener('click', addAccount);
-            
-            // 修正: アカウント選択画面内の追加ボタンのイベントリスナーを追加
-            $('addAccountBtnSelect').addEventListener('click', addAccount);
-
-            $('resetAllBtn').addEventListener('click', resetAllData);
-            
-            $('backBtn').addEventListener('click', () => showScreen('accountSelectScreen'));
-            $('detailSettingsBtn').addEventListener('click', openDetailSettings);
-            
-            $('closeDetailSettingsBtn').addEventListener('click', closeDetailSettings);
-            $('saveDetailSettingsBtn').addEventListener('click', saveDetailSettings);
-            $('addChallengeInDetailModalBtn').addEventListener('click', addChallengeInDetailModal);
-            $('resetCurrentBtn').addEventListener('click', resetCurrentAccount);
-            
-            $('addCoinBtn').addEventListener('click', addCoin);
-            $('removeCoinBtn').addEventListener('click', removeCoin);
-            
-            $('exchangeBtn').addEventListener('click', exchangeCoins);
-            $('exchangeInput').addEventListener('input', () => {
-                const input = $('exchangeInput');
-                const account = appData.accounts[currentAccountIndex];
-                const totalCoins = account ? account.challenges.reduce((sum, chal) => sum + chal.coins, 0) : 0;
-
-                if (parseInt(input.value) > totalCoins) {
-                    input.value = totalCoins > 0 ? totalCoins : 1;
-                }
-                if (parseInt(input.value) < 1) {
-                    input.value = 1;
-                }
-                $('exchangeBtn').disabled = totalCoins < 1 || parseInt(input.value) <= 0;
-            });
-
-            $('toggleHistoryBtn').addEventListener('click', toggleHistory);
-        }
-
-        // アプリケーション起動
-        loadData();
-        setupEventListeners();
-        if (appData.accounts.length > 0) {
-            showScreen('accountSelectScreen');
-        } else {
-            // アカウントが0の場合でも、初期アカウントリストを表示するために、一度設定モーダルを開いて追加を促すなど工夫が必要だが、ここではシンプルに初期画面を表示
-            showScreen('accountSelectScreen');
-        }
-    </script>
-</body>
-</html>
+                                    acc.challenges[0].coins = a

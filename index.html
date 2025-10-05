@@ -34,7 +34,8 @@
         }
 
         body {
-            font-family: 'M PLUS Rounded 1c', 'Varela Round', sans-serif;
+            /* 修正点1: フォントを丸ゴシック体('M PLUS Rounded 1c')に統一 */
+            font-family: 'M PLUS Rounded 1c', sans-serif;
             background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
             min-height: 100vh;
             padding: 20px;
@@ -261,6 +262,7 @@
             .coins-display { padding: 20px; }
         }
 
+        /* 修正点4: チャレンジ名（strongタグ）を非表示にし、1コイン＝○○円のみを表示 */
         .coin-value-label {
             display: block;
             width: fit-content;
@@ -274,8 +276,11 @@
         }
 
         .coin-value-label strong {
-            color: #ff6b9d;
+            /* チャレンジ名を非表示にするための修正 */
+            display: none;
         }
+        /* 補足: JavaScript側で「1コイン=○○円」の部分だけを表示するようにHTML構造が想定されています */
+
 
         .coins-label {
             font-size: 18px;
@@ -319,6 +324,9 @@
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s, box-shadow 0.2s;
+            /* 修正点3: アイコンをボタンの上下左右中央に配置 */
+            display: grid;
+            place-items: center;
         }
         .coin-btn:active {
             transform: scale(0.95);
@@ -705,6 +713,8 @@
             cursor: pointer;
             width: 100%;
             padding: 12px;
+            /* 修正点2: フォントサイズを大きく */
+            font-size: 20px; 
             font-family: inherit;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
             transition: transform 0.2s, box-shadow 0.2s;
@@ -744,6 +754,8 @@
             padding: 12px;
             border: none;
             border-radius: 10px;
+            /* 修正点2: フォントサイズを大きく */
+            font-size: 20px; 
             font-weight: bold;
             cursor: pointer;
             font-family: inherit;
@@ -933,7 +945,7 @@
 
             <div class="screen" id="accountDetailScreen">
                 <div class="coins-display">
-                    <div class="coin-value-label" id="coinValueLabel"></div>
+                                        <div class="coin-value-label" id="coinValueLabel"></div>
                     <div class="coins-label">現在のコイン</div>
                     <div class="coins-main">
                         <button class="coin-btn coin-btn-minus" id="removeCoinBtn">−</button>
@@ -988,7 +1000,7 @@
             <div class="setting-section">
                 <h3>データのリセット</h3>
                 <div class="reset-buttons">
-                    <button class="btn-reset btn-reset-all" id="resetAllBtn">全データをリセット</button>
+                                        <button class="btn-reset btn-reset-all" id="resetAllBtn">全データをリセット</button>
                 </div>
             </div>
             <button class="btn-save" id="saveGlobalSettingsBtn">保存</button>
@@ -1010,13 +1022,13 @@
             <div class="setting-section">
                 <h3>チャレンジ管理</h3>
                 <div id="detailChallengeSettings"></div>
-                <button class="btn-add" id="addChallengeInDetailModalBtn">＋ チャレンジを追加</button>
+                                <button class="btn-add" id="addChallengeInDetailModalBtn">＋ チャレンジを追加</button>
             </div>
             <button class="btn-save" id="saveDetailSettingsBtn">保存</button>
             <div class="setting-section">
                 <h3>データのリセット</h3>
                 <div class="reset-buttons">
-                    <button class="btn-reset btn-reset-child" id="resetCurrentBtn">このアカウントをリセット</button>
+                                        <button class="btn-reset btn-reset-child" id="resetCurrentBtn">このアカウントをリセット</button>
                 </div>
             </div>
         </div>
@@ -1072,10 +1084,3 @@
                             if (!acc.history) acc.history = [];
                             
                             // 旧データのマイグレーション処理
-                            if (typeof acc.coins === 'number') {
-                                if (acc.challenges.length === 0) {
-                                    acc.challenges.push({ name: 'お手伝い', value: 10, coins: 0, totalCoins: 0 });
-                                }
-                                if (acc.challenges.length > 0) {
-                                    acc.challenges[0].coins = acc.coins;
-     

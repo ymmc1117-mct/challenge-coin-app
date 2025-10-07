@@ -234,14 +234,14 @@
         .account-card {
             background: #e0f7fa;
             border-radius: 40px;
-            padding: 40px 40px;
+            padding: 20px 20px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
             transition: transform 0.2s, box-shadow 0.2s;
-            min-height: 120px;
+            min-height: 60px;
             flex: 1;
         }
         .account-card:active {
@@ -250,7 +250,7 @@
         }
 
         .account-card h3 {
-            font-size: 28px;
+            font-size: 24px;
             color: #333;
         }
 
@@ -270,7 +270,7 @@
             background-color: #e6f7e9;
             border: 2px dashed #81c784;
             border-radius: 40px;
-            padding: 40px 40px;
+            padding: 20px 20px;
             cursor: pointer;
             text-align: center;
             font-size: 22px;
@@ -278,7 +278,7 @@
             font-weight: bold;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s, box-shadow 0.2s;
-            min-height: 120px;
+            min-height: 64px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1627,7 +1627,7 @@
                 confetti.classList.add('confetti');
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 confetti.style.left = `${Math.random() * 100}vw`;
-                confetti.style.top = `20vh`;
+                confetti.style.top = `-20vh`;
                 confetti.style.animation = `confetti-fall 3s ease-out forwards ${Math.random() * 2}s`;
                 document.body.appendChild(confetti);
                 setTimeout(() => confetti.remove(), 4000);
@@ -1768,6 +1768,7 @@
     </script>
 </body>
 </html>
+
 
 
 

@@ -152,6 +152,7 @@
             transition: transform 0.2s, background 0.2s, color 0.2s;
             white-space: nowrap;
             min-height: 44px;
+            font-family: inherit;
         }
         .challenge-button:active {
             transform: scale(0.98);
@@ -185,7 +186,7 @@
 
         @media (max-width: 480px) {
             .content { padding: 20px; }
-            .challenge-buttons-container { padding: 8px 15px; }
+            .challenge-buttons-container { padding: 10px 20px; }
         }
 
         .screen {
@@ -204,13 +205,13 @@
             flex-direction: column;
             gap: 25px;
             flex: 1;
-            justify-content: center;
-            padding: 10px;
+            justify-content: space-between;
+            padding: 24px;
         }
 
         .account-card {
             background: #e0f7fa;
-            border-radius: 15px;
+            border-radius: 40px;
             padding: 40px 40px;
             cursor: pointer;
             display: flex;
@@ -246,7 +247,7 @@
         .add-account-btn {
             background-color: #e6f7e9;
             border: 2px dashed #81c784;
-            border-radius: 15px;
+            border-radius: 40px;
             padding: 40px 40px;
             cursor: pointer;
             text-align: center;
@@ -641,6 +642,7 @@
             font-size: 18px;
             font-family: inherit;
             min-height: 48px;
+            min-width: 0;
         }
 
         .btn-delete-account {
@@ -1038,7 +1040,7 @@
                 <div class="history-compact">
                     <div class="history-summary">
                         <div class="history-total">
-                            <div class="history-total-label">これまでのおこづかい合計</div>
+                            <div class="history-total-label">おこづかい合計</div>
                             <div class="history-total-amount" id="totalReward">0円</div>
                         </div>
                         <button class="btn-show-history" id="toggleHistoryBtn">
@@ -1061,7 +1063,7 @@
             </div>
             <div class="setting-section">
                 <h3>アカウント管理</h3>
-                <p style="color: #999; font-size: 14px; margin-bottom: 15px;">※ アカウントは最大3人まで登録できます</p>
+                <p style="color: #999; font-size: 14px; margin-bottom: 15px;">3人まで登録できます</p>
                 <div id="accountSettings"></div>
             </div>
             <div class="setting-section">
@@ -1725,6 +1727,7 @@
     </script>
 </body>
 </html>
+
 
 
 

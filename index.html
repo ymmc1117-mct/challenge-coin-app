@@ -35,10 +35,13 @@
 
         body {
             font-family: 'M PLUS Rounded 1c', 'Varela Round', sans-serif;
-            background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 100%);
+            background: linear-gradient(135deg, #ffd5cd 0%, #ffb4a8 100%);
             min-height: 100vh;
             padding: 20px;
             touch-action: manipulation;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         @media (max-width: 768px) {
@@ -47,12 +50,15 @@
 
         .container {
             max-width: 800px;
+            width: 100%;
+            height: 95vh;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .header {
@@ -61,6 +67,7 @@
             text-align: center;
             position: relative;
             border-radius: 20px 20px 0 0;
+            flex-shrink: 0;
         }
 
         @media (max-width: 768px) {
@@ -120,29 +127,30 @@
         }
 
         .challenge-buttons-container {
-            padding: 30px 30px;
+            padding: 15px 30px;
             background: white;
             display: none;
             gap: 10px;
             overflow-x: auto;
             -ms-overflow-style: none;
             scrollbar-width: none;
+            flex-shrink: 0;
         }
         .challenge-buttons-container::-webkit-scrollbar {
             display: none;
         }
 
         .challenge-button {
-            background: #fff0f5;
-            color: #ff6b9d;
-            border: 2px solid #ffc8d9;
+            background: white;
+            color: #999;
+            border: 2px solid #e0e0e0;
             border-radius: 25px;
             padding: 10px 20px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             flex-shrink: 0;
-            transition: transform 0.2s, background 0.2s;
+            transition: transform 0.2s, background 0.2s, color 0.2s;
             white-space: nowrap;
             min-height: 44px;
         }
@@ -151,9 +159,9 @@
         }
 
         .challenge-button.active {
-            background: #ffb3d9;
-            color: #333;
-            border-color: #ffb3d9;
+            background: #ffe8f0;
+            color: #e91e63;
+            border-color: #ffcce0;
         }
 
         .challenge-buttons-wrapper {
@@ -164,52 +172,63 @@
         }
 
         .content {
-            padding: 30px;
+            padding: 40px;
             overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         @media (max-width: 768px) {
-            .content { padding: 20px; }
-            .challenge-buttons-container { padding: 20px 20px; }
+            .content { padding: 30px; }
+            .challenge-buttons-container { padding: 10px 20px; }
         }
 
         @media (max-width: 480px) {
-            .content { padding: 15px; }
-            .challenge-buttons-container { padding: 15px 15px; }
+            .content { padding: 20px; }
+            .challenge-buttons-container { padding: 8px 15px; }
         }
 
         .screen {
             display: none;
+            flex: 1;
+            overflow-y: auto;
         }
 
         .screen.active {
-            display: block;
+            display: flex;
+            flex-direction: column;
         }
 
         .account-list {
-            display: grid;
-            gap: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            flex: 1;
+            justify-content: center;
+            padding: 10px;
         }
 
         .account-card {
             background: #e0f7fa;
             border-radius: 15px;
-            padding: 20px 25px;
+            padding: 40px 40px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
             transition: transform 0.2s, box-shadow 0.2s;
-            min-height: 70px;
+            min-height: 120px;
+            flex: 1;
         }
         .account-card:active {
             transform: scale(0.98);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
         }
 
         .account-card h3 {
-            font-size: 22px;
+            font-size: 28px;
             color: #333;
         }
 
@@ -220,7 +239,7 @@
         }
 
         .coins-number-list {
-            font-size: 32px;
+            font-size: 44px;
             font-weight: bold;
             color: #ff6b9d;
         }
@@ -229,22 +248,23 @@
             background-color: #e6f7e9;
             border: 2px dashed #81c784;
             border-radius: 15px;
-            padding: 20px 25px;
+            padding: 40px 40px;
             cursor: pointer;
             text-align: center;
-            font-size: 18px;
+            font-size: 22px;
             color: #4caf50;
             font-weight: bold;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s, box-shadow 0.2s;
-            min-height: 70px;
+            min-height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex: 1;
         }
         .add-account-btn:active {
             transform: scale(0.98);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
         }
         
         .add-account-btn:disabled {
@@ -258,14 +278,18 @@
         .coins-display {
             background: #e6faff;
             border-radius: 15px;
-            padding: 30px;
+            padding: 40px 30px;
             text-align: center;
             margin-bottom: 20px;
             position: relative;
         }
 
         @media (max-width: 768px) {
-            .coins-display { padding: 20px; }
+            .coins-display { padding: 35px 20px; }
+        }
+
+        @media (max-width: 480px) {
+            .coins-display { padding: 30px 20px; }
         }
 
         .coin-value-label {
@@ -939,8 +963,8 @@
 
         @media (min-width: 768px) {
             .container {
-                margin-top: 20px;
-                margin-bottom: 20px;
+                margin-top: 0;
+                margin-bottom: 0;
             }
             
             .coins-number {

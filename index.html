@@ -49,7 +49,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             width: 100%;
             height: 95vh;
             margin: 0 auto;
@@ -126,15 +126,18 @@
         }
 
         .challenge-buttons-container {
-            padding: 0px 40px 40px 40px ;
-            background: white;
-            display: none;
-            gap: 10px;
-            overflow-x: auto;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-            flex-shrink: 0;
-        }
+    padding: 0px 40px 40px 40px ;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    display: none;
+    gap: 10px;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+}
         .challenge-buttons-container::-webkit-scrollbar {
             display: none;
         }
@@ -172,13 +175,31 @@
         }
 
         .content {
-            padding: 40px;
-            overflow-y: auto;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start
-        }
+    padding: 40px;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+}
+
+.content::after {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, white);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.content.has-scroll::after {
+    opacity: 1;
+}
 
         @media (max-width: 768px) {
             .content { padding: 30px; }
@@ -440,7 +461,7 @@
             width: 100%;
             padding: 15px;
             background: linear-gradient(135deg, #dae7f8 0%, #fde5f0 100%);
-            border: none;
+            border: 2px solid rgba(255, 153, 187, 0.5);
             border-radius: 10px;
             font-size: 20px;
             font-weight: bold;
@@ -646,22 +667,31 @@
             min-width: 0;
         }
 
-        .btn-delete-account {
-            padding: 12px 15px;
-            background: #ffebee;
-            border: none;
-            border-radius: 10px;
-            color: #c62828;
-            cursor: pointer;
-            font-family: inherit;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
-            min-height: 48px;
-        }
-        .btn-delete-account:active {
-            transform: scale(0.98);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
+       .btn-delete-account {
+    padding: 15px 15px;
+    background: #ffebee;
+    border: none;
+    border-radius: 10px;
+    color: #c62828;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-delete-account:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.btn-delete-account svg {
+    width: 20px;
+    height: 20px;
+    fill: #c62828;
+}
 
         .challenge-item {
             background: #f8f9fa;
@@ -730,7 +760,7 @@
         }
 
         .btn-delete-challenge {
-            padding: 10px 15px;
+            padding: 15px 15px;
             background: #ffebee;
             border: none;
             border-radius: 8px;
@@ -745,6 +775,11 @@
             transform: scale(0.98);
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
+        .btn-delete-challenge svg {
+    width: 20px;
+    height: 20px;
+    fill: #c62828;
+}
 
         .btn-add {
             background-color: #e6f7e9;
@@ -1461,10 +1496,14 @@
             appData.accounts.forEach((account, index) => {
                 const item = document.createElement('div');
                 item.classList.add('account-item');
-                item.innerHTML = `
-                    <input type="text" value="${account.name}" data-index="${index}" class="account-name-input">
-                    <button class="btn-delete-account" data-index="${index}">削除</button>
-                `;
+               item.innerHTML = `
+    <input type="text" value="${account.name}" data-index="${index}" class="account-name-input">
+    <button class="btn-delete-account" data-index="${index}">
+        <svg viewBox="0 0 24 24">
+            <path d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" />
+        </svg>
+    </button>
+`;
                 accountSettings.appendChild(item);
             });
 
@@ -1509,14 +1548,16 @@
                 item.innerHTML = `
                     <div class="challenge-header">
                         <h4>チャレンジ ${index + 1}</h4>
-                        <button class="btn-delete-challenge" data-index="${index}">削除</button>
+                        <button class="btn-delete-challenge" data-index="${index}">
+                        <svg viewBox="0 0 24 24"><path d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" />
+                        </svg></button>
                     </div>
                     <div class="challenge-inputs-group">
                         <label for="chal-name-${index}">チャレンジ名</label>
                         <input type="text" id="chal-name-${index}" value="${challenge.name}" data-index="${index}" class="challenge-name-input">
                     </div>
                     <div class="challenge-inputs-group">
-                        <label for="chal-value-${index}">1コインあたりの円換算額</label>
+                        <label for="chal-value-${index}">1コインあたりのおこづかい</label>
                         <div class="challenge-value-wrapper">
                             <div class="input-with-suffix">
                                 <input type="number" id="chal-value-${index}" value="${challenge.value}" min="1" data-index="${index}" class="challenge-value-input">
@@ -1726,6 +1767,7 @@
     </script>
 </body>
 </html>
+
 
 
 

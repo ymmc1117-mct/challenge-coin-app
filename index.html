@@ -2181,7 +2181,6 @@ const container = document.querySelector('.challenge-buttons-container');
 const wrapper = document.querySelector('.challenge-buttons-wrapper');
 const lastButton = wrapper.lastElementChild;
 
-// スクロール状態の監視
 container.addEventListener('scroll', () => {
     if (container.scrollLeft > 0) {
         container.classList.add('scrolled');
@@ -2190,7 +2189,6 @@ container.addEventListener('scroll', () => {
     }
 });
 
-// 右端ボタンにスクロール
 const scrollToLastButton = () => {
     container.scrollLeft = lastButton.offsetLeft - container.offsetLeft;
 };

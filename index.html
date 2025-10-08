@@ -126,7 +126,7 @@
     }
 
     .header-btn:hover {
-        background: rgba(255, 240, 245, 0.95);
+        background: var(--color-yellow-bg);
     }
 
     .header-btn svg {
@@ -139,7 +139,7 @@
     .settings-btn { right: 30px; }
 
     .challenge-buttons-container {
-        padding: 20px 0px 10px 40px;
+        padding: 20px 0px 0px 40px;
         background: transparent;
         display: none;
         gap: 10px;
@@ -185,6 +185,7 @@
     }
 
     .challenge-buttons-wrapper {
+        padding-left: 40px;
         display: flex;
         gap: 10px;
         flex-grow: 1;
@@ -266,6 +267,7 @@
         transition: transform 0.2s, box-shadow 0.2s;
         min-height: 60px;
         flex: 1;
+        border: 2px solid #cceffa;
     }
 
     .account-card:active {
@@ -553,7 +555,7 @@
     .btn-show-history {
         padding: 12px 20px;
         background: var(--color-yellow-bg);
-        border: none;
+        border: 1.5px solid #f0e68c;
         border-radius: var(--radius-sm);
         font-size: 16px;
         color: var(--color-text-light);
@@ -1042,6 +1044,9 @@
         width: 12px;
         height: 12px;
         z-index: 1001;
+    }
+    .challenge-buttons-wrapper.scrolling {
+        padding-left: 0px;;
     }
 
     @keyframes confetti-fall {
@@ -1655,7 +1660,7 @@
             Utils.$('exchangeBtn').disabled = true;
         },
 
-        renderActiveCoinDisplay(challenge, account) {
+         renderActiveCoinDisplay(challenge, account) {
             const display = Utils.$('coinsDisplay');
             display.classList.remove('empty-state');
             
@@ -1671,6 +1676,16 @@
             const totalCoins = account.challenges.reduce((sum, c) => sum + c.totalCoins, 0);
             Utils.$('totalCoins').textContent = totalCoins;
 
+            // 交換ボタンの状態を更新
+            const input = Utils.$('exchangeInput');
+            input.disabled = false;
+            input.min = 1;
+            input.max = challenge.coins;
+            
+            if (!input.value || parseInt(input.value) < 1) {
+                input.value = 1;
+            }
+            
             this.updateExchangeButton(challenge);
         },
 

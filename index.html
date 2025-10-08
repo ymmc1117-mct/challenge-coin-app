@@ -139,10 +139,13 @@
     .settings-btn { right: 30px; }
     
     .challenge-buttons-container {
-    padding-left: 20px; /* 初期の左余白 */
-    transition: padding-left 0.3s ease; /* アニメーション効果 */
-    overflow-x: auto; /* 横スクロールを許可 */
-    position: relative;
+    padding: 0px 0px 0px 0px;
+    transition: padding-left 0.3s ease;
+    position: sticky;
+    top: 0;
+    background: transparent;
+    z-index: 10;
+    flex-shrink: 0;
     }
     
     .challenge-buttons-container.scrolled {
@@ -152,7 +155,7 @@
     .challenge-buttons-wrapper {
     display: flex;
     gap: 10px; /* ボタン間のスペース */
-    padding-right: 20px; /* 右端の余白 */
+    padding: 20px 40px 20px 40px; 
     flex-grow: 1;
     overflow-x: auto;
     position: relative;
@@ -228,7 +231,7 @@
     }
 
     .screen-content {
-        padding: 20px 40px 40px 40px;
+        padding: 0px 40px 40px 40px;
         flex: 1;
     }
 
@@ -1020,7 +1023,7 @@
     }
 
     .celebration h2 {
-        font-size: clamp(28px, 7vw, 40px);
+        font-size: clamp(24px, 7vw, 40px);
         color: var(--color-primary-light);
         margin-bottom: clamp(15px, 3vw, 20px);
     }
@@ -1062,7 +1065,9 @@
         z-index: 999;
         display: none;
     }
-
+    .celebration {
+    z-index: 1002; 
+    }
     .overlay.show {
         display: block;
     }
@@ -1075,7 +1080,7 @@
         .settings-btn { right: 20px; }
         .content { padding: 0px; }
         .challenge-buttons-container { padding: 15px 0px 15px 20px; }
-        .screen-content { padding: 15px 30px 30px 30px; }
+        .screen-content { padding: 0px 30px 30px 30px; }
         .account-list { padding: 30px; }
         .account-list-empty { font-size: 18px; }
         .coins-display { padding: 35px 20px; min-height: 180px; }
@@ -1086,7 +1091,7 @@
         .header h1 { font-size: 24px; }
         .content { padding: 0px; }
         .challenge-buttons-container { padding: 15px 0px 15px 20px; }
-        .screen-content { padding: 15px 20px 20px 20px; }
+        .screen-content { padding: 0px 20px 20px 20px; }
         .account-list { padding: 20px; }
         .coins-display { padding: 30px 20px; min-height: 160px; }
         .coins-number { font-size: 52px; min-width: 80px; }
@@ -1635,7 +1640,19 @@
                 });
                 wrapper.appendChild(btn);
             });
-        },
+
+            if (!wrapper.dataset.scrollListenerAdded) {
+    wrapper.addEventListener('scroll', () => {
+        if (wrapper.scrollLeft > 0) {
+            container.classList.add('scrolled');
+        } else {
+            container.classList.remove('scrolled');
+        }
+    });
+    wrapper.dataset.scrollListenerAdded = 'true';
+}
+},
+        
 
         renderCoinDisplay() {
             const account = AccountManager.getCurrentAccount();
@@ -2108,6 +2125,9 @@
                     () => {
                         CoinManager.exchange(amount);
                         ModalManager.hide('confirmModal');
+                        setTimeout(() => {  // 少し待ってからお祝い表示
+                            CoinManager.exchange(amount);
+                        }, 100);
                     },
                     '交換する',
                     'exchange-confirm'
@@ -2168,21 +2188,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', initApp);
-    const container = document.querySelector('.challenge-buttons-container');
-    const wrapper = document.querySelector('.challenge-buttons-wrapper');
-    const lastButton = wrapper.lastElementChild;
 
-    container.addEventListener('scroll', () => {
-    if (container.scrollLeft > 0) {
-        container.classList.add('scrolled');
-    } else {
-        container.classList.remove('scrolled');
-    }
-});
-
-    const scrollToLastButton = () => {
-    container.scrollLeft = lastButton.offsetLeft - container.offsetLeft;
-};
 </script>
 </body>
 </html>

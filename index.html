@@ -17,8 +17,6 @@
             --color-primary-border: #ffc8d9;
             --color-gradient-start: #dae7f8;
             --color-gradient-end: #fde5f0;
-            --color-bg-gradient-start: #ffd5cd;
-            --color-bg-gradient-end: #ffb4a8;
             --color-green: #4caf50;
             --color-green-light: #81c784;
             --color-green-bg: #e6f7e9;
@@ -46,6 +44,7 @@
             --radius-xxl: 40px;
         }
 
+```
     * {
         margin: 0;
         padding: 0;
@@ -69,23 +68,18 @@
 
     body {
         font-family: 'M PLUS Rounded 1c', 'Varela Round', sans-serif;
-        background: linear-gradient(135deg, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-end) 100%);
+        background: white;
         min-height: 100vh;
-        padding: 20px;
+        padding: 0;
+        margin: 0;
         touch-action: manipulation;
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
 
     .container {
-        max-width: 1200px;
         width: 100%;
-        height: 95vh;
-        margin: 0 auto;
+        height: 100vh;
+        margin: 0;
         background: white;
-        border-radius: var(--radius-lg);
-        box-shadow: var(--shadow-lg);
         display: flex;
         flex-direction: column;
     }
@@ -95,7 +89,6 @@
         padding: 30px;
         text-align: center;
         position: relative;
-        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
         flex-shrink: 0;
     }
 
@@ -139,26 +132,27 @@
     .settings-btn { right: 30px; }
     
     .challenge-buttons-container {
-    padding: 0px 0px 0px 0px;
-    transition: padding-left 0.3s ease;
-    position: sticky;
-    top: 0;
-    background: transparent;
-    z-index: 10;
-    flex-shrink: 0;
+        padding: 0;
+        transition: padding-left 0.3s ease;
+        position: sticky;
+        top: 0;
+        background: transparent;
+        z-index: 10;
+        flex-shrink: 0;
+        min-height: 0;
     }
     
     .challenge-buttons-container.scrolled {
-    padding-left: 0; /* スクロール時に左余白を削除 */
+        padding-left: 0;
     }
     
     .challenge-buttons-wrapper {
-    display: flex;
-    gap: 10px; /* ボタン間のスペース */
-    padding: 20px 40px 20px 40px; 
-    flex-grow: 1;
-    overflow-x: auto;
-    position: relative;
+        display: flex;
+        gap: 10px;
+        padding: 15px 30px;
+        flex-grow: 1;
+        overflow-x: auto;
+        position: relative;
     }
 
     .challenge-buttons-container::-webkit-scrollbar {
@@ -170,14 +164,14 @@
         color: var(--color-text-lighter);
         border: 2px solid var(--color-border);
         border-radius: var(--radius-xl);
-        padding: 10px 16px;
-        font-size: 14px;
+        padding: 8px 14px;
+        font-size: 13px;
         font-weight: bold;
         cursor: pointer;
         flex-shrink: 0;
         transition: transform 0.2s, background 0.2s, color 0.2s;
         white-space: nowrap;
-        min-height: 24px;
+        min-height: 20px;
         font-family: inherit;
         box-shadow: var(--shadow-sm);
     }
@@ -193,7 +187,7 @@
     }
 
     .content {
-        padding: 0px;
+        padding: 0;
         overflow-y: auto;
         flex: 1;
         display: flex;
@@ -231,7 +225,7 @@
     }
 
     .screen-content {
-        padding: 0px 40px 0px 40px;
+        padding: 0 30px;
         flex: 1;
     }
 
@@ -241,7 +235,7 @@
         gap: 25px;
         flex: 1;
         justify-content: flex-start;
-        padding: 40px;
+        padding: 30px;
     }
 
     .account-list-empty {
@@ -257,7 +251,7 @@
     .account-card {
         background: var(--color-cyan-bg);
         border-radius: clamp(20px, 5vw, 40px);
-        padding: 60px 60px;
+        padding: 60px;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -296,45 +290,22 @@
         color: var(--color-primary-light);
     }
 
-    .add-account-btn {
-        background-color: var(--color-green-bg);
-        border: 2px dashed var(--color-green-light);
-        border-radius: var(--radius-xxl);
-        padding: 20px 20px;
-        cursor: pointer;
-        text-align: center;
-        font-size: 22px;
-        color: var(--color-green);
-        font-weight: bold;
-        box-shadow: var(--shadow-sm);
-        transition: transform 0.2s, box-shadow 0.2s;
-        min-height: 64px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex: 1;
-    }
-
-    .add-account-btn:active {
-        transform: scale(0.98);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-    }
-
-    .add-account-btn.hidden {
-        display: none;
-    }
-
     .coins-display {
         background: var(--color-blue-bg);
         border-radius: var(--radius-md);
         padding: 40px 30px;
         text-align: center;
         margin-bottom: 20px;
+        margin-top: 0;
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
         min-height: 200px;
+    }
+
+    .coins-display.no-challenges {
+        margin-top: 20px;
     }
 
     .coins-display-content {
@@ -717,7 +688,7 @@
     }
 
     .btn-delete-account {
-        padding: 12px 12px;
+        padding: 12px;
         background: var(--color-red-light);
         border: 2px solid var(--color-red-border);
         border-radius: var(--radius-sm);
@@ -812,7 +783,7 @@
     }
 
     .btn-delete-challenge {
-        padding: 12px 12px;
+        padding: 12px;
         background: var(--color-red-light);
         border: 2px solid var(--color-red-border);
         border-radius: 8px;
@@ -1016,6 +987,7 @@
         display: none;
         box-shadow: var(--shadow-xl);
         max-width: 90%;
+        min-width: 280px;
     }
 
     .celebration.show {
@@ -1030,6 +1002,7 @@
 
     .celebration p {
         font-size: clamp(16px, 3.5vw, 20px);
+        white-space: nowrap;
     }
 
     .celebration-amount {
@@ -1043,9 +1016,6 @@
         width: 12px;
         height: 12px;
         z-index: 1001;
-    }
-    .challenge-buttons-wrapper.scrolling {
-        padding-left: 0px;;
     }
 
     @keyframes confetti-fall {
@@ -1065,53 +1035,63 @@
         z-index: 999;
         display: none;
     }
-    .celebration {
-    z-index: 1002; 
-    }
-    
+
     .overlay.show {
         display: block;
     }
 
     @media (max-width: 768px) {
-        .body { padding: 10px; }
+        body { padding: 0; }
         .header { padding: 20px 15px; }
-        .header h1 { font-size: 32px; }
-        .back-btn { left: 20px; }
-        .settings-btn { right: 20px; }
-        .content { padding: 0px; }
-        .challenge-buttons-wrapper { padding: 20px 30px 20px 40px; }
-        .screen-content { padding: 0px 30px 30px 30px; }
-        .account-list { padding: 30px; }
-        .account-list-empty { font-size: 18px; }
-        .coins-display { padding: 35px 20px; min-height: 180px; }
+        .header h1 { font-size: 28px; }
+        .back-btn { left: 15px; }
+        .settings-btn { right: 15px; }
+        .content { padding: 0; }
+        .challenge-buttons-wrapper { padding: 12px 20px; }
+        .challenge-button { 
+            padding: 6px 12px; 
+            font-size: 12px;
+            min-height: 18px;
+        }
+        .screen-content { padding: 0 20px 20px 20px; }
+        .account-list { padding: 20px; }
+        .account-list-empty { font-size: 16px; }
+        .coins-display { padding: 30px 20px; min-height: 160px; }
         .coins-number { font-size: 64px; min-width: 100px; }
-        .account-card { padding: 40px 40px; }
+        .account-card { padding: 30px; }
     }
 
     @media (max-width: 480px) {
         .header h1 { font-size: 24px; }
-        .content { padding: 0px; }
-        .challenge-buttons-wrapper { padding: 20px; }
-        .screen-content { padding: 0px 20px 20px 20px; }
-        .account-list { padding: 20px; }
-        .coins-display { padding: 30px 20px; min-height: 160px; }
-        .coin-value-label { font-size: 14px; }
+        .content { padding: 0; }
+        .challenge-buttons-wrapper { padding: 10px 15px; }
+        .challenge-button { 
+            padding: 5px 10px; 
+            font-size: 11px;
+            min-height: 16px;
+        }
+        .screen-content { padding: 0 15px 15px 15px; }
+        .account-list { padding: 15px; }
+        .coins-display { padding: 25px 15px; min-height: 150px; }
+        .coin-value-label { font-size: 13px; padding: 6px 12px; }
         .coins-number { font-size: 52px; min-width: 80px; }
         .history-total-label { font-size: 14px; }
-        .account-card { padding: 20px 20px; }
+        .account-card { padding: 20px; }
         .exchange-input {
             flex-direction: column;
             align-items: stretch;
         }
     }
 
-    @media (min-width: 768px) {
-        .container {
-            margin-top: 0;
-            margin-bottom: 0;
+    @media (min-width: 769px) {
+        .challenge-buttons-wrapper { padding: 20px 40px; }
+        .challenge-button { 
+            padding: 10px 16px; 
+            font-size: 14px;
+            min-height: 24px;
         }
-        
+        .screen-content { padding: 0 40px; }
+        .account-list { padding: 40px; }
         .coins-number {
             font-size: 96px;
         }
@@ -1123,6 +1103,7 @@
         }
     }
 </style>
+```
 
 </head>
 <body>
@@ -1146,6 +1127,7 @@
             </button>
         </div>
 
+```
     <div class="content">
         <div class="screen active" id="accountSelectScreen">
             <div class="account-list" id="accountList"></div>
@@ -1167,7 +1149,7 @@
                             <button class="coin-btn coin-btn-add" id="addCoinBtn">+</button>
                         </div>
                         <div class="coins-value">
-                             <span id="currentValue">0</span>円
+                            <span id="currentValue">0</span>円
                         </div>
                         <div class="total-coins">
                             <span id="totalCoinsLabel">これまでのコイン合計</span>: 
@@ -1647,17 +1629,16 @@
             });
 
             if (!wrapper.dataset.scrollListenerAdded) {
-    wrapper.addEventListener('scroll', () => {
-        if (wrapper.scrollLeft > 0) {
-            container.classList.add('scrolled');
-        } else {
-            container.classList.remove('scrolled');
-        }
-    });
-    wrapper.dataset.scrollListenerAdded = 'true';
-}
-},
-        
+                wrapper.addEventListener('scroll', () => {
+                    if (wrapper.scrollLeft > 0) {
+                        container.classList.add('scrolled');
+                    } else {
+                        container.classList.remove('scrolled');
+                    }
+                });
+                wrapper.dataset.scrollListenerAdded = 'true';
+            }
+        },
 
         renderCoinDisplay() {
             const account = AccountManager.getCurrentAccount();
@@ -1674,13 +1655,15 @@
         renderEmptyCoinDisplay() {
             const display = Utils.$('coinsDisplay');
             display.classList.add('empty-state');
+            display.classList.add('no-challenges');
             Utils.$('exchangeInput').disabled = true;
             Utils.$('exchangeBtn').disabled = true;
         },
 
-         renderActiveCoinDisplay(challenge, account) {
+        renderActiveCoinDisplay(challenge, account) {
             const display = Utils.$('coinsDisplay');
             display.classList.remove('empty-state');
+            display.classList.remove('no-challenges');
             
             Utils.$('currentCoins').classList.remove('disabled');
             Utils.$('removeCoinBtn').disabled = challenge.coins <= 0;
@@ -1694,7 +1677,6 @@
             const totalCoins = account.challenges.reduce((sum, c) => sum + c.totalCoins, 0);
             Utils.$('totalCoins').textContent = totalCoins;
 
-            // 交換ボタンの状態を更新
             const input = Utils.$('exchangeInput');
             input.disabled = false;
             input.min = 1;
@@ -2130,9 +2112,6 @@
                     () => {
                         CoinManager.exchange(amount);
                         ModalManager.hide('confirmModal');
-                        setTimeout(() => {  // 少し待ってからお祝い表示
-                            CoinManager.exchange(amount);
-                        }, 100);
                     },
                     '交換する',
                     'exchange-confirm'
@@ -2193,7 +2172,8 @@
     }
 
     document.addEventListener('DOMContentLoaded', initApp);
-
 </script>
+```
+
 </body>
 </html>

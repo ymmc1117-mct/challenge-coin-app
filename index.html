@@ -2177,6 +2177,22 @@
 
     document.addEventListener('DOMContentLoaded', initApp);
 </script>
+const container = document.querySelector('.challenge-buttons-container');
+const wrapper = document.querySelector('.challenge-buttons-wrapper');
+const lastButton = wrapper.lastElementChild;
 
+// スクロール状態の監視
+container.addEventListener('scroll', () => {
+    if (container.scrollLeft > 0) {
+        container.classList.add('scrolled');
+    } else {
+        container.classList.remove('scrolled');
+    }
+});
+
+// 右端ボタンにスクロール
+const scrollToLastButton = () => {
+    container.scrollLeft = lastButton.offsetLeft - container.offsetLeft;
+};
 </body>
 </html>

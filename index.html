@@ -189,14 +189,6 @@
         border-color: var(--color-primary-border);
     }
 
-    .challenge-buttons-wrapper {
-        display: flex;
-        gap: 10px;
-        flex-grow: 1;
-        overflow-x: auto;
-        padding-bottom: 10px;
-    }
-
     .content {
         padding: 0px;
         overflow-y: auto;
@@ -2177,11 +2169,11 @@
 
     document.addEventListener('DOMContentLoaded', initApp);
 </script>
-const container = document.querySelector('.challenge-buttons-container');
-const wrapper = document.querySelector('.challenge-buttons-wrapper');
-const lastButton = wrapper.lastElementChild;
+    const container = document.querySelector('.challenge-buttons-container');
+    const wrapper = document.querySelector('.challenge-buttons-wrapper');
+    const lastButton = wrapper.lastElementChild;
 
-container.addEventListener('scroll', () => {
+    container.addEventListener('scroll', () => {
     if (container.scrollLeft > 0) {
         container.classList.add('scrolled');
     } else {
@@ -2189,8 +2181,9 @@ container.addEventListener('scroll', () => {
     }
 });
 
-const scrollToLastButton = () => {
+    const scrollToLastButton = () => {
     container.scrollLeft = lastButton.offsetLeft - container.offsetLeft;
 };
+</script>
 </body>
 </html>

@@ -239,13 +239,14 @@
     }
 
     .account-list-empty {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        color: var(--color-text-lighter);
-        font-size: 20px;
-        line-height: 1.6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--color-text-lighter);
+    font-size: clamp(16px, 4vw, 20px);
+    line-height: 1.6;
+    padding: 40px 20px;
     }
 
     .account-card {
@@ -446,10 +447,11 @@
     }
 
     .exchange-input {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        margin-bottom: 15px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: nowrap;
     }
 
     .exchange-input input {
@@ -555,44 +557,45 @@
     }
 
     .history-item {
-        display: flex;
-        justify-content: space-between;
-        padding: 3px 0;
-        border-bottom: 1px solid var(--color-border-light);
-        font-size: 15px;
-        gap: 10px;
-    }
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--color-border-light);
+    font-size: clamp(13px, 3vw, 15px);
+    gap: 10px;
+}
 
-    .history-description {
-        font-weight: bold;
-        color: #555;
-        margin-bottom: 2px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-    }
+.history-description {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: clamp(13px, 3vw, 15px);
+}
 
-    .history-challenge-badge {
-        display: inline-block;
-        background: var(--color-primary-pale);
-        color: var(--color-primary-light);
-        padding: 3px 10px;
-        border-radius: 12px;
-        font-size: 12px;
-        font-weight: bold;
-        border: 2px solid var(--color-primary-border);
-    }
+.history-challenge-badge {
+    display: inline-block;
+    background: var(--color-primary-pale);
+    color: var(--color-primary-light);
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: clamp(10px, 2.5vw, 12px);
+    font-weight: bold;
+}
 
-    .history-date {
-        color: var(--color-text-lighter);
-        font-size: 13px;
-    }
+.history-date {
+    color: var(--color-text-lighter);
+    font-size: clamp(11px, 2.5vw, 13px);
+}
 
-    .history-reward-amount {
-        color: var(--color-primary-light);
-        font-weight: bold;
-    }
+.history-reward-amount {
+    color: var(--color-primary-light);
+    font-weight: bold;
+    font-size: clamp(13px, 3vw, 15px);
+}
 
     .history-empty {
         text-align: center;
@@ -1077,11 +1080,9 @@
         .coins-number { font-size: 52px; min-width: 80px; }
         .history-total-label { font-size: 14px; }
         .account-card { padding: 20px; }
-        .exchange-input {
-            flex-direction: column;
-            align-items: stretch;
+        .exchange-input { gap: 8px; flex-wrap: nowrap;}
+        .exchange-input span {font-size: 13px;flex-shrink: 0;
         }
-    }
 
     @media (min-width: 769px) {
         .challenge-buttons-wrapper { padding: 20px 40px; }
@@ -1357,16 +1358,11 @@
         },
 
         createDefaultData() {
-            state.appData = {
-                accounts: [{
-                    name: "なまえ",
-                    challenges: [],
-                    history: []
-                }]
-            };
-            this.save();
-        },
-
+    state.appData = {
+        accounts: []
+    };
+    this.save();
+},
         reset() {
             StorageAdapter.remove(CONFIG.STORAGE_KEY);
             this.load();
@@ -1545,11 +1541,12 @@
             list.innerHTML = '';
             
             if (state.appData.accounts.length === 0) {
-                list.innerHTML = `<div style="text-align: center; color: #999; padding: 30px;">
-                    アカウントがありません。<br>設定から追加してください。
-                </div>`;
-                return;
-            }
+    list.innerHTML = `<div class="account-list-empty">
+        アカウントを追加してください<br>
+        右上の設定ボタンから登録できます
+    </div>`;
+    return;
+}
 
             state.appData.accounts.forEach((account, index) => {
                 const card = this.createAccountCard(account, index);
@@ -2159,16 +2156,19 @@
     };
 
     function initApp() {
-        DataManager.load();
-        
-        if (state.appData.accounts.length > 0) {
-            state.currentAccountIndex = 0;
-            state.currentChallengeIndex = 0;
-        }
-        
-        EventHandlers.init();
-        UIManager.showScreen('accountSelectScreen');
+    DataManager.load();
+    
+    if (state.appData.accounts.length > 0) {
+        state.currentAccountIndex = 0;
+        state.currentChallengeIndex = 0;
+    } else {
+        state.currentAccountIndex = -1;
+        state.currentChallengeIndex = -1;
     }
+    
+    EventHandlers.init();
+    UIManager.showScreen('accountSelectScreen');
+}
 
     document.addEventListener('DOMContentLoaded', initApp);
 </script>

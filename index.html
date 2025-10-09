@@ -491,13 +491,13 @@
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     }
 
-    .btn-exchange:disabled {
-        background: #eee;
-        color: #ccc;
-        cursor: not-allowed;
-        box-shadow: none;
-        border: 2px solid #e9ecef;
-    }
+   .btn-exchange:disabled {
+    background: transparent;
+    color: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+    border: 2px solid #e9ecef;
+}
 
     .history-compact {
         background: white;
@@ -577,13 +577,18 @@
 }
 
 .history-challenge-badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: var(--color-primary-pale);
     color: var(--color-primary-light);
     padding: 3px 10px;
     border-radius: 12px;
     font-size: clamp(10px, 2.5vw, 12px);
     font-weight: bold;
+    border: 1px solid var(--color-primary-border);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .history-date {
@@ -1649,12 +1654,14 @@
         },
 
         renderEmptyCoinDisplay() {
-            const display = Utils.$('coinsDisplay');
-            display.classList.add('empty-state');
-            display.classList.add('no-challenges');
-            Utils.$('exchangeInput').disabled = true;
-            Utils.$('exchangeBtn').disabled = true;
-        },
+    const display = Utils.$('coinsDisplay');
+    display.classList.add('empty-state');
+    display.classList.add('no-challenges');
+    const input = Utils.$('exchangeInput');
+    input.value = '';
+    input.disabled = true;
+    Utils.$('exchangeBtn').disabled = true;
+},
 
         renderActiveCoinDisplay(challenge, account) {
             const display = Utils.$('coinsDisplay');

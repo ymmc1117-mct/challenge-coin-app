@@ -466,8 +466,6 @@ const UIManager = {
         Utils.$('totalReward').textContent = `${totalReward.toLocaleString()}円`;
        
         const list = Utils.$('historyList');
-        const preview = Utils.$('historyPreview');
-        list.innerHTML = '';
         preview.innerHTML = '';
 
         if (account.history.length === 0) {
@@ -935,5 +933,6 @@ function initApp() {
 
 
 document.addEventListener('DOMContentLoaded', initApp);
+
 
 

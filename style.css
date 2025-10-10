@@ -515,7 +515,7 @@ body {
 }
 
 .history-total-amount {
-    font-size: 24px;
+    font-size: 34px;
     font-weight: bold;
     color: var(--color-primary-light);
 }
@@ -1074,7 +1074,7 @@ body {
     .btn-exchange { padding: 13px; font-size: 17px; min-height: 48px; }
     .history-compact { padding: 18px; margin-bottom: 18px; }
     .history-total-label { font-size: 13px; }
-    .history-total-amount { font-size: 22px; }
+    .history-total-amount { font-size: 30px; }
     .btn-show-history { padding: 8px 12px; font-size: 13px; min-height: 36px; width: 110px; }
 }
 
@@ -1105,7 +1105,7 @@ body {
     .btn-exchange { padding: 13px; font-size: 17px; min-height: 48px; }
     .history-compact { padding: 16px; margin-bottom: 16px; }
     .history-total-label { font-size: 13px; }
-    .history-total-amount { font-size: 22px; }
+    .history-total-amount { font-size: 28px; }
     .btn-show-history { padding: 8px 12px; font-size: 13px; min-height: 36px; width: 110px; }
 }
 
@@ -1125,7 +1125,7 @@ body {
     .btn-exchange { padding: 12px; font-size: 16px; min-height: 48px; }
     .history-compact { padding: 14px; margin-bottom: 14px; }
     .history-total-label { font-size: 12px; }
-    .history-total-amount { font-size: 20px; }
+    .history-total-amount { font-size: 24px; }
     .btn-show-history { padding: 7px 10px; font-size: 12px; min-height: 34px; width: 100px; }
 }
 
@@ -1149,7 +1149,7 @@ body {
     .btn-exchange { padding: 11px; font-size: 15px; min-height: 48px; }
     .history-compact { padding: 12px; margin-bottom: 12px; }
     .history-total-label { font-size: 11px; }
-    .history-total-amount { font-size: 18px; }
+    .history-total-amount { font-size: 22px; }
     .btn-show-history { padding: 6px 8px; font-size: 11px; min-height: 32px; width: 90px; }
 }
 
@@ -1169,3 +1169,4 @@ body {
         font-size: 32px;
     }
 }
+

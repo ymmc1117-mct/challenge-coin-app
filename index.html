@@ -8,6 +8,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#dae7f8">
     <meta name="apple-mobile-web-app-title" content="Coin">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+    <meta name="x5-fullscreen" content="true">
     <title>Challenge Coin!</title>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Varela+Round&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -84,6 +87,18 @@
     </div>
     <div class="history-preview" id="historyPreview"></div>
     <div class="history-details" id="historyDetails">
+        <div class="history-filter">
+            <label>表示期間:</label>
+            <div class="custom-select" id="monthFilterContainer">
+                <div class="custom-select-trigger" id="monthFilterTrigger">
+                    <span id="monthFilterValue">すべて</span>
+                    <svg class="custom-select-arrow" viewBox="0 0 24 24">
+                        <path d="M7,10L12,15L17,10H7Z" />
+                    </svg>
+                </div>
+                <div class="custom-select-options" id="monthFilterOptions"></div>
+            </div>
+        </div>
         <div id="historyList"></div>
     </div>
 </div>
@@ -93,10 +108,10 @@
 </div>
 
 <div class="modal" id="globalSettingsModal">
+    <button class="close-btn" id="closeGlobalSettingsBtn">×</button>
     <div class="modal-content">
         <div class="modal-header">
             <h2>全体設定</h2>
-            <button class="close-btn" id="closeGlobalSettingsBtn">×</button>
         </div>
         <div class="setting-section">
             <h3>アカウント管理</h3>
@@ -115,10 +130,10 @@
 </div>
 
 <div class="modal" id="detailSettingsModal">
+    <button class="close-btn" id="closeDetailSettingsBtn">×</button>
     <div class="modal-content">
         <div class="modal-header">
             <h2 id="detailModalTitle">アカウント設定</h2>
-            <button class="close-btn" id="closeDetailSettingsBtn">×</button>
         </div>
         <div class="setting-section">
             <h3>アカウント名</h3>

@@ -1,10 +1,29 @@
-/* Updated styles to fix challenge button floating and background transparency issue */
-.challenge-button {
-    position: relative;
-    background-color: rgba(255, 255, 255, 0.8); /* Adjusted background transparency */
-    z-index: 10; /* Ensured button is above other elements */
+/* 修正: チャレンジボタンを画面上部に固定 */
+.challenge-buttons-container {
+    position: fixed; /* 固定 */
+    top: 0; /* ヘッダー直下に配置 */
+    left: 0;
+    width: 100%; /* 横幅を全体に広げる */
+    background: transparent; /* 背景を透明に設定 */
+    z-index: 1000; /* 他の要素の上に表示 */
+    padding: 10px 20px; /* 必要に応じてパディングを追加 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* ボタンに影を追加（任意） */
 }
 
-.background {
-    opacity: 0.9; /* Updated background transparency */
+/* 修正: コンテンツのスクロールを調整 */
+.content {
+    padding-top: 100px; /* チャレンジボタン分のスペースを確保 */
+    overflow-y: auto; /* 縦方向のスクロールを有効にする */
+    background: transparent; /* 背景を透明に設定 */
+}
+
+/* 修正: スクロールバーの位置を調整 (必要に応じて) */
+.scroll-bar {
+    position: fixed; /* 固定 */
+    top: 50px; /* ヘッダーの高さに応じて調整 */
+    left: 0;
+    width: 100%;
+    height: 10px; /* スクロールバーの高さを設定 */
+    background: rgba(0, 0, 0, 0.1); /* 半透明の背景色 */
+    z-index: 999; /* チャレンジボタンの下に表示 */
 }

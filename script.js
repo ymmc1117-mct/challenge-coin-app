@@ -470,13 +470,9 @@ const UIManager = {
 
         if (account.history.length === 0) {
             list.innerHTML = '<div class="history-empty">まだ履歴はありません</div>';
-            preview.classList.add('hidden');
             return;
         }
 
-        // プレビューに最新1件を表示
-        preview.classList.remove('hidden');
-        preview.appendChild(this.createHistoryItem(account.history[account.history.length - 1]));
 
         // 詳細リストに全件を表示
         account.history.slice().reverse().forEach(item => {
@@ -933,6 +929,7 @@ function initApp() {
 
 
 document.addEventListener('DOMContentLoaded', initApp);
+
 
 
 

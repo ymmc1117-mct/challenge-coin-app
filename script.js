@@ -3,7 +3,7 @@ const CONFIG = {
     STORAGE_KEY: 'challengeCoinData',
     DEFAULT_CHALLENGE: { name: 'お手伝い', value: 10, coins: 0, totalCoins: 0 },
     CELEBRATION_DURATION: 3000,
-    CONFETTI_COUNT: 200,
+    CONFETTI_COUNT: 140,
     CONFETTI_COLORS: ['#ff6b9d', '#ffb3ba', '#a8e6cf', '#dae7f8']
 };
 
@@ -777,7 +777,7 @@ const CelebrationManager = {
             confetti.classList.add('confetti');
             confetti.style.backgroundColor =
                 CONFIG.CONFETTI_COLORS[Math.floor(Math.random() * CONFIG.CONFETTI_COLORS.length)];
-            confetti.style.left = `${Math.random() * 70}vw`;
+            confetti.style.left = `${Math.random() * 105}vw`;
             confetti.style.top = `-20vh`;
             confetti.style.animation =
                 `confetti-fall 3s ease-out forwards ${Math.random() * 2}s`;
@@ -935,4 +935,5 @@ function initApp() {
 
 
 document.addEventListener('DOMContentLoaded', initApp);
+
 

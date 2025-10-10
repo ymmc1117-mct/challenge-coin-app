@@ -531,7 +531,7 @@ body {
     padding: 15px;
     background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
     border: 2px solid rgba(255, 153, 187, 0.15);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     font-size: 18px;
     font-weight: bold;
     color: var(--color-text);

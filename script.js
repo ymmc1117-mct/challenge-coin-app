@@ -51,7 +51,7 @@ const Utils = {
             day: 'numeric',
             hour: '2-digit',
             minute: '2-digit'
-        });
+        }).replace(/\//g, '月').replace(/ /g, '日 ') + '時';
     },
 
     validateChallengeValue(value) {
@@ -465,13 +465,21 @@ const UIManager = {
         Utils.$('totalReward').textContent = `${totalReward.toLocaleString()}円`;
        
         const list = Utils.$('historyList');
+        const preview = Utils.$('historyPreview');
         list.innerHTML = '';
+        preview.innerHTML = '';
 
         if (account.history.length === 0) {
             list.innerHTML = '<div class="history-empty">まだ履歴はありません</div>';
+            preview.classList.add('hidden');
             return;
         }
 
+        // プレビューに最新1件を表示
+        preview.classList.remove('hidden');
+        preview.appendChild(this.createHistoryItem(account.history[account.history.length - 1]));
+
+        // 詳細リストに全件を表示
         account.history.slice().reverse().forEach(item => {
             list.appendChild(this.createHistoryItem(item));
         });
@@ -768,7 +776,7 @@ const CelebrationManager = {
             confetti.classList.add('confetti');
             confetti.style.backgroundColor =
                 CONFIG.CONFETTI_COLORS[Math.floor(Math.random() * CONFIG.CONFETTI_COLORS.length)];
-            confetti.style.left = `${Math.random() * 100}vw`;
+            confetti.style.left = `${Math.random() * 70}vw`;
             confetti.style.top = `-20vh`;
             confetti.style.animation =
                 `confetti-fall 3s ease-out forwards ${Math.random() * 2}s`;
@@ -824,9 +832,15 @@ const EventHandlers = {
 
         Utils.$('toggleHistoryBtn').addEventListener('click', () => {
             const details = Utils.$('historyDetails');
+            const preview = Utils.$('historyPreview');
             const text = Utils.$('historyToggleText');
             const isShowing = details.classList.toggle('show');
             text.textContent = isShowing ? '閉じる' : 'くわしく見る';
+            if (isShowing) {
+                preview.classList.add('hidden');
+            } else {
+                preview.classList.remove('hidden');
+            }
         });
 
         Utils.$('resetAllBtn').addEventListener('click',
@@ -917,5 +931,6 @@ function initApp() {
     EventHandlers.init();
     UIManager.showScreen('accountSelectScreen');
 }
+
 
 document.addEventListener('DOMContentLoaded', initApp);

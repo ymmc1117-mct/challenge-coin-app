@@ -96,8 +96,8 @@ body {
     background: rgba(255, 255, 255, 0.9);
     border: 2px solid transparent;
     border-radius: 50%;
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -286,15 +286,15 @@ body {
 .coins-display {
     background: var(--color-blue-bg);
     border-radius: var(--radius-md);
-    padding: 30px 20px;
+    padding: 35px 25px;
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     margin-top: 0;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 180px;
+    min-height: 220px;
     flex-shrink: 0;
 }
 
@@ -329,11 +329,11 @@ body {
 .coin-value-label {
     display: block;
     width: fit-content;
-    margin: 0 auto 10px;
-    font-size: 18px;
+    margin: 0 auto 12px;
+    font-size: 16px;
     color: var(--color-text-light);
     background: var(--color-primary-pale);
-    padding: 8px 15px;
+    padding: 10px 16px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-primary-border);
 }
@@ -343,24 +343,24 @@ body {
 }
 
 .coins-label {
-    font-size: 20px;
+    font-size: 18px;
     color: var(--color-text-light);
-    margin-bottom: 15px;
+    margin-bottom: 18px;
 }
 
 .coins-main {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
-    margin: 15px 0;
+    gap: 20px;
+    margin: 18px 0;
 }
 
 .coins-number {
-    font-size: 64px;
+    font-size: 72px;
     font-weight: bold;
     color: var(--color-primary-light);
-    min-width: 100px;
+    min-width: 120px;
 }
 
 .coins-number.disabled {
@@ -368,11 +368,11 @@ body {
 }
 
 .coin-btn {
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     border: none;
     border-radius: var(--radius-md);
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     cursor: pointer;
     box-shadow: var(--shadow-sm);
@@ -412,10 +412,10 @@ body {
 }
 
 .coins-value {
-    font-size: 22px;
+    font-size: 24px;
     color: var(--color-text);
     font-weight: bold;
-    margin-top: 8px;
+    margin-top: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -428,35 +428,35 @@ body {
 .exchange-section {
     background: var(--color-yellow-bg);
     border-radius: var(--radius-md);
-    padding: 15px;
-    margin-bottom: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
     flex-shrink: 0;
 }
 
 .exchange-section h3 {
     font-size: 18px;
     color: var(--color-text);
-    margin-bottom: 12px;
+    margin-bottom: 15px;
     font-weight: bold;
 }
 
 .exchange-input {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
     flex-wrap: nowrap;
 }
 
 .exchange-input input {
     flex: 1;
-    padding: 12px;
+    padding: 14px;
     border: 2px solid var(--color-border);
     border-radius: var(--radius-sm);
     font-size: 18px;
     text-align: center;
     font-family: inherit;
-    min-height: 44px;
+    min-height: 48px;
 }
 
 .exchange-input span {
@@ -466,7 +466,7 @@ body {
 
 .btn-exchange {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
     border: 2px solid rgba(255, 153, 187, 0.15);
     border-radius: var(--radius-sm);
@@ -477,7 +477,7 @@ body {
     font-family: inherit;
     box-shadow: var(--shadow-sm);
     transition: transform 0.2s, box-shadow 0.2s;
-    min-height: 44px;
+    min-height: 48px;
 }
 
 .btn-exchange:active {
@@ -496,10 +496,10 @@ body {
 .history-compact {
     background: white;
     border-radius: var(--radius-md);
-    padding: 15px;
+    padding: 20px;
     border: 2px solid var(--color-border);
     flex-shrink: 0;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .history-summary {
@@ -625,7 +625,7 @@ body {
 .modal-content {
     background: white;
     border-radius: var(--radius-lg);
-    padding: 30px;
+    padding: 25px;
     max-width: 600px;
     width: 100%;
     max-height: 90vh;
@@ -636,30 +636,30 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
 .modal-header h2 {
-    font-size: 26px;
+    font-size: 22px;
     color: var(--color-text);
 }
 
 .close-btn {
     background: none;
     border: none;
-    font-size: 32px;
+    font-size: 28px;
     cursor: pointer;
     color: var(--color-text-lighter);
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .setting-section {
-    margin-bottom: 25px;
-    padding-bottom: 25px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
     border-bottom: 2px solid var(--color-border-light);
 }
 
@@ -668,24 +668,24 @@ body {
 }
 
 .setting-section h3 {
-    font-size: 20px;
+    font-size: 18px;
     color: var(--color-text);
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     font-weight: bold;
 }
 
 .account-item {
     display: flex;
     gap: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .account-item input {
     flex: 1;
-    padding: 12px 15px;
+    padding: 12px 14px;
     border: 2px solid var(--color-border);
     border-radius: var(--radius-sm);
-    font-size: 18px;
+    font-size: 16px;
     font-family: inherit;
     min-height: 48px;
     min-width: 0;
@@ -723,38 +723,38 @@ body {
 .challenge-item {
     background: var(--color-border-light);
     border-radius: var(--radius-md);
-    padding: 20px;
-    margin-bottom: 15px;
+    padding: 16px;
+    margin-bottom: 12px;
 }
 
 .challenge-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .challenge-header h4 {
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .challenge-inputs-group {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .challenge-inputs-group label {
     display: block;
-    font-size: 15px;
+    font-size: 14px;
     color: var(--color-text-lighter);
     margin-bottom: 5px;
 }
 
 .challenge-inputs-group input {
     width: 100%;
-    padding: 12px 15px;
+    padding: 12px 14px;
     border: 2px solid var(--color-border);
     border-radius: var(--radius-sm);
-    font-size: 18px;
+    font-size: 16px;
     font-family: inherit;
     min-height: 48px;
 }
@@ -778,10 +778,10 @@ body {
 
 .input-with-suffix .suffix {
     position: absolute;
-    right: 15px;
+    right: 14px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 18px;
+    font-size: 16px;
     color: var(--color-text-light);
     pointer-events: none;
 }
@@ -796,8 +796,8 @@ body {
     font-family: inherit;
     box-shadow: var(--shadow-sm);
     transition: transform 0.2s, box-shadow 0.2s;
-    min-height: 44px;
-    min-width: 44px;
+    min-height: 48px;
+    min-width: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -823,12 +823,12 @@ body {
     font-weight: bold;
     cursor: pointer;
     width: 100%;
-    padding: 15px;
+    padding: 14px;
     font-family: inherit;
     box-shadow: var(--shadow-sm);
     transition: transform 0.2s, box-shadow 0.2s;
     font-size: 16px;
-    min-height: 52px;
+    min-height: 48px;
 }
 
 .btn-add:active {
@@ -842,19 +842,19 @@ body {
 
 .btn-save {
     width: 100%;
-    padding: 15px;
+    padding: 14px;
     background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
     border: 1px solid rgba(255, 153, 187, 0.15);
     border-radius: var(--radius-sm);
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     color: var(--color-text);
     cursor: pointer;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
     font-family: inherit;
     box-shadow: var(--shadow-sm);
     transition: transform 0.2s, box-shadow 0.2s;
-    min-height: 52px;
+    min-height: 48px;
 }
 
 .btn-save:active {
@@ -869,7 +869,7 @@ body {
 }
 
 .btn-reset {
-    padding: 15px;
+    padding: 14px;
     border: none;
     border-radius: var(--radius-sm);
     font-weight: bold;
@@ -878,7 +878,7 @@ body {
     box-shadow: var(--shadow-sm);
     transition: transform 0.2s, box-shadow 0.2s;
     font-size: 16px;
-    min-height: 52px;
+    min-height: 48px;
 }
 
 .btn-reset:active {
@@ -919,21 +919,21 @@ body {
 .confirm-content {
     background: white;
     border-radius: var(--radius-lg);
-    padding: 30px;
+    padding: 25px;
     max-width: 400px;
     width: 100%;
     text-align: center;
 }
 
 .confirm-content h3 {
-    font-size: 22px;
-    margin-bottom: 15px;
+    font-size: 20px;
+    margin-bottom: 12px;
 }
 
 .confirm-content p {
     color: var(--color-text-light);
-    margin-bottom: 25px;
-    font-size: 16px;
+    margin-bottom: 20px;
+    font-size: 15px;
     line-height: 1.5;
 }
 
@@ -944,7 +944,7 @@ body {
 
 .btn-confirm {
     flex: 1;
-    padding: 15px;
+    padding: 14px;
     border: none;
     border-radius: var(--radius-sm);
     font-weight: bold;
@@ -953,7 +953,7 @@ body {
     box-shadow: var(--shadow-sm);
     transition: transform 0.2s, box-shadow 0.2s;
     font-size: 16px;
-    min-height: 52px;
+    min-height: 48px;
 }
 
 .btn-confirm:active {
@@ -1057,22 +1057,22 @@ body {
         font-size: 12px;
         min-height: 18px;
     }
-    .screen-content { padding: 0 20px 20px 20px; }
+    .screen-content { padding: 0 25px 25px 25px; }
     .account-list { padding: 20px; }
     .account-list-empty { font-size: 16px; }
-    .coins-display { padding: 20px 15px; min-height: 140px; }
-    .coins-number { font-size: 52px; min-width: 80px; }
-    .coins-main { gap: 12px; margin: 12px 0; }
-    .coin-btn { width: 44px; height: 44px; font-size: 20px; }
-    .coins-value { font-size: 20px; margin-top: 6px; }
+    .coins-display { padding: 25px 20px; min-height: 200px; }
+    .coins-number { font-size: 68px; min-width: 110px; }
+    .coins-main { gap: 18px; margin: 16px 0; }
+    .coin-btn { width: 48px; height: 48px; font-size: 26px; }
+    .coins-value { font-size: 22px; margin-top: 8px; }
     .account-card { padding: 30px; }
-    .exchange-section { padding: 12px; margin-bottom: 12px; }
-    .exchange-section h3 { font-size: 16px; margin-bottom: 10px; }
-    .exchange-input { gap: 6px; margin-bottom: 10px; }
-    .exchange-input input { padding: 10px; font-size: 16px; min-height: 40px; }
-    .exchange-input span { font-size: 14px; }
-    .btn-exchange { padding: 10px; font-size: 16px; min-height: 40px; }
-    .history-compact { padding: 12px; margin-bottom: 12px; }
+    .exchange-section { padding: 18px; margin-bottom: 18px; }
+    .exchange-section h3 { font-size: 17px; margin-bottom: 13px; }
+    .exchange-input { gap: 8px; margin-bottom: 13px; }
+    .exchange-input input { padding: 13px; font-size: 17px; min-height: 48px; }
+    .exchange-input span { font-size: 15px; }
+    .btn-exchange { padding: 13px; font-size: 17px; min-height: 48px; }
+    .history-compact { padding: 18px; margin-bottom: 18px; }
     .history-total-label { font-size: 13px; }
     .history-total-amount { font-size: 22px; }
     .btn-show-history { padding: 8px 12px; font-size: 13px; min-height: 36px; width: 110px; }
@@ -1087,70 +1087,70 @@ body {
         font-size: 11px;
         min-height: 16px;
     }
-    .screen-content { padding: 0 15px 15px 15px; }
+    .screen-content { padding: 0 20px 20px 20px; }
     .account-list { padding: 15px; }
-    .coins-display { padding: 18px 12px; min-height: 130px; }
-    .coin-value-label { font-size: 13px; padding: 6px 12px; }
-    .coins-label { font-size: 16px; margin-bottom: 10px; }
-    .coins-number { font-size: 48px; min-width: 70px; }
-    .coins-main { gap: 10px; margin: 10px 0; }
-    .coin-btn { width: 40px; height: 40px; font-size: 18px; }
-    .coins-value { font-size: 18px; margin-top: 5px; }
+    .coins-display { padding: 22px 18px; min-height: 180px; }
+    .coin-value-label { font-size: 15px; padding: 8px 14px; }
+    .coins-label { font-size: 17px; margin-bottom: 14px; }
+    .coins-number { font-size: 64px; min-width: 100px; }
+    .coins-main { gap: 16px; margin: 14px 0; }
+    .coin-btn { width: 48px; height: 48px; font-size: 26px; }
+    .coins-value { font-size: 22px; margin-top: 8px; }
     .account-card { padding: 20px; }
-    .exchange-section { padding: 10px; margin-bottom: 10px; }
-    .exchange-section h3 { font-size: 15px; margin-bottom: 8px; }
-    .exchange-input { gap: 6px; margin-bottom: 8px; }
-    .exchange-input input { padding: 8px; font-size: 15px; min-height: 38px; }
-    .exchange-input span { font-size: 13px; flex-shrink: 0; }
-    .btn-exchange { padding: 8px; font-size: 15px; min-height: 38px; }
-    .history-compact { padding: 10px; margin-bottom: 10px; }
-    .history-total-label { font-size: 12px; }
-    .history-total-amount { font-size: 20px; }
-    .btn-show-history { padding: 6px 10px; font-size: 12px; min-height: 32px; width: 100px; }
+    .exchange-section { padding: 16px; margin-bottom: 16px; }
+    .exchange-section h3 { font-size: 17px; margin-bottom: 12px; }
+    .exchange-input { gap: 8px; margin-bottom: 12px; }
+    .exchange-input input { padding: 13px; font-size: 17px; min-height: 48px; }
+    .exchange-input span { font-size: 15px; flex-shrink: 0; }
+    .btn-exchange { padding: 13px; font-size: 17px; min-height: 48px; }
+    .history-compact { padding: 16px; margin-bottom: 16px; }
+    .history-total-label { font-size: 13px; }
+    .history-total-amount { font-size: 22px; }
+    .btn-show-history { padding: 8px 12px; font-size: 13px; min-height: 36px; width: 110px; }
 }
 
 @media (max-width: 480px) and (max-height: 700px) {
-    .coins-display { padding: 15px 10px; min-height: 110px; }
-    .coin-value-label { font-size: 12px; padding: 4px 10px; }
-    .coins-label { font-size: 14px; margin-bottom: 8px; }
-    .coins-number { font-size: 40px; min-width: 60px; }
-    .coins-main { gap: 8px; margin: 8px 0; }
-    .coin-btn { width: 36px; height: 36px; font-size: 16px; }
-    .coins-value { font-size: 16px; margin-top: 4px; }
-    .exchange-section { padding: 8px; margin-bottom: 8px; }
-    .exchange-section h3 { font-size: 14px; margin-bottom: 6px; }
-    .exchange-input { gap: 5px; margin-bottom: 6px; }
-    .exchange-input input { padding: 6px; font-size: 14px; min-height: 34px; }
-    .exchange-input span { font-size: 12px; }
-    .btn-exchange { padding: 6px; font-size: 14px; min-height: 34px; }
-    .history-compact { padding: 8px; margin-bottom: 8px; }
-    .history-total-label { font-size: 11px; }
-    .history-total-amount { font-size: 18px; }
-    .btn-show-history { padding: 5px 8px; font-size: 11px; min-height: 30px; width: 90px; }
+    .coins-display { padding: 18px 15px; min-height: 160px; }
+    .coin-value-label { font-size: 14px; padding: 7px 12px; }
+    .coins-label { font-size: 16px; margin-bottom: 12px; }
+    .coins-number { font-size: 56px; min-width: 90px; }
+    .coins-main { gap: 14px; margin: 12px 0; }
+    .coin-btn { width: 48px; height: 48px; font-size: 24px; }
+    .coins-value { font-size: 20px; margin-top: 6px; }
+    .exchange-section { padding: 14px; margin-bottom: 14px; }
+    .exchange-section h3 { font-size: 16px; margin-bottom: 10px; }
+    .exchange-input { gap: 7px; margin-bottom: 10px; }
+    .exchange-input input { padding: 12px; font-size: 16px; min-height: 48px; }
+    .exchange-input span { font-size: 14px; }
+    .btn-exchange { padding: 12px; font-size: 16px; min-height: 48px; }
+    .history-compact { padding: 14px; margin-bottom: 14px; }
+    .history-total-label { font-size: 12px; }
+    .history-total-amount { font-size: 20px; }
+    .btn-show-history { padding: 7px 10px; font-size: 12px; min-height: 34px; width: 100px; }
 }
 
 @media (max-width: 480px) and (max-height: 650px) {
     .header { padding: 15px; padding-top: max(15px, env(safe-area-inset-top) + 8px); }
     .header h1 { font-size: 22px; }
     .challenge-buttons-wrapper { padding: 8px 12px; }
-    .screen-content { padding: 0 12px 12px 12px; }
-    .coins-display { padding: 12px 8px; min-height: 100px; }
-    .coin-value-label { font-size: 11px; padding: 3px 8px; }
-    .coins-label { font-size: 13px; margin-bottom: 6px; }
-    .coins-number { font-size: 36px; min-width: 55px; }
-    .coins-main { gap: 6px; margin: 6px 0; }
-    .coin-btn { width: 32px; height: 32px; font-size: 14px; }
-    .coins-value { font-size: 15px; margin-top: 3px; }
-    .exchange-section { padding: 6px; margin-bottom: 6px; }
-    .exchange-section h3 { font-size: 13px; margin-bottom: 5px; }
-    .exchange-input { gap: 4px; margin-bottom: 5px; }
-    .exchange-input input { padding: 5px; font-size: 13px; min-height: 30px; }
-    .exchange-input span { font-size: 11px; }
-    .btn-exchange { padding: 5px; font-size: 13px; min-height: 30px; }
-    .history-compact { padding: 6px; margin-bottom: 6px; }
-    .history-total-label { font-size: 10px; }
-    .history-total-amount { font-size: 16px; }
-    .btn-show-history { padding: 4px 6px; font-size: 10px; min-height: 28px; width: 80px; }
+    .screen-content { padding: 0 18px 18px 18px; }
+    .coins-display { padding: 16px 12px; min-height: 140px; }
+    .coin-value-label { font-size: 13px; padding: 6px 10px; }
+    .coins-label { font-size: 15px; margin-bottom: 10px; }
+    .coins-number { font-size: 48px; min-width: 80px; }
+    .coins-main { gap: 12px; margin: 10px 0; }
+    .coin-btn { width: 48px; height: 48px; font-size: 22px; }
+    .coins-value { font-size: 18px; margin-top: 5px; }
+    .exchange-section { padding: 12px; margin-bottom: 12px; }
+    .exchange-section h3 { font-size: 15px; margin-bottom: 8px; }
+    .exchange-input { gap: 6px; margin-bottom: 8px; }
+    .exchange-input input { padding: 11px; font-size: 15px; min-height: 48px; }
+    .exchange-input span { font-size: 13px; }
+    .btn-exchange { padding: 11px; font-size: 15px; min-height: 48px; }
+    .history-compact { padding: 12px; margin-bottom: 12px; }
+    .history-total-label { font-size: 11px; }
+    .history-total-amount { font-size: 18px; }
+    .btn-show-history { padding: 6px 8px; font-size: 11px; min-height: 32px; width: 90px; }
 }
 
 @media (min-width: 769px) {

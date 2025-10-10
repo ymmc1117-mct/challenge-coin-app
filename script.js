@@ -50,8 +50,9 @@ const Utils = {
             month: 'numeric',
             day: 'numeric',
             hour: '2-digit',
-            minute: '2-digit'
-        }).replace(/\//g, '月').replace(/ /g, '日 ') + '時';
+        }).replace(/\//g, '月') // 月に置換
+        .replace(/:/g, '時') // 時:分 のコロンを 時に置換（分が削除されると :00 になるため）
+        .replace(/ /g, '日 ')
     },
 
     validateChallengeValue(value) {
@@ -934,3 +935,4 @@ function initApp() {
 
 
 document.addEventListener('DOMContentLoaded', initApp);
+

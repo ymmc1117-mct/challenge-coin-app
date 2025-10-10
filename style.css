@@ -1058,7 +1058,7 @@ body {
         min-height: 18px;
     }
     .screen-content { padding: 0 25px 25px 25px; }
-    .account-list { padding: 20px; }
+    .account-list { padding: 25px; }
     .account-list-empty { font-size: 16px; }
     .coins-display { padding: 25px 20px; min-height: 200px; }
     .coins-number { font-size: 68px; min-width: 110px; }
@@ -1087,7 +1087,7 @@ body {
         font-size: 11px;
         min-height: 16px;
     }
-    .screen-content { padding: 0 20px 20px 20px; }
+    .screen-content { padding: 0 15px 15px 15px; }
     .account-list { padding: 15px; }
     .coins-display { padding: 22px 18px; min-height: 180px; }
     .coin-value-label { font-size: 15px; padding: 8px 14px; }

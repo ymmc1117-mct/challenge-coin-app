@@ -176,6 +176,7 @@ body {
 }
 
 .content {
+    background: transparent; 
     padding: 0;
     overflow-y: auto;
     flex: 1;

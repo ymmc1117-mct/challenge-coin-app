@@ -778,15 +778,14 @@ const SettingsManager = {
             </div>
             <div class="challenge-inputs-group">
                 <label for="chal-value-${index}">1コインあたりのおこづかい</label>
-                <div class="challenge-value-wrapper">
-                    <div class="input-with-suffix">
-                        <input type="number" id="chal-value-${index}"
-                               value="${challenge.value}"
-                               min="1"
-                               data-index="${index}"
-                               class="challenge-value-input">
-                        <span class="suffix">円</span>
-                    </div>
+               <div class="challenge-value-wrapper">
+    <input type="number" id="chal-value-${index}"
+           value="${challenge.value}"
+           min="1"
+           data-index="${index}"
+           class="challenge-value-input">
+    <span class="value-suffix">円</span>
+</div>
                 </div>
             </div>
         `;
@@ -1062,4 +1061,5 @@ function initApp() {
 
 
 document.addEventListener('DOMContentLoaded', initApp);
+
 

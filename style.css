@@ -595,7 +595,6 @@ body {
     min-height: 40px;
     width: 120px;
     flex-shrink: 0;
-    box-shadow: var(--shadow-sm);
 }
 
 .btn-show-history:active {

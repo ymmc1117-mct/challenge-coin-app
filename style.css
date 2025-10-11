@@ -605,7 +605,7 @@ body {
 .history-details {
     margin-top: 20px;
     padding-top: 20px;
-    border-top: 2px solid var(--color-border-light);
+    border-top: 2px solid #d6f3dd;
     display: none;
 }
 

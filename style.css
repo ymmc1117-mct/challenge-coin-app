@@ -584,8 +584,8 @@ body {
 
 .btn-show-history {
     padding: 10px 16px;
-    background: var(--color-yellow-bg);
-    border: 1.5px solid #f5f0b5;
+    background: #e1bee7;
+    border: none;
     border-radius: var(--radius-sm);
     font-size: 14px;
     color: var(--color-text-lighter);

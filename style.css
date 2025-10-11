@@ -79,6 +79,7 @@ body {
     text-align: center;
     position: relative;
     flex-shrink: 0;
+    margin-top: calc(-1 * env(safe-area-inset-top));
 }
 
 .header h1 {

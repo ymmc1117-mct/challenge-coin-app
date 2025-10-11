@@ -75,10 +75,10 @@ body {
 .header {
     background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
     padding: 30px;
+    padding-top: calc(env(safe-area-inset-top) + 30px);
     text-align: center;
     position: relative;
     flex-shrink: 0;
-    padding-top: max(30px, env(safe-area-inset-top) + 10px);
 }
 
 .header h1 {

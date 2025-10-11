@@ -1112,39 +1112,17 @@ body {
     padding: 20px;
 }
 
-.error-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1001;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.error-modal.show {
+.confirm-modal.show {
     display: flex;
 }
 
-.error-content {
+.confirm-content {
     background: white;
     border-radius: var(--radius-lg);
     padding: 25px;
     max-width: 400px;
     width: 100%;
     text-align: center;
-    position: relative;
-}
-
-.error-content p {
-    color: var(--color-text-light);
-    font-size: 15px;
-    line-height: 1.5;
-    margin: 0;
 }
 
 .confirm-content h3 {
@@ -1192,18 +1170,6 @@ body {
     background: #e57373;
     color: white;
     border: 1px solid var(--color-red);
-}
-
-.input-error-confirm {
-    background: #81c784;
-    color: white;
-    border: 1px solid #66bb6a;
-}
-
-.exchange-error-confirm {
-    background: #64b5f6;
-    color: white;
-    border: 1px solid #42a5f5;
 }
 
 .exchange-confirm {

@@ -993,7 +993,7 @@ const EventHandlers = {
             const reward = amount * challenge.value;
             ModalManager.confirm(
                 '交換の確認',
-                `${amount}コインを${reward.toLocaleString()}円のおこづかいと交換しますか?`,
+                `${amount}コインを${reward.toLocaleString()}円と交換しますか?`,
                 () => {
                     CoinManager.exchange(amount);
                     ModalManager.hide('confirmModal');

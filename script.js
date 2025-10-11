@@ -454,12 +454,8 @@ const UIManager = {
         input.min = 1;
         input.max = challenge.coins;
        
-        // 入力値の検証と調整（無効な値の場合のみ調整）
-        if (input.value && !isNaN(parseInt(input.value)) && parseInt(input.value) >= 1) {
-            // 有効な値の場合はそのまま保持
-        } else {
-            // 無効な値や空の場合は空に設定
-            input.value = '';
+        if (!input.value || parseInt(input.value) < 1) {
+            input.value = 1;
         }
        
         this.updateExchangeButton(challenge);
@@ -484,16 +480,11 @@ const UIManager = {
         input.disabled = false;
         input.placeholder = '';
        
-        // 入力値の検証と調整（無効な値の場合のみ調整）
-        if (input.value && !isNaN(amount) && amount >= 1) {
-            // 有効な値の場合はそのまま保持
-        } else {
-            // 無効な値や空の場合は空に設定
-            input.value = '';
+        if (!input.value || isNaN(amount) || amount < 1) {
+            input.value = 1;
         }
        
-        // 交換ボタンは常に活性状態にする（未入力の場合も有効）
-        btn.disabled = false;
+        btn.disabled = isNaN(amount) || amount < 1 || amount > challenge.coins;
     },
 
     renderHistoryCompact() {
@@ -649,19 +640,8 @@ const ModalManager = {
         modal.classList.add('show');
     },
 
-    showError(message, duration = 2000) {
-        const errorModal = Utils.$('errorModal');
-        const errorMessage = Utils.$('errorMessage');
-
-        if (errorModal && errorMessage) {
-            errorMessage.textContent = message;
-            errorModal.classList.add('show');
-
-            // 指定時間後に自動的に閉じる
-            setTimeout(() => {
-                errorModal.classList.remove('show');
-            }, duration);
-        }
+    hide(modalId) {
+        Utils.$(modalId).classList.remove('show');
     },
 
     confirm(title, message, callback, confirmText = 'OK', confirmClass = 'btn-confirm-action') {
@@ -1007,26 +987,10 @@ const EventHandlers = {
     },
 
     handleExchange() {
-        const input = Utils.$('exchangeInput');
-        const inputValue = input.value.trim();
-        const amount = parseInt(inputValue);
+        const amount = parseInt(Utils.$('exchangeInput').value);
         const challenge = AccountManager.getCurrentChallenge();
-
-        console.log('Exchange debug:', {
-            inputValue: inputValue,
-            inputValueLength: inputValue.length,
-            amount: amount,
-            isNaN: isNaN(amount),
-            challenge: challenge ? 'exists' : 'null',
-            challengeCoins: challenge ? challenge.coins : 'N/A',
-            inputElement: input,
-            inputDisabled: input.disabled,
-            inputType: input.type,
-            inputMin: input.min,
-            inputMax: input.max
-        });
-
-        if (challenge && !isNaN(amount) && amount > 0 && amount <= challenge.coins) {
+       
+        if (challenge && amount > 0 && amount <= challenge.coins) {
             const reward = amount * challenge.value;
             ModalManager.confirm(
                 '交換の確認',
@@ -1038,12 +1002,8 @@ const EventHandlers = {
                 '交換する',
                 'exchange-confirm'
             );
-        } else if (!inputValue || isNaN(amount) || amount <= 0) {
-            // 未入力または無効な値の場合の自動消去エラーメッセージ
-            ModalManager.showError('交換するコイン数を入力してください。');
         } else {
-            // その他のエラーケース（コイン不足など）の自動消去エラーメッセージ
-            ModalManager.showError('交換できるコイン数が正しくありません。');
+            alert('交換できるコイン数が正しくありません。');
         }
     },
 

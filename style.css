@@ -20,7 +20,7 @@
     --color-text-light: #666;
     --color-text-lighter: #999;
     --color-border: #e9ecef;
-    --color-border-light: #eef0f2;
+    --color-border-light: #eeeff0;
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
     --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
     --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.1);
@@ -30,6 +30,13 @@
     --radius-lg: 20px;
     --radius-xl: 25px;
     --radius-xxl: 40px;
+    /* パステルカラー */
+    --color-pastel-pink: #ffeaff;
+    --color-pastel-yellow: #ffffd6;
+    --color-pastel-mint: #e0ffef;
+    --color-pastel-blue: #e0efff;
+    --color-pastel-lavender: #f2e5ff;
+    --color-pastel-orange: #ffefe0;
 }
 
 * {
@@ -70,16 +77,15 @@ body {
     background: white;
     display: flex;
     flex-direction: column;
-    padding-top: 0;
 }
 
 .header {
     background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
     padding: 30px;
-    padding-top: calc(env(safe-area-inset-top) + 30px);
     text-align: center;
     position: relative;
     flex-shrink: 0;
+    padding-top: max(30px, env(safe-area-inset-top) + 10px);
 }
 
 .header h1 {
@@ -584,14 +590,14 @@ body {
 
 .btn-show-history {
     padding: 10px 16px;
-    background: #d6f3dd;
-    border: none;
+    background: #d0f0d8;
+    border: 1px solid #d0f0d8;
     border-radius: var(--radius-sm);
     font-size: 14px;
     color: var(--color-text-light);
     cursor: pointer;
     font-family: inherit;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s;
     min-height: 40px;
     width: 120px;
     flex-shrink: 0;
@@ -599,13 +605,12 @@ body {
 
 .btn-show-history:active {
     transform: scale(0.98);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 .history-details {
     margin-top: 20px;
     padding-top: 20px;
-    border-top: 2px solid #d6f3dd;
+    border-top: 2px solid var(--color-border-light);
     display: none;
 }
 
@@ -619,7 +624,7 @@ body {
     gap: 10px;
     margin-bottom: 20px;
     padding: 12px 16px;
-    background: #dcf6e2;
+    background: #d0f0d8;
     border-radius: var(--radius-lg);
     width: fit-content;
 }
@@ -764,7 +769,6 @@ body {
     color: var(--color-text-lighter);
     padding: 20px;
 }
-
 
 .modal {
     position: fixed;
@@ -1147,7 +1151,7 @@ body {
     flex: 1;
     padding: 14px;
     border: none;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     font-weight: bold;
     cursor: pointer;
     font-family: inherit;
@@ -1220,12 +1224,12 @@ body {
     position: fixed;
     width: 12px;
     height: 12px;
-    z-index: 1004; histor
+    z-index: 1004;
 }
 
 @keyframes confetti-fall {
     to {
-        transform: translateY(120vh) rotate(600deg);
+        transform: translateY(120vh) rotate(720deg);
         opacity: 0;
     }
 }
@@ -1241,8 +1245,65 @@ body {
     display: none;
 }
 
-.overlay.show {
-    display: block;
+.color-picker-section {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+.color-picker-section h3 {
+    font-size: 18px;
+    color: var(--color-text);
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.color-picker {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.color-option {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    box-shadow: var(--shadow-sm);
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+}
+
+.color-option.selected {
+    border-color: #999;
+}
+
+.color-option[data-color="#ffeaff"] {
+    background-color: var(--color-pastel-pink);
+}
+
+.color-option[data-color="#ffffd6"] {
+    background-color: var(--color-pastel-yellow);
+}
+
+.color-option[data-color="#e0ffef"] {
+    background-color: var(--color-pastel-mint);
+}
+
+.color-option[data-color="#e0efff"] {
+    background-color: var(--color-pastel-blue);
+}
+
+.color-option[data-color="#f2e5ff"] {
+    background-color: var(--color-pastel-lavender);
+}
+
+.color-option[data-color="#ffefe0"] {
+    background-color: var(--color-pastel-orange);
 }
 
 @media (max-width: 768px) {

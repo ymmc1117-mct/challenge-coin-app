@@ -4,7 +4,8 @@ const CONFIG = {
     DEFAULT_CHALLENGE: { name: 'お手伝い', value: 10, coins: 0, totalCoins: 0 },
     CELEBRATION_DURATION: 3000,
     CONFETTI_COUNT: 140,
-    CONFETTI_COLORS: ['#ff6b9d', '#ffb3ba', '#a8e6cf', '#dae7f8']
+    CONFETTI_COLORS: ['#ff6b9d', '#ffb3ba', '#a8e6cf', '#dae7f8'],
+    DEFAULT_ACCOUNT_COLOR: '#e0ffff' // シアン（水色）
 };
 
 const StorageAdapter = {
@@ -62,6 +63,19 @@ const Utils = {
 
     sanitizeAccountName(name, fallback) {
         return (name && name.trim()) || fallback;
+    },
+
+    getBorderColorForAccount(accountColor) {
+        const colorMap = {
+            '#ffeaff': '#ffdbff', // パステルピンクの境界線
+            '#ffffd6': '#FFF5BA', // パステルイエローの境界線
+            '#e0ffef': '#ccffe5', // パステルミントグリーンの境界線
+            '#e0efff': '#d6eaff', // パステルブルーの境界線
+            '#f2e5ff': '#eddbff', // パステルラベンダーの境界線
+            '#ffefe0': '#ffe8d1', // パステルオレンジの境界線
+            '#e0ffff': '#d1ffff'  // デフォルトのシアン（水色）の境界線
+        };
+        return colorMap[accountColor] || '#cceffa'; // デフォルトは元の色
     }
 };
 
@@ -85,6 +99,7 @@ const DataManager = {
         data.accounts.forEach(acc => {
             if (!acc.challenges) acc.challenges = [];
             if (!acc.history) acc.history = [];
+            if (!acc.color) acc.color = CONFIG.DEFAULT_ACCOUNT_COLOR;
            
             if (typeof acc.coins === 'number') {
                 if (acc.challenges.length === 0) {
@@ -139,6 +154,7 @@ const AccountManager = {
         if (state.appData.accounts.length < CONFIG.MAX_ACCOUNTS) {
             state.appData.accounts.push({
                 name: `アカウント ${state.appData.accounts.length + 1}`,
+                color: CONFIG.DEFAULT_ACCOUNT_COLOR,
                 challenges: [],
                 history: []
             });
@@ -306,6 +322,8 @@ const UIManager = {
         const card = document.createElement('div');
         card.classList.add('account-card');
         card.dataset.index = index;
+        card.style.backgroundColor = account.color || CONFIG.DEFAULT_ACCOUNT_COLOR;
+        card.style.borderColor = Utils.getBorderColorForAccount(account.color);
        
         const currentCoins = AccountManager.getTotalCoins(account);
         
@@ -746,12 +764,24 @@ const SettingsManager = {
         Utils.$('detailModalTitle').textContent = `${account.name} の設定`;
         Utils.$('detailAccountNameInput').value = account.name;
 
+        this.renderColorPicker(account);
+
         const container = Utils.$('detailChallengeSettings');
         container.innerHTML = '';
 
         account.challenges.forEach((challenge, index) => {
             const item = this.createChallengeSettingItem(challenge, index);
             container.appendChild(item);
+        });
+    },
+
+    renderColorPicker(account) {
+        const colorOptions = document.querySelectorAll('.color-option');
+        colorOptions.forEach(option => {
+            option.classList.remove('selected');
+            if (option.dataset.color === account.color) {
+                option.classList.add('selected');
+            }
         });
     },
 
@@ -824,10 +854,18 @@ const SettingsManager = {
             account.name
         );
 
+        this.saveColor(account);
         this.saveChallengeSettings(account);
         DataManager.save();
         ModalManager.hide('detailSettingsModal');
         UIManager.renderDetailScreen();
+    },
+
+    saveColor(account) {
+        const selectedColor = document.querySelector('.color-option.selected');
+        if (selectedColor) {
+            account.color = selectedColor.dataset.color;
+        }
     },
 
     saveChallengeSettings(account) {
@@ -961,13 +999,12 @@ const EventHandlers = {
             Utils.$('monthFilterContainer').classList.toggle('open');
         });
 
-        // ドロップダウン外をクリックしたら閉じる
-        document.addEventListener('click', (e) => {
-            const monthContainer = Utils.$('monthFilterContainer');
-            
-            if (monthContainer && !monthContainer.contains(e.target)) {
-                monthContainer.classList.remove('open');
-            }
+        // カラーピッカーのイベントリスナー
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+            });
         });
 
         Utils.$('resetAllBtn').addEventListener('click',
@@ -993,7 +1030,7 @@ const EventHandlers = {
             const reward = amount * challenge.value;
             ModalManager.confirm(
                 '交換の確認',
-                `${amount}コインを${reward.toLocaleString()}円と交換しますか?`,
+                `${amount}コインを${reward.toLocaleString()}円のおこづかいと交換しますか?`,
                 () => {
                     CoinManager.exchange(amount);
                     ModalManager.hide('confirmModal');

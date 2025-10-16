@@ -473,11 +473,9 @@ const UIManager = {
         input.disabled = false;
         input.min = 1;
         input.max = challenge.coins;
-       
-        if (!input.value || parseInt(input.value) < 1) {
-            input.value = 1;
-        }
-       
+
+        // 初期値を設定しない（空のまま）
+
         this.updateExchangeButton(challenge);
     },
 
@@ -498,13 +496,11 @@ const UIManager = {
         input.min = 1;
         input.max = challenge.coins;
         input.disabled = false;
-        input.placeholder = '';
+        input.placeholder = 'コイン枚数を入力';
        
-        if (!input.value || isNaN(amount) || amount < 1) {
-            input.value = 1;
-        }
-       
-        btn.disabled = isNaN(amount) || amount < 1 || amount > challenge.coins;
+        // 値が空または無効な場合は何もしない（ボタンを無効に保つ）
+
+        btn.disabled = !input.value || isNaN(amount) || amount < 1 || amount > challenge.coins;
     },
 
     renderHistoryCompact() {
@@ -1100,5 +1096,4 @@ function initApp() {
 
 
 document.addEventListener('DOMContentLoaded', initApp);
-
 

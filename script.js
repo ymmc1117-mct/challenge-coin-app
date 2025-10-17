@@ -904,12 +904,10 @@ const CelebrationManager = {
         Utils.$('celebration').querySelector('h2').textContent = title;
         Utils.$('celebrationText').innerHTML = text;
         Utils.$('celebration').classList.add('show');
-        Utils.$('overlay').classList.add('show');
         this.createConfetti();
 
         setTimeout(() => {
             Utils.$('celebration').classList.remove('show');
-            Utils.$('overlay').classList.remove('show');
             if (state.currentAccountIndex !== -1) {
                 const account = AccountManager.getCurrentAccount();
                 if (account) {

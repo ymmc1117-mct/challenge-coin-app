@@ -482,7 +482,7 @@ const UIManager = {
     updateExchangeButton(challenge) {
         const input = Utils.$('exchangeInput');
         const btn = Utils.$('exchangeBtn');
-       
+
         if (challenge.coins === 0) {
             input.value = '';
             input.placeholder = 'コインがありません';
@@ -490,17 +490,17 @@ const UIManager = {
             btn.disabled = true;
             return;
         }
-       
+
         const amount = parseInt(input.value);
 
         input.min = 1;
         input.max = challenge.coins;
         input.disabled = false;
         input.placeholder = 'コイン枚数を入力';
-       
-        // 値が空または無効な場合は何もしない（ボタンを無効に保つ）
 
-        btn.disabled = !input.value || isNaN(amount) || amount < 1 || amount > challenge.coins;
+        // ボタンは常に活性化された状態にするが、機能的には入力値の検証を行う
+        btn.disabled = false; // 常に活性化された見た目にする
+        // 実際の交換処理では入力値の検証を行うので、ここでは視覚的に活性化だけする
     },
 
     renderHistoryCompact() {
@@ -1023,8 +1023,14 @@ const EventHandlers = {
     handleExchange() {
         const amount = parseInt(Utils.$('exchangeInput').value);
         const challenge = AccountManager.getCurrentChallenge();
-       
-        if (challenge && amount > 0 && amount <= challenge.coins) {
+
+        // 入力値が空または無効な場合は交換処理を実行しない
+        if (!amount || isNaN(amount) || amount < 1 || amount > challenge.coins) {
+            alert('交換できるコイン数が正しくありません。');
+            return;
+        }
+
+        if (challenge) {
             const reward = amount * challenge.value;
             ModalManager.confirm(
                 '交換の確認',
@@ -1036,8 +1042,6 @@ const EventHandlers = {
                 '交換する',
                 'exchange-confirm'
             );
-        } else {
-            alert('交換できるコイン数が正しくありません。');
         }
     },
 
@@ -1096,4 +1100,3 @@ function initApp() {
 
 
 document.addEventListener('DOMContentLoaded', initApp);
-

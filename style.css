@@ -33,7 +33,7 @@
     /* パステルカラー */
     --color-pastel-pink: #ffeaf4;
     --color-pastel-yellow: #ffffd6;
-    --color-pastel-mint: #d7f0e5;
+    --color-pastel-mint: #eafff4;
     --color-pastel-blue: #e0efff;
     --color-pastel-lavender: #f2e5ff;
     --color-pastel-orange: #ffefe0;
@@ -776,16 +776,20 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.35);
     z-index: 1000;
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    pointer-events: none;
 }
 
 .modal.show {
-    display: flex;
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .modal-content {
@@ -1111,14 +1115,18 @@ body {
     bottom: 0;
     background: rgba(0, 0, 0, 0.35);
     z-index: 1001;
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    pointer-events: none;
 }
 
 .confirm-modal.show {
-    display: flex;
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .confirm-content {
@@ -1191,14 +1199,18 @@ body {
     bottom: 0;
     background: rgba(0, 0, 0, 0.35);
     z-index: 1003;
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    pointer-events: none;
 }
 
 .celebration.show {
-    display: flex;
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .celebration-content {
@@ -1251,7 +1263,12 @@ body {
     bottom: 0;
     background: rgba(0, 0, 0, 0.35);
     z-index: 1002;
-    display: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    pointer-events: none;
 }
 
 .color-picker-section {

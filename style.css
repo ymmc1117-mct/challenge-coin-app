@@ -33,7 +33,7 @@
     /* パステルカラー */
     --color-pastel-pink: #ffeaf4;
     --color-pastel-yellow: #ffffd6;
-    --color-pastel-mint: #eafff4;
+    --color-pastel-mint: #e2fff3;
     --color-pastel-blue: #e0efff;
     --color-pastel-lavender: #f2e5ff;
     --color-pastel-orange: #ffefe0;
@@ -1324,7 +1324,7 @@ body {
     background-color: var(--color-pastel-mint);
 }
 
-.color-option[data-color="#eafff4"] {
+.color-option[data-color="#e2fff3"] {
     background-color: var(--color-pastel-mint);
 }
 

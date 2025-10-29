@@ -71,7 +71,7 @@ const Utils = {
             '#ffeaf4': '#ffd1e8', // パステルピンクの境界線（新しい色用）
             '#ffffd6': '#FFF5BA', // パステルイエローの境界線
             '#e0ffef': '#ccffe5', // パステルミントグリーンの境界線（古い色用）
-            '#eafff4': '#eaf7f2', // パステルミントグリーンの境界線（新しい色用）
+            '#e2fff3': '#d0f6e8', // パステルミントグリーンの境界線（新しい色用）
             '#e0efff': '#d6eaff', // パステルブルーの境界線
             '#f2e5ff': '#eddbff', // パステルラベンダーの境界線
             '#ffefe0': '#ffe8d1', // パステルオレンジの境界線
@@ -1098,3 +1098,4 @@ function initApp() {
 
 
 document.addEventListener('DOMContentLoaded', initApp);
+

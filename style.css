@@ -513,6 +513,7 @@ body {
     font-family: inherit;
     min-height: 48px;
     background: white;
+    min-width: 0;
     transition: border-color 0.2s, box-shadow 0.2s;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }

@@ -1,249 +1,194 @@
 <!DOCTYPE html>
+
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Today's Key">
-    <title>Today's Key - ピアノ音階スロット</title>
-    
-    <!-- ホーム画面アイコン -->
-    <link rel="apple-touch-icon" href="icon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="icon.png">
-    <link rel="manifest" href="manifest.json">
-    
-    <!-- iOS用メタタグ -->
-    <meta name="theme-color" content="#fce7f3">
-    
+    <meta name="theme-color" content="#dae7f8">
+    <meta name="apple-mobile-web-app-title" content="Coin">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+    <meta name="x5-fullscreen" content="true">
+    <title>Challenge Coin!</title>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Varela+Round&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <div class="content">
-            <!-- ヘッダー -->
-            <div class="header">
-                <div class="title-wrapper">
-                    <svg class="icon-left" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-                    </svg>
-                    <h1 class="title">Today's Key</h1>
-                    <svg class="icon-right" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-                    </svg>
-                </div>
-                <p class="subtitle">今日の音階は何かな？</p>
-            </div>
-
-            <!-- スロットマシン -->
-            <div class="slot-container">
-                <div class="slot-window">
-                    <div class="gradient-top"></div>
-                    <div class="gradient-bottom"></div>
-                    <div class="selection-frame"></div>
-                    <div class="slot-list" id="slotList"></div>
-                </div>
-                <button class="start-button" id="startButton">スタート</button>
-            </div>
-
-            <!-- 結果表示 -->
-            <div class="result-container" id="resultContainer" style="display: none;">
-                <p class="result-label">今日の音階は</p>
-                <p class="result-scale-german" id="resultGerman"></p>
-                <p class="result-scale-japanese" id="resultJapanese"></p>
-            </div>
-
-            <!-- 練習履歴ボタン -->
-            <button class="history-button" id="historyButton">
-                <svg class="history-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-                    <path d="M3 3v5h5"/>
-                    <path d="M12 7v5l4 2"/>
+        <div class="header">
+            <button class="header-btn back-btn" id="backBtn" style="display: none;">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
                 </svg>
-                <span id="historyButtonText">練習履歴を見る</span>
             </button>
-
-            <!-- 練習履歴表示 -->
-            <div class="history-container" id="historyContainer" style="display: none;">
-                <h3 class="history-title">練習履歴</h3>
-                <div id="historyList"></div>
-            </div>
-
-            <!-- 一覧表ボタン -->
-            <button class="table-button" id="tableButton">
-                <svg class="table-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 3h18v18H3z"/>
-                    <path d="M3 9h18"/>
-                    <path d="M3 15h18"/>
-                    <path d="M9 3v18"/>
+            <h1 id="headerTitle">Challenge Coin!</h1>
+            <button class="header-btn settings-btn" id="globalSettingsBtn" style="display: none;">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
                 </svg>
-                <span id="tableButtonText">音階一覧表を見る</span>
             </button>
+            <button class="header-btn settings-btn" id="detailSettingsBtn" style="display: none;">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
+                </svg>
+            </button>
+        </div>
 
-            <!-- ä¸€è¦§è¡¨è¡¨ç¤º -->
-            <div class="table-container" id="tableContainer" style="display: none;">
-                <h3 class="table-title">音階一覧表</h3>
-                
-                <div class="table-section">
-                    <h4 class="table-section-title">長調 (dur / ドゥア)</h4>
-                    <div class="scale-grid">
-                        <div class="scale-card">
-                            <div class="scale-german">C dur</div>
-                            <div class="scale-reading">ツェー・ドゥア</div>
-                            <div class="scale-japanese">ハ長調</div>
-                            <div class="scale-key-signature">調号なし</div>
+    <div class="content">
+        <div class="screen active" id="accountSelectScreen">
+            <div class="account-list" id="accountList"></div>
+        </div>
+
+        <div class="screen" id="accountDetailScreen">
+            <div class="challenge-buttons-container" id="challengeButtonsContainer">
+                <div class="challenge-buttons-wrapper" id="challengeButtonsWrapper"></div>
+            </div>
+            <div class="screen-content" id="detailScreenContent">
+                <div class="coins-display" id="coinsDisplay">
+                    <div class="empty-state-message">チャレンジを追加してください。</div>
+                    <div class="coins-display-content">
+                        <div class="coin-value-label" id="coinValueLabel"></div>
+                        <div class="coins-label">現在のコイン</div>
+                        <div class="coins-main">
+                            <button class="coin-btn coin-btn-minus" id="removeCoinBtn">−</button>
+                            <div class="coins-number" id="currentCoins">0</div>
+                            <button class="coin-btn coin-btn-add" id="addCoinBtn">+</button>
                         </div>
-                        <div class="scale-card">
-                            <div class="scale-german">G dur</div>
-                            <div class="scale-reading">ゲー・ドゥア</div>
-                            <div class="scale-japanese">ト長調</div>
-                            <div class="scale-key-signature">♯</div>
+                        <div class="coins-value">
+                            <span id="currentValue">0</span>円
                         </div>
-                        <div class="scale-card">
-                            <div class="scale-german">D dur</div>
-                            <div class="scale-reading">デー・ドゥア</div>
-                            <div class="scale-japanese">ニ長調</div>
-                            <div class="scale-key-signature">♯♯</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">A dur</div>
-                            <div class="scale-reading">アー・ドゥア</div>
-                            <div class="scale-japanese">イ長調</div>
-                            <div class="scale-key-signature">♯♯♯</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">E dur</div>
-                            <div class="scale-reading">エー・ドゥア</div>
-                            <div class="scale-japanese">ホ長調</div>
-                            <div class="scale-key-signature">♯♯♯♯</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">B dur</div>
-                            <div class="scale-reading">ベー・ドゥア</div>
-                            <div class="scale-japanese">ロ長調</div>
-                            <div class="scale-key-signature">♯♯♯♯♯</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">F# dur</div>
-                            <div class="scale-reading">フィス・ドゥア</div>
-                            <div class="scale-japanese">嬰ヘ長調</div>
-                            <div class="scale-key-signature">♯♯♯♯♯♯</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">Des dur</div>
-                            <div class="scale-reading">デス・ドゥア</div>
-                            <div class="scale-japanese">変ニ長調</div>
-                            <div class="scale-key-signature">♭♭♭♭♭</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">As dur</div>
-                            <div class="scale-reading">アス・ドゥア</div>
-                            <div class="scale-japanese">変イ長調</div>
-                            <div class="scale-key-signature">♭♭♭♭</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">Es dur</div>
-                            <div class="scale-reading">エス・ドゥア</div>
-                            <div class="scale-japanese">変ホ長調</div>
-                            <div class="scale-key-signature">♭♭♭</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">B dur</div>
-                            <div class="scale-reading">ベー・ドゥア</div>
-                            <div class="scale-japanese">変ロ長調</div>
-                            <div class="scale-key-signature">♭♭</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">F dur</div>
-                            <div class="scale-reading">エフ・ドゥア</div>
-                            <div class="scale-japanese">ヘ長調</div>
-                            <div class="scale-key-signature">♭</div>
+                        <div class="total-coins">
+                            <span id="totalCoinsLabel">これまでのコイン合計</span>:
+                            <span class="total-coins-number" id="totalCoins">0</span>コイン
                         </div>
                     </div>
                 </div>
 
-                <div class="table-section">
-                    <h4 class="table-section-title">短調 (moll / モル)</h4>
-                    <div class="scale-grid">
-                        <div class="scale-card">
-                            <div class="scale-german">a moll</div>
-                            <div class="scale-reading">アー・モル</div>
-                            <div class="scale-japanese">イ短調</div>
-                            <div class="scale-key-signature">調号なし</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">e moll</div>
-                            <div class="scale-reading">エー・モル</div>
-                            <div class="scale-japanese">ホ短調</div>
-                            <div class="scale-key-signature">♯</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">h moll</div>
-                            <div class="scale-reading">ハー・モル</div>
-                            <div class="scale-japanese">ロ短調</div>
-                            <div class="scale-key-signature">♯♯</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">fis moll</div>
-                            <div class="scale-reading">フィス・モル</div>
-                            <div class="scale-japanese">嬰ヘ短調</div>
-                            <div class="scale-key-signature">♯♯♯</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">cis moll</div>
-                            <div class="scale-reading">ツィス・モル</div>
-                            <div class="scale-japanese">嬰ハ短調</div>
-                            <div class="scale-key-signature">♯♯♯♯</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">gis moll</div>
-                            <div class="scale-reading">ギス・モル</div>
-                            <div class="scale-japanese">嬰ト短調</div>
-                            <div class="scale-key-signature">♯♯♯♯♯</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">dis moll</div>
-                            <div class="scale-reading">ディス・モル</div>
-                            <div class="scale-japanese">嬰ニ短調</div>
-                            <div class="scale-key-signature">♯♯♯♯♯♯</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">b moll</div>
-                            <div class="scale-reading">ベー・モル</div>
-                            <div class="scale-japanese">変ロ短調</div>
-                            <div class="scale-key-signature">♭♭♭♭♭</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">f moll</div>
-                            <div class="scale-reading">エフ・モル</div>
-                            <div class="scale-japanese">ヘ短調</div>
-                            <div class="scale-key-signature">♭♭♭♭</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">c moll</div>
-                            <div class="scale-reading">ツェー・モル</div>
-                            <div class="scale-japanese">ハ短調</div>
-                            <div class="scale-key-signature">♭♭♭</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">g moll</div>
-                            <div class="scale-reading">ゲー・モル</div>
-                            <div class="scale-japanese">ト短調</div>
-                            <div class="scale-key-signature">♭♭</div>
-                        </div>
-                        <div class="scale-card">
-                            <div class="scale-german">d moll</div>
-                            <div class="scale-reading">デー・モル</div>
-                            <div class="scale-japanese">ニ短調</div>
-                            <div class="scale-key-signature">♭</div>
-                        </div>
+                <div class="exchange-section">
+                    <h3>コインの交換</h3>
+                    <div class="exchange-input">
+                        <input type="number" id="exchangeInput" min="1">
+                        <span>コイン</span>
                     </div>
+                    <button class="btn-exchange" id="exchangeBtn">おこづかいと交換する</button>
                 </div>
+
+                <div class="history-compact">
+    <div class="history-summary">
+        <div class="history-total">
+            <div class="history-total-label">おこづかい合計</div>
+            <div class="history-total-amount" id="totalReward">0円</div>
+        </div>
+        <button class="btn-show-history" id="toggleHistoryBtn">
+            <span id="historyToggleText">くわしく見る</span>
+        </button>
+    </div>
+    <div class="history-preview" id="historyPreview"></div>
+    <div class="history-details" id="historyDetails">
+        <div class="history-filter">
+            <label>表示期間:</label>
+            <div class="custom-select" id="monthFilterContainer">
+                <div class="custom-select-trigger" id="monthFilterTrigger">
+                    <span id="monthFilterValue">すべて</span>
+                    <svg class="custom-select-arrow" viewBox="0 0 24 24">
+                        <path d="M7,10L12,15L17,10H7Z" />
+                    </svg>
+                </div>
+                <div class="custom-select-options" id="monthFilterOptions"></div>
+            </div>
+        </div>
+        <div id="historyList"></div>
+    </div>
+</div>
             </div>
         </div>
     </div>
+</div>
 
-    <script src="script.js"></script>
+<div class="modal" id="globalSettingsModal">
+    <div class="modal-content">
+        <button class="close-btn" id="closeGlobalSettingsBtn">×</button>
+        <div class="modal-header">
+            <h2>全体設定</h2>
+        </div>
+        <div class="setting-section">
+            <h3>アカウント管理</h3>
+            <p style="color: #999; font-size: 14px; margin-bottom: 15px;">3人まで登録できます</p>
+            <div id="accountSettings"></div>
+            <button class="btn-add" id="addAccountBtn">＋ アカウントを追加</button>
+        </div>
+        <button class="btn-save" id="saveGlobalSettingsBtn">保存</button>
+        <div class="setting-section">
+            <h3>データのリセット</h3>
+            <div class="reset-buttons">
+                <button class="btn-reset btn-reset-all" id="resetAllBtn">全データをリセット</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="detailSettingsModal">
+    <div class="modal-content">
+        <button class="close-btn" id="closeDetailSettingsBtn">×</button>
+        <div class="modal-header">
+            <h2 id="detailModalTitle">アカウント設定</h2>
+        </div>
+        <div class="setting-section">
+            <h3>アカウント名</h3>
+            <div class="account-item">
+                <input type="text" id="detailAccountNameInput">
+            </div>
+        </div>
+        <div class="setting-section">
+            <h3>アカウントカードの色</h3>
+            <div class="color-picker-section">
+                <div class="color-picker">
+                    <div class="color-option" data-color="#ffeaf4" title="パステルピンク"></div>
+                    <div class="color-option" data-color="#ffffd6" title="パステルイエロー"></div>
+                    <div class="color-option" data-color="#e2fff3" title="パステルミントグリーン"></div>
+                    <div class="color-option" data-color="#e0efff" title="パステルブルー"></div>
+                    <div class="color-option" data-color="#f2e5ff" title="パステルラベンダー"></div>
+                    <div class="color-option" data-color="#ffefe0" title="パステルオレンジ"></div>
+                </div>
+            </div>
+        </div>
+        <div class="setting-section">
+            <h3>チャレンジ管理</h3>
+            <div id="detailChallengeSettings"></div>
+            <button class="btn-add" id="addChallengeInDetailModalBtn">＋ チャレンジを追加</button>
+        </div>
+        <button class="btn-save" id="saveDetailSettingsBtn">保存</button>
+        <div class="setting-section">
+            <h3>データのリセット</h3>
+            <div class="reset-buttons">
+                <button class="btn-reset btn-reset-child" id="resetCurrentBtn">このアカウントをリセット</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="confirm-modal" id="confirmModal">
+    <div class="confirm-content">
+        <h3 id="confirmTitle">確認</h3>
+        <p id="confirmMessage"></p>
+        <div class="confirm-buttons">
+            <button class="btn-confirm btn-cancel" id="cancelBtn">キャンセル</button>
+            <button class="btn-confirm btn-confirm-action" id="confirmActionBtn">はい</button>
+        </div>
+    </div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<div class="celebration" id="celebration">
+    <div class="celebration-content">
+        <h2>がんばったね!</h2>
+        <p id="celebrationText"></p>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
 </body>
 </html>

@@ -223,7 +223,7 @@
     }
 
     .history-item {
-      background: #ffffff;
+      background: #f9fafb;
       border-radius: 0.75rem;
       padding: 1.25rem 1.5rem;
       margin-bottom: 0.75rem;
@@ -233,6 +233,7 @@
       transition: all 0.2s ease;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
       border: 1px solid #e5e7eb;
+      position: relative;
     }
 
     .history-item:hover {
@@ -262,6 +263,32 @@
       color: #4f46e5;
       font-family: 'Roboto Mono', monospace;
       letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .delete-history-btn {
+      padding: 0.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      background: #fef2f2;
+      color: #ef4444;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #fecaca;
+    }
+
+    .delete-history-btn:hover {
+      background: #fee2e2;
+      transform: scale(1.1);
+    }
+
+    .delete-history-btn i {
+      font-size: 1.25rem;
     }
 
     .game-screen {
@@ -1598,8 +1625,8 @@
         contentEl.innerHTML = '<div class="empty-history">まだクリア履歴がありません</div>';
         clearBtn.style.display = 'none';
       } else {
-        clearBtn.style.display = 'block';
-        const listHtml = history.map(record => {
+        clearBtn.style.display = 'flex';
+        const listHtml = history.map((record, index) => {
           const date = new Date(record.date);
           const dateStr = date.toLocaleString('ja-JP', {
             year: 'numeric',
@@ -1618,12 +1645,43 @@
                 <div class="history-level">${record.level}</div>
                 <div class="history-date">${dateStr}</div>
               </div>
-              <div class="history-time">${timeStr}</div>
+              <div class="history-time">
+                <span>${timeStr}</span>
+                <button class="delete-history-btn" onclick="deleteHistoryItem(${index})" title="削除">
+                  <i class="material-icons-round">delete</i>
+                </button>
+              </div>
             </div>
           `;
         }).join('');
         
         contentEl.innerHTML = `<div class="history-list">${listHtml}</div>`;
+      }
+    }
+
+    window.deleteHistoryItem = function(index) {
+      if (!confirm('この履歴を削除しますか？')) return;
+      
+      try {
+        const history = getHistory();
+        history.splice(index, 1);
+        localStorage.setItem('sudokuHistory', JSON.stringify(history));
+        loadHistory();
+      } catch (error) {
+        console.error('履歴の削除中にエラーが発生しました:', error);
+        alert('履歴の削除中にエラーが発生しました。');
+      }
+    }
+
+    window.clearHistory = function() {
+      if (!confirm('クリア履歴を全て削除しますか？この操作は元に戻せません。')) return;
+      
+      try {
+        localStorage.removeItem('sudokuHistory');
+        loadHistory();
+      } catch (error) {
+        console.error('履歴の削除中にエラーが発生しました:', error);
+        alert('履歴の削除中にエラーが発生しました。');
       }
     }
   </script>

@@ -1,205 +1,1689 @@
 <!DOCTYPE html>
-
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#dae7f8">
-    <meta name="apple-mobile-web-app-title" content="Coin">
-    <meta name="screen-orientation" content="portrait">
-    <meta name="x5-orientation" content="portrait">
-    <meta name="x5-fullscreen" content="true">
-    <title>Challenge Coin!</title>
-    
-    <!-- PWA 設定 -->
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="icon-180.png" type="image/png">
-    <link rel="apple-touch-icon" href="icon-180.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Coin">
-    <meta name="theme-color" content="#ff6098">
-    
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Varela+Round&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4f46e5">
+  <title>SUDOKU - 改良版</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      min-height: 100vh;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .container {
+      max-width: 100vw;
+      width: 100vw;
+      height: 100vh;
+      max-height: 100vh;
+      background: white;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+
+    @media (min-width: 640px) {
+      .container {
+        max-width: 95vw;
+        width: 95vw;
+        height: 98vh;
+        max-height: 98vh;
+        border-radius: 1rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        padding: 1.5rem;
+      }
+
+      body {
+        padding: 0.5rem;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        max-width: 700px;
+        width: 95vw;
+      }
+    }
+
+    .title {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .title h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .subtitle {
+      color: #6b7280;
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      margin-top: 0.5rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 1rem;
+      border: none;
+      border-radius: 9999px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: #e5e7eb;
+      color: #4b5563;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab:hover {
+      background: #d1d5db;
+    }
+
+    .tab.active {
+      background: #4f46e5;
+      color: white;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .level-list h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .level-btn {
+      width: 100%;
+      padding: 1.25rem;
+      margin-bottom: 0.75rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: #4f46e5;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
+    }
+
+    .level-btn:hover {
+      background: #4338ca;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .level-details {
+      text-align: center;
+    }
+
+    .level-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .level-desc {
+      font-size: 0.75rem;
+      opacity: 0.9;
+      margin-top: 0.25rem;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .clear-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.75rem;
+      background: #fef2f2;
+      color: #ef4444;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      border: 1px solid #fecaca;
+    }
+
+    .clear-btn:hover {
+      background: #fee2e2;
+      transform: translateY(-1px);
+    }
+
+    .empty-history {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #6b7280;
+      background: #f9fafb;
+      border-radius: 0.75rem;
+      border: 1px dashed #e5e7eb;
+      margin: 1rem 0;
+      font-size: 1rem;
+    }
+
+    .history-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      background: #f9fafb;
+      border-radius: 0.75rem;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e5e7eb;
+      position: relative;
+    }
+
+    .history-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .history-info {
+      flex: 1;
+    }
+
+    .history-level {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 0.25rem;
+    }
+
+    .history-date {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    .history-time {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #4f46e5;
+      font-family: 'Roboto Mono', monospace;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .delete-history-btn {
+      padding: 0.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      background: #fef2f2;
+      color: #ef4444;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #fecaca;
+    }
+
+    .delete-history-btn:hover {
+      background: #fee2e2;
+      transform: scale(1.1);
+    }
+
+    .delete-history-btn i {
+      font-size: 1.25rem;
+    }
+
+    .game-screen {
+      display: none;
+    }
+
+    .game-screen.active {
+      display: block;
+    }
+
+    .game-screen.active #countdown-screen {
+      background: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .countdown-screen {
+      text-align: center;
+      padding: 0;
+      background: none;
+      width: 100%;
+    }
+
+    .countdown-number {
+      font-size: 8rem;
+      font-weight: 700;
+      color: white;
+      animation: pulse 1s infinite;
+    }
+
+    .countdown-level {
+      font-size: 1.5rem;
+      color: white;
+      margin-top: 1rem;
+    }
+
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .back-btn, .timer, .game-level-name {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      color: #4f46e5;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .back-btn:hover {
+      background-color: rgba(79, 70, 229, 0.1);
+    }
+
+    .timer {
+      color: #667eea;
+      font-size: 1.25rem;
+    }
+
+    .game-level-name {
+      color: #4b5563;
+      font-size: 0.875rem;
+    }
+
+    .board-container {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto 1rem;
+    }
+
+    .sudoku-board {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 0;
+      background: white;
+      border: 2px solid #1f2937;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      aspect-ratio: 1;
+    }
+
+    .cell {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
+    }
+
+    .cell.initial {
+      background: #f3f4f6;
+      color: #1f2937;
+      cursor: default;
+    }
+
+    .cell.editable {
+      background: white;
+      color: #667eea;
+    }
+
+    .cell.editable:hover {
+      background: #eef2ff;
+    }
+
+    .cell.selected {
+      box-shadow: inset 0 0 0 4px #667eea;
+      z-index: 10;
+    }
+
+    .cell.wrong {
+      background: #fee2e2;
+      color: #ef4444;
+    }
+
+    .memo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      width: 100%;
+      height: 100%;
+      padding: 2px;
+      font-size: 0.625rem;
+      color: #9ca3af;
+    }
+
+    .memo-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .top-controls {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .bottom-controls {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .control-btn {
+      padding: 0.75rem 0.5rem;
+      border: none;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .control-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .control-btn:active {
+      transform: translateY(0);
+    }
+
+    .control-btn i {
+      font-size: 1.25rem;
+    }
+
+    .error-btn {
+      background: #ef4444;
+    }
+
+    .error-btn:hover {
+      background: #dc2626;
+    }
+
+    .error-btn.active {
+      background: #b91c1c;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+
+    .hint-btn {
+      background: #f59e0b;
+    }
+
+    .hint-btn:hover {
+      background: #d97706;
+    }
+
+    .reset-btn {
+      background: #6b7280;
+    }
+
+    .reset-btn:hover {
+      background: #4b5563;
+    }
+
+    .pause-btn {
+      background: #8b5cf6;
+    }
+
+    .pause-btn:hover {
+      background: #7c3aed;
+    }
+
+    .pause-btn.active {
+      background: #6d28d9;
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+    }
+
+    .memo-btn {
+      background: #a855f7;
+    }
+
+    .memo-btn:hover {
+      background: #9333ea;
+    }
+
+    .memo-btn.active {
+      background: #7e22ce;
+      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+    }
+
+    .number-pad {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+      max-width: 500px;
+      margin: 0 auto 1rem;
+    }
+
+    .number-btn {
+      aspect-ratio: 1;
+      border: none;
+      border-radius: 0.75rem;
+      background: #4f46e5;
+      color: white;
+      font-size: 1.25rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .number-btn:hover {
+      background: #4338ca;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(79, 70, 229, 0.25);
+    }
+
+    .number-btn:active {
+      transform: translateY(0);
+    }
+
+    .delete-btn {
+      background: #6b7280;
+      font-size: 1rem;
+    }
+
+    .delete-btn:hover {
+      background: #4b5563;
+    }
+
+    .clear-screen {
+      display: none;
+    }
+
+    .clear-screen.active {
+      display: block;
+    }
+
+    .clear-emoji {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .clear-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #667eea;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .clear-message {
+      color: #6b7280;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .clear-stats {
+      background: linear-gradient(135deg, #eef2ff, #f3e8ff);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .clear-time-label {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .clear-time {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #667eea;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .clear-level {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #374151;
+      text-align: center;
+    }
+
+    .clear-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .action-btn {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .primary-btn:hover {
+      background: linear-gradient(135deg, #4338ca, #6d28d9);
+    }
+
+    .secondary-btn {
+      background: #f3f4f6;
+      color: #4b5563;
+      border: 1px solid #e5e7eb;
+    }
+
+    .secondary-btn:hover {
+      background: #e5e7eb;
+    }
+
+    #board.paused {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .title h1 {
+        font-size: 2rem;
+      }
+      
+      .cell {
+        font-size: 1rem;
+      }
+      
+      .number-btn {
+        font-size: 1.25rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <button class="header-btn back-btn" id="backBtn" style="display: none;">
-                <svg viewBox="0 0 24 24">
-                    <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
-                </svg>
-            </button>
-            <h1 id="headerTitle">Challenge Coin!</h1>
-            <button class="header-btn settings-btn" id="globalSettingsBtn" style="display: none;">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
-                </svg>
-            </button>
-            <button class="header-btn settings-btn" id="detailSettingsBtn" style="display: none;">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
-                </svg>
-            </button>
-        </div>
+  <div class="container">
+    <div class="menu-screen" id="menu-screen">
+      <div class="title">
+        <h1>SUDOKU</h1>
+        <div class="subtitle">論理的難易度システム</div>
+      </div>
 
-    <div class="content">
-        <div class="screen active" id="accountSelectScreen">
-            <div class="account-list" id="accountList"></div>
-        </div>
-
-        <div class="screen" id="accountDetailScreen">
-            <div class="challenge-buttons-container" id="challengeButtonsContainer">
-                <div class="challenge-buttons-wrapper" id="challengeButtonsWrapper"></div>
-            </div>
-            <div class="screen-content" id="detailScreenContent">
-                <div class="coins-display" id="coinsDisplay">
-                    <div class="empty-state-message">チャレンジを追加してください<br>
-                右上の設定ボタンから登録できます</div>
-                    <div class="coins-display-content">
-                        <div class="coin-value-label" id="coinValueLabel"></div>
-                        <div class="coins-label">現在のコイン</div>
-                        <div class="coins-main">
-                            <button class="coin-btn coin-btn-minus" id="removeCoinBtn">−</button>
-                            <div class="coins-number" id="currentCoins">0</div>
-                            <button class="coin-btn coin-btn-add" id="addCoinBtn">+</button>
-                        </div>
-                        <div class="coins-value">
-                            <span id="currentValue">0</span>円
-                        </div>
-                        <div class="total-coins">
-                            <span id="totalCoinsLabel">これまでのコイン合計</span>:
-                            <span class="total-coins-number" id="totalCoins">0</span>コイン
-                        </div>
-                    </div>
-                </div>
-
-                <div class="exchange-section">
-                    <h3>コインの交換</h3>
-                    <div class="exchange-input">
-                        <input type="number" id="exchangeInput" min="1">
-                        <span>コイン</span>
-                    </div>
-                    <button class="btn-exchange" id="exchangeBtn">おこづかいと交換する</button>
-                </div>
-
-                <div class="history-compact">
-    <div class="history-summary">
-        <div class="history-total">
-            <div class="history-total-label">おこづかい合計</div>
-            <div class="history-total-amount" id="totalReward">0円</div>
-        </div>
-        <button class="btn-show-history" id="toggleHistoryBtn">
-            <span id="historyToggleText">くわしく見る</span>
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('game')">
+          <i class="material-icons-round" style="font-size: 1.1rem;">add</i>
+          <span>新しいゲーム</span>
         </button>
-    </div>
-    <div class="history-preview" id="historyPreview"></div>
-    <div class="history-details" id="historyDetails">
-        <div class="history-filter">
-            <label>表示期間:</label>
-            <div class="custom-select" id="monthFilterContainer">
-                <div class="custom-select-trigger" id="monthFilterTrigger">
-                    <span id="monthFilterValue">すべて</span>
-                    <svg class="custom-select-arrow" viewBox="0 0 24 24">
-                        <path d="M7,10L12,15L17,10H7Z" />
-                    </svg>
-                </div>
-                <div class="custom-select-options" id="monthFilterOptions"></div>
+        <button class="tab" onclick="showTab('history')">
+          <i class="material-icons-round" style="font-size: 1.1rem;">history</i>
+          <span>履歴</span>
+        </button>
+      </div>
+      
+      <div id="game-tab" class="section active">
+        <div class="level-list">
+          <h2>難易度を選択</h2>
+          <button class="level-btn" onclick="window.startGame(0)">
+            <div class="level-details">
+              <div class="level-name">入門</div>
+              <div class="level-desc">基本スキャンのみ</div>
             </div>
-        </div>
-        <div id="historyList"></div>
-    </div>
-</div>
+          </button>
+          <button class="level-btn" onclick="window.startGame(1)">
+            <div class="level-details">
+              <div class="level-name">簡単</div>
+              <div class="level-desc">唯一候補法</div>
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="globalSettingsModal">
-    <div class="modal-content">
-        <button class="close-btn" id="closeGlobalSettingsBtn">×</button>
-        <div class="modal-header">
-            <h2>全体設定</h2>
-        </div>
-        <div class="setting-section">
-            <h3>アカウント管理</h3>
-            <p style="color: #999; font-size: 14px; margin-bottom: 15px;">3人まで登録できます</p>
-            <div id="accountSettings"></div>
-            <button class="btn-add" id="addAccountBtn">＋ アカウントを追加</button>
-        </div>
-        <button class="btn-save" id="saveGlobalSettingsBtn">保存</button>
-        <div class="setting-section">
-            <h3>データのリセット</h3>
-            <div class="reset-buttons">
-                <button class="btn-reset btn-reset-all" id="resetAllBtn">全データをリセット</button>
+          </button>
+          <button class="level-btn" onclick="window.startGame(2)">
+            <div class="level-details">
+              <div class="level-name">普通</div>
+              <div class="level-desc">ペア削除が必要</div>
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="detailSettingsModal">
-    <div class="modal-content">
-        <button class="close-btn" id="closeDetailSettingsBtn">×</button>
-        <div class="modal-header">
-            <h2 id="detailModalTitle">アカウント設定</h2>
-        </div>
-        <div class="setting-section">
-            <h3>アカウント名</h3>
-            <div class="account-item">
-                <input type="text" id="detailAccountNameInput">
+          </button>
+          <button class="level-btn" onclick="window.startGame(3)">
+            <div class="level-details">
+              <div class="level-name">難しい</div>
+              <div class="level-desc">複数技法の組み合わせ</div>
             </div>
-        </div>
-        <div class="setting-section">
-            <h3>アカウントカードの色</h3>
-            <div class="color-picker-section">
-                <div class="color-picker">
-                    <div class="color-option" data-color="#ffeaf4" title="パステルピンク"></div>
-                    <div class="color-option" data-color="#ffffd6" title="パステルイエロー"></div>
-                    <div class="color-option" data-color="#e2fff3" title="パステルミントグリーン"></div>
-                    <div class="color-option" data-color="#e0efff" title="パステルブルー"></div>
-                    <div class="color-option" data-color="#f2e5ff" title="パステルラベンダー"></div>
-                    <div class="color-option" data-color="#ffefe0" title="パステルオレンジ"></div>
-                </div>
+          </button>
+          <button class="level-btn" onclick="window.startGame(4)">
+            <div class="level-details">
+              <div class="level-name">超難しい</div>
+              <div class="level-desc">高度な論理推論</div>
             </div>
-        </div>
-        <div class="setting-section">
-            <h3>チャレンジ管理</h3>
-            <div id="detailChallengeSettings"></div>
-            <button class="btn-add" id="addChallengeInDetailModalBtn">＋ チャレンジを追加</button>
-        </div>
-        <button class="btn-save" id="saveDetailSettingsBtn">保存</button>
-        <div class="setting-section">
-            <h3>データのリセット</h3>
-            <div class="reset-buttons">
-                <button class="btn-reset btn-reset-child" id="resetCurrentBtn">このアカウントをリセット</button>
+          </button>
+          <button class="level-btn" onclick="window.startGame(5)">
+            <div class="level-details">
+              <div class="level-name">激ムズ</div>
+              <div class="level-desc">最高難易度の挑戦</div>
             </div>
+          </button>
         </div>
-    </div>
-</div>
-
-<div class="confirm-modal" id="confirmModal">
-    <div class="confirm-content">
-        <h3 id="confirmTitle">確認</h3>
-        <p id="confirmMessage"></p>
-        <div class="confirm-buttons">
-            <button class="btn-confirm btn-cancel" id="cancelBtn">キャンセル</button>
-            <button class="btn-confirm btn-confirm-action" id="confirmActionBtn">はい</button>
+      </div>
+      
+      <div id="history-tab" class="section">
+        <div class="history-header">
+          <h2>クリア履歴</h2>
+          <button class="clear-btn" onclick="clearHistory()" id="clear-history-btn" style="display:none">
+            <i class="material-icons-round" style="font-size: 1rem;">delete</i>
+            全て削除
+          </button>
         </div>
+        <div id="history-content"></div>
+      </div>
     </div>
-</div>
 
-<div class="overlay" id="overlay"></div>
-<div class="celebration" id="celebration">
-    <div class="celebration-content">
-        <h2>がんばったね!</h2>
-        <p id="celebrationText"></p>
+    <div id="game-screen" class="game-screen">
+      <div id="countdown-screen" class="countdown-screen" style="display:none"></div>
+      
+      <div id="play-screen" style="display:none">
+        <div class="game-header">
+          <button class="back-btn" onclick="backToMenu()">
+            <i class="material-icons-round" style="font-size: 1.25rem;">arrow_back</i>
+            <span>戻る</span>
+          </button>
+          <div class="timer" id="timer">0:00</div>
+          <div class="game-level-name" id="level-name"></div>
+        </div>
+        
+        <div class="top-controls">
+          <button class="control-btn error-btn" id="error-btn" onclick="toggleErrors()">
+            <i class="material-icons-round">error_outline</i>
+            <span>間違い表示</span>
+          </button>
+          <button class="control-btn hint-btn" onclick="getHint()">
+            <i class="material-icons-round">lightbulb</i>
+            <span>ヒント</span>
+          </button>
+          <button class="control-btn reset-btn" onclick="resetGame()">
+            <i class="material-icons-round">refresh</i>
+            <span>リセット</span>
+          </button>
+        </div>
+        
+        <div class="board-container">
+          <div class="sudoku-board" id="board"></div>
+        </div>
+        
+        <div class="number-pad" id="number-pad"></div>
+        
+        <div class="bottom-controls">
+          <button class="control-btn pause-btn" id="pause-btn" onclick="togglePause()">
+            <i class="material-icons-round">pause</i>
+            <span>一時停止</span>
+          </button>
+          <button class="control-btn memo-btn" id="memo-btn" onclick="toggleMemo()">
+            <i class="material-icons-round">edit_note</i>
+            <span>メモ</span>
+          </button>
+        </div>
+      </div>
     </div>
-</div>
 
-<script src="script.js"></script>
+    <div id="clear-screen" class="clear-screen">
+      <div class="clear-emoji">🎉</div>
+      <div class="clear-title">クリア!</div>
+      <div class="clear-message">おめでとうございます!</div>
+      
+      <div class="clear-stats">
+        <div class="clear-time-label">クリアタイム</div>
+        <div class="clear-time" id="clear-time">0:00</div>
+        <div class="clear-level" id="clear-level"></div>
+      </div>
+      
+      <div class="clear-actions">
+        <button class="action-btn primary-btn" onclick="backToMenu()">
+          <i class="material-icons-round" style="font-size: 1.25rem;">home</i>
+          <span>メニューに戻る</span>
+        </button>
+        <button class="action-btn secondary-btn" onclick="retryGame()">
+          <i class="material-icons-round" style="font-size: 1.25rem;">replay</i>
+          <span>同じ難易度で再挑戦</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
+  <script>
+    const LEVELS = [
+      { 
+        name: '入門',
+        minClues: 45,
+        maxClues: 50,
+        techniques: ['naked_single'],
+        maxDepth: 1,
+        clusterTolerance: 0.8
+      },
+      { 
+        name: '簡単',
+        minClues: 36,
+        maxClues: 45,
+        techniques: ['naked_single', 'hidden_single'],
+        maxDepth: 2,
+        clusterTolerance: 0.6
+      },
+      { 
+        name: '普通',
+        minClues: 30,
+        maxClues: 36,
+        techniques: ['naked_single', 'hidden_single', 'naked_pair'],
+        maxDepth: 3,
+        clusterTolerance: 0.5
+      },
+      { 
+        name: '難しい',
+        minClues: 26,
+        maxClues: 30,
+        techniques: ['naked_single', 'hidden_single', 'naked_pair', 'pointing_pair'],
+        maxDepth: 4,
+        clusterTolerance: 0.4
+      },
+      { 
+        name: '超難しい',
+        minClues: 23,
+        maxClues: 26,
+        techniques: ['naked_single', 'hidden_single', 'naked_pair', 'pointing_pair', 'box_line'],
+        maxDepth: 5,
+        clusterTolerance: 0.3
+      },
+      { 
+        name: '激ムズ',
+        minClues: 20,
+        maxClues: 23,
+        techniques: ['naked_single', 'hidden_single', 'naked_pair', 'pointing_pair', 'box_line', 'x_wing'],
+        maxDepth: 6,
+        clusterTolerance: 0.2
+      }
+    ];
+    
+    let currentLevel = null;
+    let timerInterval = null;
+    let isPaused = false;
+    let board = null;
+    let solution = null;
+    let initialBoard = null;
+    let selectedCell = null;
+    let memoMode = false;
+    let memos = {};
+    let time = 0;
+    let clearTime = null;
+    let showErrors = false;
+    
+    function showTab(tab) {
+      const tabs = document.querySelectorAll('.tab');
+      const sections = document.querySelectorAll('.section');
+      
+      tabs.forEach(t => t.classList.remove('active'));
+      sections.forEach(s => s.classList.remove('active'));
+      
+      if (tab === 'game') {
+        document.querySelector('.tab[onclick*="game"]').classList.add('active');
+        document.getElementById('game-tab').classList.add('active');
+      } else {
+        document.querySelector('.tab[onclick*="history"]').classList.add('active');
+        document.getElementById('history-tab').classList.add('active');
+        loadHistory();
+      }
+    }
+    
+    function isValid(board, row, col, num) {
+      for (let x = 0; x < 9; x++) {
+        if (board[row][x] === num) return false;
+      }
+      
+      for (let x = 0; x < 9; x++) {
+        if (board[x][col] === num) return false;
+      }
+      
+      const startRow = row - row % 3;
+      const startCol = col - col % 3;
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          if (board[i + startRow][j + startCol] === num) return false;
+        }
+      }
+      
+      return true;
+    }
+    
+    function solveSudoku(board) {
+      for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+          if (board[row][col] === 0) {
+            for (let num = 1; num <= 9; num++) {
+              if (isValid(board, row, col, num)) {
+                board[row][col] = num;
+                if (solveSudoku(board)) {
+                  return true;
+                }
+                board[row][col] = 0;
+              }
+            }
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+    
+    function getCandidates(board, row, col) {
+      if (board[row][col] !== 0) return [];
+      
+      const candidates = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+      
+      for (let x = 0; x < 9; x++) {
+        candidates.delete(board[row][x]);
+        candidates.delete(board[x][col]);
+      }
+      
+      const startRow = Math.floor(row / 3) * 3;
+      const startCol = Math.floor(col / 3) * 3;
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          candidates.delete(board[startRow + i][startCol + j]);
+        }
+      }
+      
+      return Array.from(candidates);
+    }
+    
+    function evaluateDistribution(board) {
+      const rowCounts = Array(9).fill(0);
+      const colCounts = Array(9).fill(0);
+      const boxCounts = Array(9).fill(0);
+      
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          if (board[i][j] === 0) {
+            rowCounts[i]++;
+            colCounts[j]++;
+            const boxIdx = Math.floor(i / 3) * 3 + Math.floor(j / 3);
+            boxCounts[boxIdx]++;
+          }
+        }
+      }
+      
+      const calcVariance = (arr) => {
+        const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
+        const variance = arr.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / arr.length;
+        return variance;
+      };
+      
+      const rowVar = calcVariance(rowCounts);
+      const colVar = calcVariance(colCounts);
+      const boxVar = calcVariance(boxCounts);
+      
+      const avgVar = (rowVar + colVar + boxVar) / 3;
+      const maxVar = 20;
+      
+      return Math.max(0, 1 - avgVar / maxVar);
+    }
+    
+    function evaluateDifficulty(board) {
+      const testBoard = board.map(row => [...row]);
+      let steps = 0;
+      let maxCandidates = 0;
+      let minCandidates = 9;
+      
+      const solve = () => {
+        let progress = true;
+        
+        while (progress) {
+          progress = false;
+          
+          for (let row = 0; row < 9; row++) {
+            for (let col = 0; col < 9; col++) {
+              if (testBoard[row][col] === 0) {
+                const candidates = getCandidates(testBoard, row, col);
+                
+                if (candidates.length === 0) return false;
+                
+                maxCandidates = Math.max(maxCandidates, candidates.length);
+                minCandidates = Math.min(minCandidates, candidates.length);
+                
+                if (candidates.length === 1) {
+                  testBoard[row][col] = candidates[0];
+                  steps++;
+                  progress = true;
+                }
+              }
+            }
+          }
+        }
+        
+        for (let row = 0; row < 9; row++) {
+          for (let col = 0; col < 9; col++) {
+            if (testBoard[row][col] === 0) {
+              return false;
+            }
+          }
+        }
+        
+        return true;
+      };
+      
+      const solvable = solve();
+      
+      return {
+        solvable,
+        steps,
+        maxCandidates,
+        minCandidates,
+        complexity: steps + maxCandidates * 2
+      };
+    }
+    
+    function hasUniqueSolution(board) {
+      const solutions = [];
+      
+      const solve = (b, limit = 2) => {
+        if (solutions.length >= limit) return;
+        
+        for (let row = 0; row < 9; row++) {
+          for (let col = 0; col < 9; col++) {
+            if (b[row][col] === 0) {
+              for (let num = 1; num <= 9; num++) {
+                if (isValid(b, row, col, num)) {
+                  b[row][col] = num;
+                  solve(b, limit);
+                  b[row][col] = 0;
+                }
+              }
+              return;
+            }
+          }
+        }
+        
+        solutions.push(b.map(row => [...row]));
+      };
+      
+      solve(board.map(row => [...row]));
+      return solutions.length === 1;
+    }
+    
+    function generateSudoku(levelIndex) {
+      const level = LEVELS[levelIndex];
+      let attempts = 0;
+      const maxAttempts = 50;
+      
+      while (attempts < maxAttempts) {
+        attempts++;
+        
+        const board = Array(9).fill(0).map(() => Array(9).fill(0));
+        
+        const diagonalBoxes = [0, 4, 8];
+        for (let box of diagonalBoxes) {
+          const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => Math.random() - 0.5);
+          let idx = 0;
+          const startRow = Math.floor(box / 3) * 3;
+          const startCol = (box % 3) * 3;
+          for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+              board[startRow + i][startCol + j] = nums[idx++];
+            }
+          }
+        }
+        
+        if (!solveSudoku(board)) continue;
+        
+        const solution = board.map(row => [...row]);
+        
+        const cells = [];
+        for (let i = 0; i < 9; i++) {
+          for (let j = 0; j < 9; j++) {
+            cells.push([i, j]);
+          }
+        }
+        
+        for (let i = cells.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [cells[i], cells[j]] = [cells[j], cells[i]];
+        }
+        
+        const targetClues = Math.floor(Math.random() * (level.maxClues - level.minClues + 1)) + level.minClues;
+        const cellsToRemove = 81 - targetClues;
+        
+        let removed = 0;
+        for (let i = 0; i < cells.length && removed < cellsToRemove; i++) {
+          const [row, col] = cells[i];
+          const backup = board[row][col];
+          board[row][col] = 0;
+          
+          const testBoard = board.map(row => [...row]);
+          if (!hasUniqueSolution(testBoard)) {
+            board[row][col] = backup;
+          } else {
+            removed++;
+          }
+        }
+        
+        const distribution = evaluateDistribution(board);
+        if (distribution < level.clusterTolerance) {
+          continue;
+        }
+        
+        const difficulty = evaluateDifficulty(board);
+        
+        if (difficulty.solvable && 
+            difficulty.complexity >= levelIndex * 10 &&
+            difficulty.complexity <= (levelIndex + 1) * 20) {
+          return { puzzle: board, solution };
+        }
+      }
+      
+      const board = Array(9).fill(0).map(() => Array(9).fill(0));
+      const diagonalBoxes = [0, 4, 8];
+      for (let box of diagonalBoxes) {
+        const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => Math.random() - 0.5);
+        let idx = 0;
+        const startRow = Math.floor(box / 3) * 3;
+        const startCol = (box % 3) * 3;
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+            board[startRow + i][startCol + j] = nums[idx++];
+          }
+        }
+      }
+      
+      solveSudoku(board);
+      const solution = board.map(row => [...row]);
+      
+      const cells = [];
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          cells.push([i, j]);
+        }
+      }
+      
+      for (let i = cells.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cells[i], cells[j]] = [cells[j], cells[i]];
+      }
+      
+      const targetClues = Math.floor((level.minClues + level.maxClues) / 2);
+      const cellsToRemove = 81 - targetClues;
+      for (let i = 0; i < cellsToRemove && i < cells.length; i++) {
+        const [row, col] = cells[i];
+        board[row][col] = 0;
+      }
+      
+      return { puzzle: board, solution };
+    }
+    
+    window.startGame = function(levelIndex) {
+      currentLevel = levelIndex;
+      const { puzzle, solution: sol } = generateSudoku(levelIndex);
+      board = puzzle.map(row => [...row]);
+      solution = sol;
+      initialBoard = puzzle.map(row => [...row]);
+      selectedCell = null;
+      memos = {};
+      time = 0;
+      clearTime = null;
+      showErrors = false;
+      memoMode = false;
+      isPaused = false;
+      
+      document.getElementById('menu-screen').style.display = 'none';
+      document.getElementById('game-screen').style.display = 'block';
+      document.getElementById('game-screen').classList.add('active');
+      document.getElementById('clear-screen').style.display = 'none';
+      document.getElementById('clear-screen').classList.remove('active');
+      document.getElementById('level-name').textContent = LEVELS[levelIndex].name;
+      
+      const errorBtn = document.getElementById('error-btn');
+      const memoBtn = document.getElementById('memo-btn');
+      const pauseBtn = document.getElementById('pause-btn');
+      errorBtn.classList.remove('active');
+      memoBtn.classList.remove('active');
+      pauseBtn.classList.remove('active');
+      
+      startCountdown();
+    }
+    
+    function startCountdown() {
+      let count = 3;
+      const countdownEl = document.getElementById('countdown-screen');
+      const container = document.querySelector('.container');
+      
+      countdownEl.style.display = 'block';
+      document.getElementById('play-screen').style.display = 'none';
+      container.style.background = 'transparent';
+      container.style.boxShadow = 'none';
+      
+      function updateCountdown() {
+        if (count > 0) {
+          countdownEl.innerHTML = `
+            <div>
+              <div class="countdown-number">${count}</div>
+              <div class="countdown-level">${LEVELS[currentLevel].name}</div>
+            </div>
+          `;
+          count--;
+          setTimeout(updateCountdown, 1000);
+        } else {
+          countdownEl.innerHTML = `
+            <div>
+              <div class="countdown-number">START!</div>
+              <div class="countdown-level">${LEVELS[currentLevel].name}</div>
+            </div>
+          `;
+          setTimeout(() => {
+            countdownEl.style.display = 'none';
+            document.getElementById('play-screen').style.display = 'block';
+            container.style.background = 'white';
+            container.style.boxShadow = '0 20px 60px rgba(0,0,0,0.3)';
+            startTimer();
+            renderBoard();
+            renderNumberPad();
+          }, 1000);
+        }
+      }
+      
+      updateCountdown();
+    }
+    
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      if (isPaused) return;
+      
+      time = clearTime || time;
+      updateTimer();
+      
+      timerInterval = setInterval(() => {
+        if (!isPaused) {
+          time++;
+          updateTimer();
+        }
+      }, 1000);
+    }
+    
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+    
+    function togglePause() {
+      isPaused = !isPaused;
+      const pauseBtn = document.getElementById('pause-btn');
+      const boardEl = document.getElementById('board');
+      
+      if (isPaused) {
+        pauseBtn.querySelector('span').textContent = '再開';
+        pauseBtn.querySelector('i').textContent = 'play_arrow';
+        pauseBtn.classList.add('active');
+        boardEl.classList.add('paused');
+        stopTimer();
+      } else {
+        pauseBtn.querySelector('span').textContent = '一時停止';
+        pauseBtn.querySelector('i').textContent = 'pause';
+        pauseBtn.classList.remove('active');
+        boardEl.classList.remove('paused');
+        startTimer();
+      }
+    }
+    
+    function updateTimer() {
+      const mins = Math.floor(time / 60);
+      const secs = time % 60;
+      document.getElementById('timer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+    
+    function renderBoard() {
+      const boardEl = document.getElementById('board');
+      const currentBoard = boardEl.innerHTML !== '';
+      
+      if (!currentBoard) {
+        boardEl.innerHTML = '';
+        
+        for (let i = 0; i < 9; i++) {
+          for (let j = 0; j < 9; j++) {
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            cell.dataset.row = i;
+            cell.dataset.col = j;
+            
+            updateCellStyle(cell, i, j);
+            cell.onclick = () => handleCellClick(i, j);
+            
+            boardEl.appendChild(cell);
+          }
+        }
+      }
+      
+      const cells = boardEl.querySelectorAll('.cell');
+      cells.forEach(cell => {
+        const row = parseInt(cell.dataset.row);
+        const col = parseInt(cell.dataset.col);
+        
+        cell.textContent = '';
+        cell.innerHTML = '';
+        
+        if (board[row][col] !== 0) {
+          cell.textContent = board[row][col];
+        } else {
+          const memo = memos[`${row}-${col}`] || [];
+          if (memo.length > 0) {
+            const memoGrid = document.createElement('div');
+            memoGrid.className = 'memo-grid';
+            for (let n = 1; n <= 9; n++) {
+              const memoCell = document.createElement('div');
+              memoCell.className = 'memo-cell';
+              memoCell.textContent = memo.includes(n) ? n : '';
+              memoGrid.appendChild(memoCell);
+            }
+            cell.appendChild(memoGrid);
+          }
+        }
+        
+        updateCellStyle(cell, row, col);
+      });
+    }
+    
+    function updateCellStyle(cell, row, col) {
+      cell.className = 'cell';
+      
+      const isInitial = initialBoard[row][col] !== 0;
+      if (isInitial) {
+        cell.classList.add('initial');
+      } else {
+        cell.classList.add('editable');
+      }
+      
+      if (selectedCell && selectedCell.row === row && selectedCell.col === col) {
+        cell.classList.add('selected');
+      }
+      
+      if (!isInitial && showErrors && board[row][col] !== 0 && board[row][col] !== solution[row][col]) {
+        cell.classList.add('wrong');
+      }
+      
+      let borderRight = '1px solid #e5e7eb';
+      let borderBottom = '1px solid #e5e7eb';
+      
+      if (col === 2 || col === 5) borderRight = '2px solid #9ca3af';
+      if (col === 8) borderRight = 'none';
+      
+      if (row === 2 || row === 5) borderBottom = '2px solid #9ca3af';
+      if (row === 8) borderBottom = 'none';
+      
+      cell.style.borderRight = borderRight;
+      cell.style.borderBottom = borderBottom;
+    }
+    
+    function renderNumberPad() {
+      const padEl = document.getElementById('number-pad');
+      padEl.innerHTML = '';
+      
+      for (let i = 1; i <= 9; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'number-btn';
+        btn.textContent = i;
+        btn.onclick = () => handleNumberInput(i);
+        padEl.appendChild(btn);
+      }
+      
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'number-btn delete-btn';
+      deleteBtn.textContent = '消去';
+      deleteBtn.onclick = () => handleNumberInput(0);
+      padEl.appendChild(deleteBtn);
+    }
+    
+    function handleCellClick(row, col) {
+      if (clearTime !== null || isPaused) return;
+      if (initialBoard[row][col] !== 0) return;
+      selectedCell = { row, col };
+      renderBoard();
+    }
+    
+    function handleNumberInput(num) {
+      if (clearTime !== null || isPaused) return;
+      if (!selectedCell) return;
+      
+      const { row, col } = selectedCell;
+      if (initialBoard[row][col] !== 0) return;
+      
+      const key = `${row}-${col}`;
+      
+      if (memoMode) {
+        const current = memos[key] || [];
+        
+        if (num === 0) {
+          delete memos[key];
+        } else if (current.includes(num)) {
+          memos[key] = current.filter(n => n !== num);
+          if (memos[key].length === 0) {
+            delete memos[key];
+          }
+        } else {
+          memos[key] = [...current, num].sort((a, b) => a - b);
+        }
+      } else {
+        if (board[row][col] === num) {
+          board[row][col] = 0;
+        } else {
+          board[row][col] = num;
+        }
+        
+        if (memos[key]) {
+          delete memos[key];
+        }
+        
+        if (checkWin()) {
+          stopTimer();
+          clearTime = time;
+          showClearScreen();
+          saveHistory();
+        }
+      }
+      
+      renderBoard();
+    }
+    
+    function checkWin() {
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          if (board[i][j] === 0) return false;
+          if (board[i][j] !== solution[i][j]) return false;
+        }
+      }
+      return true;
+    }
+    
+    function toggleErrors() {
+      showErrors = !showErrors;
+      document.getElementById('error-btn').classList.toggle('active');
+      renderBoard();
+    }
+    
+    function toggleMemo() {
+      memoMode = !memoMode;
+      document.getElementById('memo-btn').classList.toggle('active');
+    }
+    
+    function getHint() {
+      if (clearTime !== null || isPaused) return;
+      
+      const emptyCells = [];
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          if (board[i][j] === 0 && initialBoard[i][j] === 0) {
+            emptyCells.push({ row: i, col: j });
+          }
+        }
+      }
+      
+      if (emptyCells.length === 0) return;
+      
+      const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+      board[randomCell.row][randomCell.col] = solution[randomCell.row][randomCell.col];
+      selectedCell = null;
+      
+      if (checkWin()) {
+        stopTimer();
+        clearTime = time;
+        showClearScreen();
+        saveHistory();
+      }
+      
+      renderBoard();
+    }
+    
+    function resetGame() {
+      if (clearTime !== null) return;
+      if (isPaused) return;
+      if (!confirm('記入した数字を全てクリアしますか？')) return;
+      
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          if (initialBoard[i][j] === 0) {
+            board[i][j] = 0;
+          }
+        }
+      }
+      memos = {};
+      selectedCell = null;
+      renderBoard();
+    }
+    
+    window.backToMenu = function() {
+      if (clearTime === null && time > 0 && !confirm('ゲームを終了してメニューに戻りますか?')) return;
+      
+      stopTimer();
+      document.getElementById('menu-screen').style.display = 'block';
+      document.getElementById('game-screen').style.display = 'none';
+      document.getElementById('game-screen').classList.remove('active');
+      document.getElementById('clear-screen').style.display = 'none';
+      document.getElementById('clear-screen').classList.remove('active');
+      document.getElementById('play-screen').style.display = 'none';
+    }
+    
+    window.retryGame = function() {
+      document.getElementById('clear-screen').style.display = 'none';
+      document.getElementById('clear-screen').classList.remove('active');
+      startGame(currentLevel);
+    }
+    
+    function showClearScreen() {
+      document.getElementById('menu-screen').style.display = 'none';
+      document.getElementById('play-screen').style.display = 'none';
+      document.getElementById('game-screen').style.display = 'none';
+      document.getElementById('game-screen').classList.remove('active');
+      document.getElementById('clear-screen').style.display = 'block';
+      document.getElementById('clear-screen').classList.add('active');
+      
+      const mins = Math.floor(clearTime / 60);
+      const secs = clearTime % 60;
+      document.getElementById('clear-time').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+      document.getElementById('clear-level').textContent = `難易度: ${LEVELS[currentLevel].name}`;
+    }
+    
+    function saveHistory() {
+      const history = getHistory();
+      const record = {
+        level: LEVELS[currentLevel].name,
+        time: clearTime,
+        date: new Date().toISOString()
+      };
+      history.unshift(record);
+      if (history.length > 50) history.pop();
+      localStorage.setItem('sudokuHistory', JSON.stringify(history));
+    }
+    
+    function getHistory() {
+      try {
+        const saved = localStorage.getItem('sudokuHistory');
+        return saved ? JSON.parse(saved) : [];
+      } catch {
+        return [];
+      }
+    }
+    
+    function loadHistory() {
+      const history = getHistory();
+      const contentEl = document.getElementById('history-content');
+      const clearBtn = document.getElementById('clear-history-btn');
+      
+      if (history.length === 0) {
+        contentEl.innerHTML = '<div class="empty-history">まだクリア履歴がありません</div>';
+        clearBtn.style.display = 'none';
+      } else {
+        clearBtn.style.display = 'flex';
+        const listHtml = history.map((record, index) => {
+          const date = new Date(record.date);
+          const dateStr = date.toLocaleString('ja-JP', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+          const mins = Math.floor(record.time / 60);
+          const secs = record.time % 60;
+          const timeStr = `${mins}:${secs.toString().padStart(2, '0')}`;
+          
+          return `
+            <div class="history-item">
+              <div class="history-info">
+                <div class="history-level">${record.level}</div>
+                <div class="history-date">${dateStr}</div>
+              </div>
+              <div class="history-time">
+                <span>${timeStr}</span>
+                <button class="delete-history-btn" onclick="deleteHistoryItem(${index})" title="削除">
+                  <i class="material-icons-round">delete</i>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+        contentEl.innerHTML = `<div class="history-list">${listHtml}</div>`;
+      }
+    }
+
+    window.deleteHistoryItem = function(index) {
+      if (!confirm('この履歴を削除しますか？')) return;
+      
+      try {
+        const history = getHistory();
+        history.splice(index, 1);
+        localStorage.setItem('sudokuHistory', JSON.stringify(history));
+        loadHistory();
+      } catch (error) {
+        console.error('履歴の削除中にエラーが発生しました:', error);
+        alert('履歴の削除中にエラーが発生しました。');
+      }
+    }
+
+    window.clearHistory = function() {
+      if (!confirm('クリア履歴を全て削除しますか？この操作は元に戻せません。')) return;
+      
+      try {
+        localStorage.removeItem('sudokuHistory');
+        loadHistory();
+      } catch (error) {
+        console.error('履歴の削除中にエラーが発生しました:', error);
+        alert('履歴の削除中にエラーが発生しました。');
+      }
+    }
+  </script>
 </body>
 </html>

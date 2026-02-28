@@ -247,6 +247,45 @@ const CoinManager = {
             'おめでとう!',
             `${amount}コインを ${reward.toLocaleString()}円 に交換しました!`
         );
+    },
+
+    exchangeAll() {
+        const account = AccountManager.getCurrentAccount();
+        if (!account || !Array.isArray(account.challenges) || account.challenges.length === 0) return null;
+
+        const targets = account.challenges.filter(c => c && typeof c.coins === 'number' && c.coins > 0);
+        if (targets.length === 0) return null;
+
+        let totalCoins = 0;
+        let totalReward = 0;
+
+        targets.forEach(chal => {
+            const amount = chal.coins;
+            const value = Utils.validateChallengeValue(chal.value);
+            const reward = amount * value;
+
+            totalCoins += amount;
+            totalReward += reward;
+
+            chal.coins = 0;
+            account.history.push({
+                type: 'exchange',
+                coins: amount,
+                reward: reward,
+                challengeName: chal.name,
+                timestamp: Date.now()
+            });
+        });
+
+        DataManager.save();
+        UIManager.renderDetailScreen();
+
+        CelebrationManager.show(
+            'おめでとう!',
+            `${totalCoins}コインを ${totalReward.toLocaleString()}円 にまとめて交換しました!`
+        );
+
+        return { totalCoins, totalReward, count: targets.length };
     }
 };
 
@@ -482,12 +521,16 @@ const UIManager = {
     updateExchangeButton(challenge) {
         const input = Utils.$('exchangeInput');
         const btn = Utils.$('exchangeBtn');
+        const allBtn = Utils.$('exchangeAllBtn');
 
         if (challenge.coins === 0) {
             input.value = '';
             input.placeholder = 'コインがありません';
             input.disabled = true;
             btn.disabled = true;
+            const account = AccountManager.getCurrentAccount();
+            const hasAnyCoins = !!(account && Array.isArray(account.challenges) && account.challenges.some(c => c && c.coins > 0));
+            if (allBtn) allBtn.disabled = !hasAnyCoins;
             return;
         }
 
@@ -501,6 +544,10 @@ const UIManager = {
         // ボタンは常に活性化された状態にするが、機能的には入力値の検証を行う
         btn.disabled = false; // 常に活性化された見た目にする
         // 実際の交換処理では入力値の検証を行うので、ここでは視覚的に活性化だけする
+
+        const account = AccountManager.getCurrentAccount();
+        const hasAnyCoins = !!(account && Array.isArray(account.challenges) && account.challenges.some(c => c && c.coins > 0));
+        if (allBtn) allBtn.disabled = !hasAnyCoins;
     },
 
     renderHistoryCompact() {
@@ -977,6 +1024,9 @@ const EventHandlers = {
         Utils.$('exchangeBtn').addEventListener('click',
             () => this.handleExchange());
 
+        Utils.$('exchangeAllBtn').addEventListener('click',
+            () => this.handleExchangeAll());
+
         Utils.$('toggleHistoryBtn').addEventListener('click', () => {
             const details = Utils.$('historyDetails');
             const preview = Utils.$('historyPreview');
@@ -1043,6 +1093,31 @@ const EventHandlers = {
         }
     },
 
+    handleExchangeAll() {
+        const account = AccountManager.getCurrentAccount();
+        if (!account || !Array.isArray(account.challenges) || account.challenges.length === 0) return;
+
+        const targets = account.challenges.filter(c => c && c.coins > 0);
+        if (targets.length === 0) {
+            alert('交換できるコインがありません。');
+            return;
+        }
+
+        const totalCoins = targets.reduce((sum, c) => sum + c.coins, 0);
+        const totalReward = targets.reduce((sum, c) => sum + (c.coins * Utils.validateChallengeValue(c.value)), 0);
+
+        ModalManager.confirm(
+            'まとめて交換の確認',
+            `${targets.length}件のチャレンジの合計${totalCoins}コインを${totalReward.toLocaleString()}円と交換しますか?`,
+            () => {
+                CoinManager.exchangeAll();
+                ModalManager.hide('confirmModal');
+            },
+            '交換する',
+            'exchange-confirm'
+        );
+    },
+
     handleResetAll() {
         ModalManager.confirm(
             '全データリセット',
@@ -1098,4 +1173,3 @@ function initApp() {
 
 
 document.addEventListener('DOMContentLoaded', initApp);
-

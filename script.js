@@ -5,7 +5,8 @@ const CONFIG = {
     CELEBRATION_DURATION: 3000,
     CONFETTI_COUNT: 140,
     CONFETTI_COLORS: ['#ff6b9d', '#ffb3ba', '#a8e6cf', '#dae7f8'],
-    DEFAULT_ACCOUNT_COLOR: '#e0ffff' // シアン（水色）
+    DEFAULT_ACCOUNT_COLOR: '#e0ffff', // シアン（水色）
+    HISTORY_RECENT_MONTHS: 12
 };
 
 const StorageAdapter = {
@@ -39,7 +40,7 @@ const state = {
     currentAccountIndex: -1,
     currentChallengeIndex: 0,
     confirmCallback: null,
-    selectedMonth: 'all'
+    selectedMonth: null
 };
 
 const Utils = {
@@ -79,6 +80,12 @@ const Utils = {
         };
         return colorMap[accountColor] || '#cceffa'; // デフォルトは元の色
     }
+    ,
+
+    getCurrentMonthKey() {
+        const date = new Date();
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    }
 };
 
 const DataManager = {
@@ -90,6 +97,7 @@ const DataManager = {
         const saved = StorageAdapter.load(CONFIG.STORAGE_KEY);
         if (saved && Array.isArray(saved.accounts)) {
             this.migrateData(saved);
+            this.trimHistory(saved);
             state.appData = saved;
             return;
         }
@@ -119,6 +127,64 @@ const DataManager = {
                 chal.value = Utils.validateChallengeValue(chal.value);
             });
         });
+    },
+
+    trimHistory(data) {
+        if (!data || !Array.isArray(data.accounts)) return;
+
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        let changed = false;
+
+        data.accounts.forEach(acc => {
+            if (!acc || !Array.isArray(acc.history) || acc.history.length === 0) return;
+
+            const keep = [];
+            const yearTotals = new Map();
+            let hadOld = false;
+
+            acc.history.forEach(item => {
+                if (!item) return;
+
+                const type = item.type;
+                if (type === 'archive') {
+                    // 既存の集約レコードがあれば再集約するので一旦捨てる
+                    changed = true;
+                    return;
+                }
+
+                const ts = typeof item.timestamp === 'number' ? item.timestamp : 0;
+                const year = ts ? new Date(ts).getFullYear() : currentYear;
+
+                if (year >= currentYear) {
+                    keep.push(item);
+                    return;
+                }
+
+                hadOld = true;
+                if (type === 'exchange') {
+                    yearTotals.set(year, (yearTotals.get(year) || 0) + (item.reward || 0));
+                }
+            });
+
+            if (!hadOld) return;
+
+            const archives = Array.from(yearTotals.entries())
+                .sort((a, b) => b[0] - a[0])
+                .map(([year, total]) => ({
+                    type: 'archive',
+                    year,
+                    reward: total,
+                    timestamp: new Date(year, 0, 1).getTime()
+                }));
+
+            acc.history = keep.concat(archives);
+            changed = true;
+        });
+
+        if (changed) {
+            this.save();
+        }
     },
 
     createDefaultData() {
@@ -552,27 +618,21 @@ const UIManager = {
 
     renderHistoryCompact() {
         const account = AccountManager.getCurrentAccount();
-        const totalReward = AccountManager.getTotalReward(account);
-        Utils.$('totalReward').textContent = `${totalReward.toLocaleString()}円`;
-       
+        const totalEl = Utils.$('totalReward');
+        const labelEl = document.querySelector('.history-total-label');
+
         const list = Utils.$('historyList');
         const preview = Utils.$('historyPreview');
         list.innerHTML = '';
         preview.innerHTML = '';
 
-        if (account.history.length === 0) {
-            list.innerHTML = '<div class="history-empty">まだ履歴はありません</div>';
-            preview.classList.add('hidden');
-            return;
-        }
-
         // プレビューは常に非表示
         preview.classList.add('hidden');
 
-        // 月選択ドロップダウンを更新
+        // 月選択ドロップダウンを更新（履歴0件でも「今日の月」を含める）
         this.updateMonthFilter(account);
 
-        // フィルター適用して表示
+        // フィルター適用して表示（0件なら0円表示＆空表示）
         this.filterAndDisplayHistory(account);
     },
 
@@ -583,10 +643,13 @@ const UIManager = {
         // 履歴から月のリストを取得
         const months = new Set();
         account.history.forEach(item => {
+            if (!item || item.type === 'archive') return;
             const date = new Date(item.timestamp);
             const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
             months.add(monthKey);
         });
+
+        months.add(Utils.getCurrentMonthKey());
 
         // ドロップダウンを更新
         const sortedMonths = Array.from(months).sort().reverse();
@@ -644,6 +707,10 @@ const UIManager = {
         const list = Utils.$('historyList');
         
         let filteredHistory = account.history.slice().reverse();
+
+        if (selectedMonth !== 'all') {
+            filteredHistory = filteredHistory.filter(item => item && item.type !== 'archive');
+        }
         
         if (selectedMonth !== 'all') {
             filteredHistory = filteredHistory.filter(item => {
@@ -652,6 +719,8 @@ const UIManager = {
                 return monthKey === selectedMonth;
             });
         }
+
+        this.updateHistoryTotalSummary(selectedMonth, filteredHistory);
 
         list.innerHTML = '';
         if (filteredHistory.length === 0) {
@@ -663,20 +732,49 @@ const UIManager = {
         }
     },
 
+    updateHistoryTotalSummary(selectedMonth, historyItems) {
+        const total = historyItems.reduce((sum, item) => sum + (item.reward || 0), 0);
+
+        const totalEl = Utils.$('totalReward');
+        if (totalEl) {
+            totalEl.textContent = `${total.toLocaleString()}円`;
+        }
+
+        const labelEl = document.querySelector('.history-total-label');
+        if (!labelEl) return;
+
+        if (selectedMonth === 'all') {
+            labelEl.textContent = 'すべてのおこづかい';
+            return;
+        }
+
+        const [year, month] = selectedMonth.split('-');
+        const monthNum = parseInt(month, 10);
+        if (!year || isNaN(monthNum)) {
+            labelEl.textContent = 'おこづかい合計';
+            return;
+        }
+
+        labelEl.textContent = `${year}年${monthNum}月のおこづかい`;
+    },
+
     createHistoryItem(item) {
         const div = document.createElement('div');
         div.classList.add('history-item');
-       
-        const date = Utils.formatDate(item.timestamp);
+
+        const date = (item && item.type === 'archive') ? `${item.year}年` : Utils.formatDate(item.timestamp);
         let description = '';
         let amountText = '';
         let badge = '';
        
         if (item.type === 'exchange') {
-            description = `${item.coins}コインを交換`;
+            description = `<span class="history-coins"><span class="history-coins-number">${item.coins}</span><span class="history-coins-unit">コイン</span></span>`;
             amountText = `+${item.reward.toLocaleString()}円`;
             const challengeName = item.challengeName || 'チャレンジ';
             badge = `<span class="history-challenge-badge">${challengeName}</span>`;
+        } else if (item.type === 'archive') {
+            description = `${item.year}年分まとめ`;
+            amountText = `+${(item.reward || 0).toLocaleString()}円`;
         } else if (item.type === 'reset') {
             description = `データリセット (${item.coins}コイン, ${item.reward}円をリセット)`;
             amountText = '—';
@@ -708,12 +806,30 @@ const ModalManager = {
     },
 
     confirm(title, message, callback, confirmText = 'OK', confirmClass = 'btn-confirm-action') {
+        const cancelBtn = Utils.$('cancelBtn');
+        if (cancelBtn) cancelBtn.style.display = '';
         Utils.$('confirmTitle').textContent = title;
         Utils.$('confirmMessage').textContent = message;
         Utils.$('confirmActionBtn').textContent = confirmText;
         Utils.$('confirmActionBtn').className = `btn-confirm ${confirmClass}`;
         state.confirmCallback = callback;
         this.show('confirmModal');
+    },
+
+    alert(title, message, okText = 'OK', okClass = 'btn-confirm-action') {
+        const cancelBtn = Utils.$('cancelBtn');
+        if (cancelBtn) cancelBtn.style.display = 'none';
+
+        this.confirm(
+            title,
+            message,
+            () => {
+                if (cancelBtn) cancelBtn.style.display = '';
+                this.hide('confirmModal');
+            },
+            okText,
+            okClass
+        );
     },
 
     openGlobalSettings() {
@@ -1074,7 +1190,7 @@ const EventHandlers = {
 
         // 入力値が空または無効な場合は交換処理を実行しない
         if (!amount || isNaN(amount) || amount < 1 || amount > challenge.coins) {
-            alert('交換できるコイン数が正しくありません。');
+            ModalManager.alert('入力エラー', '交換できるコイン数が正しくありません。');
             return;
         }
 
@@ -1099,7 +1215,7 @@ const EventHandlers = {
 
         const targets = account.challenges.filter(c => c && c.coins > 0);
         if (targets.length === 0) {
-            alert('交換できるコインがありません。');
+            ModalManager.alert('お知らせ', '交換できるコインがありません。');
             return;
         }
 
@@ -1165,6 +1281,10 @@ function initApp() {
     } else {
         state.currentAccountIndex = -1;
         state.currentChallengeIndex = -1;
+    }
+
+    if (!state.selectedMonth) {
+        state.selectedMonth = Utils.getCurrentMonthKey();
     }
 
     EventHandlers.init();

@@ -762,6 +762,10 @@ const UIManager = {
         const div = document.createElement('div');
         div.classList.add('history-item');
 
+        if (item && item.type === 'archive') {
+            div.classList.add('history-item-archive');
+        }
+
         const date = (item && item.type === 'archive') ? `${item.year}年` : Utils.formatDate(item.timestamp);
         let description = '';
         let amountText = '';

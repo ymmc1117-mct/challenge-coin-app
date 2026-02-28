@@ -550,6 +550,21 @@ body {
     min-height: 48px;
 }
 
+#exchangeAllBtn {
+    margin-top: 0;
+}
+
+.exchange-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.exchange-buttons .btn-exchange {
+    flex: 1;
+    width: auto;
+    border-radius: 999px;
+}
+
 .btn-exchange:active {
     transform: scale(0.98);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
@@ -1160,7 +1175,7 @@ body {
     flex: 1;
     padding: 14px;
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: 999px;
     font-weight: bold;
     cursor: pointer;
     font-family: inherit;

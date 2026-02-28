@@ -1370,26 +1370,21 @@ body {
         min-height: 18px;
     }
     .screen-content { padding: 0 25px 25px 25px; }
-    .account-list { padding: 20px; }
-    .account-list-empty { font-size: 16px; }
-    .coins-display { padding: 25px 20px; min-height: 200px; }
-    .coins-number { font-size: 68px; min-width: 110px; }
-    .coins-main { gap: 18px; margin: 16px 0; }
-    .coin-btn { width: 48px; height: 48px; font-size: 26px; }
-    .coins-value { font-size: 22px; margin-top: 8px; }
-    .account-card { padding: 30px 30px 20px 30px; }
-    .account-card-main.no-unexchanged { gap: 15px; }
-    .account-unexchanged { gap: 2px; }
-    .exchange-section { padding: 18px; margin-bottom: 18px; }
-    .exchange-section h3 { font-size: 17px; margin-bottom: 13px; }
-    .exchange-input { gap: 8px; margin-bottom: 13px; }
-    .exchange-input input { padding: 13px; font-size: 17px; min-height: 48px; }
-    .exchange-input span { font-size: 15px; }
-    .btn-exchange { padding: 13px; font-size: 17px; min-height: 48px; }
-    .history-compact { padding: 18px; margin-bottom: 18px; }
-    .history-total-label { font-size: 17px; }
-    .history-total-amount { font-size: 30px; }
-    .btn-show-history { padding: 8px 12px; font-size: 13px; min-height: 36px; width: 110px; }
+}
+
+@media (orientation: landscape) and (min-width: 820px) {
+    .coins-label {
+        display: none;
+    }
+
+    .coins-display {
+        min-height: 180px;
+        padding: 25px 20px;
+    }
+
+    .screen-content {
+        padding-bottom: 60px;
+    }
 }
 
 @media (max-width: 480px) {

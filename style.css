@@ -640,7 +640,7 @@ body {
     gap: 10px;
     margin-bottom: 20px;
     padding: 12px 16px;
-    background: #d0f0d8;
+    background: #e3f7e8;
     border-radius: var(--radius-lg);
     width: fit-content;
 }
@@ -752,6 +752,25 @@ body {
     gap: 8px;
     flex-wrap: wrap;
     font-size: clamp(13px, 3vw, 15px);
+}
+
+.history-coins {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 1px;
+    white-space: nowrap;
+    color: var(--color-primary-light);
+}
+
+.history-coins-number {
+    display: inline-block;
+    width: 2ch;
+    text-align: left;
+}
+
+.history-coins-unit {
+    display: inline-block;
+    white-space: nowrap;
 }
 
 .history-challenge-badge {

@@ -10,8 +10,15 @@ const CONFIG = {
 };
 
 const StorageAdapter = {
+    backupKey(key) {
+        return `${key}:backup`;
+    },
     save(key, data) {
         try {
+            const existing = localStorage.getItem(key);
+            if (existing) {
+                localStorage.setItem(this.backupKey(key), existing);
+            }
             localStorage.setItem(key, JSON.stringify(data));
         } catch (e) {
             console.error('保存エラー:', e);
@@ -94,11 +101,35 @@ const DataManager = {
     },
 
     load() {
-        const saved = StorageAdapter.load(CONFIG.STORAGE_KEY);
+        const key = CONFIG.STORAGE_KEY;
+        const raw = (() => {
+            try {
+                return localStorage.getItem(key);
+            } catch {
+                return null;
+            }
+        })();
+
+        const saved = StorageAdapter.load(key);
         if (saved && Array.isArray(saved.accounts)) {
             this.migrateData(saved);
             this.trimHistory(saved);
             state.appData = saved;
+            return;
+        }
+
+        const backup = StorageAdapter.load(StorageAdapter.backupKey(key));
+        if (backup && Array.isArray(backup.accounts)) {
+            this.migrateData(backup);
+            this.trimHistory(backup);
+            state.appData = backup;
+            this.save();
+            return;
+        }
+
+        // 既存データが壊れている可能性があるので、ここで空データを保存して上書きしない
+        if (raw) {
+            state.appData = { accounts: [] };
             return;
         }
 
